@@ -1,0 +1,30 @@
+Package: FacileBioc
+Type: Package
+Title: FacileData wrappers over Bioconductor assay containers
+Version: 0.1.0
+Authors@R: c(
+    person("Steve", "Lianoglou", , "lianoglou@dnli.com", c("aut", "cre")),
+    person("Denali Therapeutics", role = c("cph", "fnd"))
+    )
+Description: Enables the use of standard Bioconductor assay containers, like
+    SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.
+    within the FacileData ecosystem.
+Depends:
+    FacileData
+Imports:
+    checkmate,
+    Biobase,
+    edgeR,
+    methods,
+    MultiAssayExperiment,
+    SingleCellExperiment,
+    SummarizedExperiment,
+    tidyr
+Suggests:
+    knitr,
+    testthat
+License: Apache Version 2.0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.0.1.9000
