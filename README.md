@@ -16,39 +16,39 @@ badges: end -->
 
 **NOTE: Development on this package has not yet begun**
 
-The `FacileBioc` package will enable Bioconductor-standard assay
-containers, like a `SummarizedExperiment`, `MultiAssayExperiment`,
-`DGElist`, etc. to be used as a FacileDataStore by implementing the
-FacileData API over them.
+The `FacileBioc` package will define the FacileData API over
+Bioconductor-standard assay containers, like a `SummarizedExperiment`,
+`MultiAssayExperiment`, `DGEList`, etc.
 
 This will enable them to be used as “first-class” data-providers within
-the facile ecosystem, enabling them to take advantage of all the
+the facile ecosystem, so that they can take advantage of all the
 goodness we have on offer here.
 
 ## Example Usage
 
-The current plan is to defined `FacileData::facilitate()` functions over
-the various Bioconductor assay containers so that they return a
-“facile-wrapped” version of the data container.
+The current plan is to implement `FacileData::facilitate()` functions
+over the the assay containers (eg. `facilitate.DGEList()`) so that they
+return a “facile-wrapped” version of the data container.
 
-We would then be able to perform a tumor-vs-normal differential
-expression analysis with the
-[FacileAnalysis](https://github.com/facileverse/FacileAnalysis) package,
-and interact with the result via `shine()`, like so:
+Imagine we had a `DGEList` object (`y`), with RNA-seq data from an
+experiment with “normal” and “tumor” samples. A differential expression
+analysis contrasting the two sample types using the
+[FacileAnalysis](https://github.com/facileverse/FacileAnalysis) package
+would like like so:
 
 ``` r
 library(FacileAnalysis)
 library(edgeR)
-y <- DGEList(counts = count.matrix, genes = gene.info, samples = pheno.info)
+y <- DGEList(counts = count.matrix, genes = gene.info, samples = sample.info)
 yf <- FacileBioc::facilitate(y)
 dge.facile <- yf %>% 
   flm_def(group = "sample_type", numer = "tumor", denom = "normal") %>% 
   fdge(method = "voom")
-shine(dge)
+shine(dge.facile)
 ```
 
-We should also still be able to use the FacileDGEList object `yf` as a
-normal `DGEList` as well, ie.
+We should still be able to use the `FacileDGEList` object (`yf`) as a
+normal `DGEList`, so that the “normal” edgeR moves would work as well:
 
 ``` r
 yf <- calcNormFactors(yf)
