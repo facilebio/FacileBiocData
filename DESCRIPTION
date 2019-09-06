@@ -9,22 +9,24 @@ Authors@R: c(
 Description: Enables the use of standard Bioconductor assay containers, like
     SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.
     within the FacileData ecosystem.
-Depends:
-    FacileData
 Imports:
+    broom,
     checkmate,
+    FacileData,
+    dplyr,
+    methods,
+    reshape2,
+    tidyr
+Suggests:
     Biobase,
     edgeR,
-    methods,
+    knitr,
     MultiAssayExperiment,
     SingleCellExperiment,
     SummarizedExperiment,
-    tidyr
-Suggests:
-    knitr,
     testthat
 License: Apache Version 2.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.1
