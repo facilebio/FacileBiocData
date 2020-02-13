@@ -3,16 +3,15 @@ NULL
 
 #' @export
 #' @noRd
-#' @rdname facilitate
 #' @method facilitate DGEList
-facilitate.DGEList <- function(x, ...) {
+facilitate.EList <- function(x, ...) {
 
-  x[["facile"]] <- list(
+  x$facile <- list(
     extra = NULL,
     stuff = NULL,
     here = NULL)
 
-  class(x) <- c("FacileDGEList", "FacileBiocDataStore", "FacileBiocDataStore",
+  class(x) <- c("FacileEList", "FacileBiocDataStore", "FacileBiocDataStore",
                 class(x))
   x
 }
@@ -20,17 +19,17 @@ facilitate.DGEList <- function(x, ...) {
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.DGEList <- function(x, ...) {
+fdata.EList <- function(x, ...) {
   x[["genes"]]
 }
 
 #' @noRd
-pdata.DGEList <- function(x, ...) {
-  x[["samples"]]
+pdata.EList <- function(x, ...) {
+  x[["targets"]]
 }
 
 #' @noRd
-adata.DGEList <- function(x, name = "counts", ...) {
+adata.EList <- function(x, name = "E", ...) {
   out <- x[[name]]
   assert_matrix(out, "numeric", nrows = nrow(fdata(x)), ncols = ncol(pdata(x)))
   out

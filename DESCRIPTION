@@ -1,4 +1,4 @@
-Package: FacileBioc
+Package: FacileBiocData
 Type: Package
 Title: FacileData wrappers over Bioconductor assay containers
 Version: 0.1.0
@@ -9,6 +9,10 @@ Authors@R: c(
 Description: Enables the use of standard Bioconductor assay containers, like
     SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.
     within the FacileData ecosystem.
+URL: https://github.com/facilebio/FacileBiocData
+BugReports: https://github.com/facilebio/FacileBiocData/issues
+Depends:
+    FacileData
 Imports:
     broom,
     checkmate,
@@ -25,8 +29,20 @@ Suggests:
     SingleCellExperiment,
     SummarizedExperiment,
     testthat
+Remotes:
+    facilebio/FacileData
 License: Apache Version 2.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
+Collate: 
+    'api.R'
+    'DGEList.R'
+    'EList.R'
+    'ExpressionSet.R'
+    'MultiAssayExperiment.R'
+    'SingleCellExperiment.R'
+    'SummarizedExperiment.R'
+    'package.R'
+    'utils.R'
