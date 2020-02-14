@@ -2,10 +2,7 @@
 NULL
 
 #' @export
-setClass("FacileDGEList",
-         slots = c(facile = "list"),
-         contains = c("FacileBiocDataStore", "DGEList"),
-         prototype = prototype(facile = list()))
+setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 
 #' @export
 #' @noRd
@@ -38,8 +35,27 @@ pdata.DGEList <- function(x, ...) {
 }
 
 #' @noRd
-adata.DGEList <- function(x, name = "counts", ...) {
+adata.DGEList <- function(x, name = NULL, ...) {
+  if (is.null(name)) {
+    name <- "counts"
+  }
   out <- x[[name]]
-  assert_matrix(out, "numeric", nrows = nrow(fdata(x)), ncols = ncol(pdata(x)))
+  assert_matrix(out, "numeric", nrows = nrow(x), ncols = ncol(x))
+  out
+}
+
+#' @noRd
+anames.DGEList <- function(x, ..., .required = "counts") {
+  dnames <- names(x)
+  if (!.required %in% dnames) {
+    stop("`counts` not found in DGEList, you've got problems")
+  }
+  out <- unique(c(.required, dnames))
+  for (dname in dnames) {
+    elem <- x[[dname]]
+    if (!(is.matrix(elem) && nrow(elem) == nrow(x) && ncol(elem) == ncol(x))) {
+      out <- setdiff(out, dname)
+    }
+  }
   out
 }

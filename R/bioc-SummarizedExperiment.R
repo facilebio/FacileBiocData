@@ -6,9 +6,7 @@ NULL
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
 #' @importClassesFrom S4Vectors DataFrame SimpleList
 setClass("FacileSummarizedExperiment",
-         slots = c(facile = "list"),
-         contains = c("FacileBiocDataStore", "SummarizedExperiment"),
-         prototype = prototype(facile = list()))
+         contains = c("FacileBiocDataStore", "SummarizedExperiment"))
 
 #' @export
 #' @noRd
@@ -43,6 +41,9 @@ adata.SummarizedExperiment <- function(x, name = NULL, ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("SummarizedExperiment package required, please install it.",
          call. = FALSE)
+  }
+  if (is.null(name)) {
+    name <- SummarizedExperiment::assayNames(x)[1L]
   }
   SummarizedExperiment::assay(x, name)
 }

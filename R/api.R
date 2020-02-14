@@ -11,7 +11,9 @@ setOldClass("FacileDataStore")
 #' @noRd
 #' @export
 setClass("FacileBiocDataStore",
-         contains = c("FacileDataStore", "VIRTUAL"))
+         contains = c("FacileDataStore", "VIRTUAL"),
+         slots = c(facile = "list"),
+         prototype = prototype(facile = list()))
 
 #' Retrieve the internal facile list data structure from a data container
 #'
@@ -40,4 +42,10 @@ pdata <- function(x, ...) {
 #' @noRd
 adata <- function(x, assay = NULL, ...) {
   UseMethod("adata", x)
+}
+
+#' Retrieves names of assay elements in the container
+#' @noRd
+anames <- function(x, ...) {
+  UseMethod("anames", x)
 }

@@ -1,5 +1,9 @@
 #' @include api.R
+#' @include bioc-DGEList.R
 NULL
+
+#' @export
+setClass("FacileEList", contains = c("FacileBiocDataStore", "EList"))
 
 #' @export
 #' @noRd
@@ -33,4 +37,9 @@ adata.EList <- function(x, name = "E", ...) {
   out <- x[[name]]
   assert_matrix(out, "numeric", nrows = nrow(fdata(x)), ncols = ncol(pdata(x)))
   out
+}
+
+#' @noRd
+anames.EList <- function(x, ...) {
+  anames.DGEList(x, ..., .required = "E")
 }

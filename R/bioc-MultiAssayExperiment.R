@@ -6,9 +6,7 @@ NULL
 #' @importClassesFrom MultiAssayExperiment MultiAssayExperiment
 #' @importClassesFrom S4Vectors DataFrame SimpleList
 setClass("FacileMultiAssayExperiment",
-         slots = c(facile = "list"),
-         contains = c("FacileBiocDataStore", "MultiAssayExperiment"),
-         prototype = prototype(facile = list()))
+         contains = c("FacileBiocDataStore", "MultiAssayExperiment"))
 
 #' @export
 #' @noRd

@@ -19,7 +19,7 @@ if (!exists("eset")) {
 }
 
 test_that("facilitate.ExpressionSet works", {
-  f <- facilitate(eset)
+  f <- facilitate(eset, rename_fdata = c(name = "symbol"))
   expect_s4_class(f, "FacileExpressionSet")
   expect_s4_class(f, "FacileBiocDataStore")
   expect_s4_class(f, "FacileDataStore")

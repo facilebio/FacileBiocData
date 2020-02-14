@@ -1,14 +1,14 @@
 #' @include api.R
 NULL
 
+# NOTE: FacileSingleCellExperiment should be a subclass of FacileSumarrizedExperiment,
+#       figure it out!
 #' @export
 #' @importFrom utils packageVersion
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @importClassesFrom S4Vectors DataFrame SimpleList
 setClass("FacileSingleCellExperiment",
-         slots = c(facile = "list"),
-         contains = c("FacileBiocDataStore", "SingleCellExperiment"),
-         prototype = prototype(facile = list()))
+         contains = c("FacileBiocDataStore", "SingleCellExperiment"))
 
 #' @export
 #' @noRd
