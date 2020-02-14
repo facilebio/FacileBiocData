@@ -25,4 +25,6 @@ test_that("facilitate.DGEList works", {
   expect_equal(nrow(covs), unname(ncol(f)))
   checkmate::expect_factor(covs[["sex"]], c("m", "f"))
   checkmate::expect_factor(covs[["sample_type"]], c("normal", "tumor"))
+
+  expect_s4_class(fds(covs), "FacileDGEList")
 })

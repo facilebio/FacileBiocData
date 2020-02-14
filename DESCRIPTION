@@ -23,6 +23,7 @@ Imports:
     tidyr
 Suggests:
     Biobase,
+    FacileAnalysis,
     edgeR,
     knitr,
     MultiAssayExperiment,
