@@ -2,8 +2,6 @@
 NULL
 
 #' @export
-#' @importFrom utils packageVersion
-#' @importClassesFrom Biobase ExpressionSet
 setClass("FacileExpressionSet",
          slots = c(facile = "list"),
          contains = c("FacileBiocDataStore", "ExpressionSet"),
@@ -14,6 +12,10 @@ setClass("FacileExpressionSet",
 #' @rdname facilitate
 #' @method facilitate ExpressionSet
 facilitate.ExpressionSet <- function(x, ...) {
+  if (!requireNamespace("Biobase", quietly = TRUE)) {
+    stop("Biobase package required, please install it.",
+         call. = FALSE)
+  }
   out <- new("FacileExpressionSet",
              experimentData = Biobase::experimentData(x),
              assayData = Biobase::assayData(x),
@@ -21,8 +23,18 @@ facilitate.ExpressionSet <- function(x, ...) {
              featureData = Biobase::featureData(x),
              anotation = Biobase::annotation(x),
              protocolData = Biobase::protocolData(x))
+  sinfo <- .init_pdata(x, ...)
+  colnames(out) <- sinfo[["sample_id"]]
+  out <- Biobase::`pData<-`(out, sinfo)
+
+  # eav <- as.EAVtable(sinfo)
+  # out@facile[["eav"]] <- eav
+  # out@facile[["covariate_def"]] <- attr(eav, "covariate_def")
   out
 }
+
+#' @noRd
+ifacile.FacileExpressionSet <- function(x, ...) x@facile
 
 # bioc data retrieval methods --------------------------------------------------
 

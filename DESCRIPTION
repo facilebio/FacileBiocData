@@ -44,5 +44,6 @@ Collate:
     'MultiAssayExperiment.R'
     'SingleCellExperiment.R'
     'SummarizedExperiment.R'
+    'init_pdata.R'
     'package.R'
     'utils.R'
