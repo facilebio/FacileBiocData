@@ -51,10 +51,35 @@
       finfo <- rename(finfo, all_of(rename_fdata))
     }
   }
-  fmissing <- setdiff(colnames(ftmpl), colnames(finfo))
-  if (length(fmissing)) {
-    stop("The feature data.frame from the bioc container is missing the ",
-         "following columns: ", paste(fmissing, collapse = ","))
+
+  # feature_id is really the only required thing, the rest we can make up
+  if (is.character(finfo[["feature_id"]])) {
+    if (any(duplicated(finfo[["feature_id"]]))) {
+      warning("duplicated feature_id column detected, using rownames()")
+      finfo[["feature_id"]] <- rownames(x)
+    }
+  } else {
+    finfo[["feature_id"]] <- rownames(x)
+  }
+  if (any(duplicated(finfo[["feature_id"]]))) {
+    stop("The feature 'feature_id' column is not unique")
+  }
+  if (!is.character(finfo[["name"]])) {
+    # I wish I never renamed `name` to `symbol` in ye-old FacileData::as.DGEList
+    if (is.character(finfo[["symbol"]])) {
+      finfo[["name"]] <- finfo[["symbol"]]
+    } else {
+      finfo[["name"]] <- finfo[["feature_id"]]
+    }
+  }
+  if (!is.character(finfo[["feature_type"]])) {
+    finfo[["feature_type"]] <- feature_type
+  }
+  if (!is.character(finfo[["assay_type"]])) {
+    finfo[["assay_type"]] <- assay_type
+  }
+  if (!is.character(finfo[["meta"]])) {
+    finfo[["meta"]] <- "unk_meta"
   }
   for (fcol in colnames(ftmpl)) {
     expected_class <- class(ftmpl[[fcol]])[1L]
@@ -63,9 +88,6 @@
            expected_class)
 
     }
-  }
-  if (any(duplicated(finfo[["feature_id"]]))) {
-    stop("The feature 'feature_id' column is not unique")
   }
   if (nrow(finfo) != nrow(x)) {
     stop("The number of rows in the feature data.frame is not the same as the ",

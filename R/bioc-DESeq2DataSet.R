@@ -2,29 +2,18 @@
 NULL
 
 #' @export
-setClass("FacileSummarizedExperiment",
-         contains = c("FacileBiocDataStore", "SummarizedExperiment"))
+#' @importClassesFrom DESeq2 DESeqDataSet
+setClass("FacileDESeqDataSet",
+         contains = c("FacileBiocDataStore", "DESeqDataSet"))
 
 #' @export
 #' @noRd
 #' @rdname facilitate
 #' @method facilitate SummarizedExperiment
-facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
+facilitate.DESeqDataSet <- function(x, assay_name = NULL, ...) {
+  if (!requireNamespace("DESeq2", quietly = TRUE)) {
+    stop("DESeq2 package required, please install it.",
          call. = FALSE)
-  }
-  # Implementation inspired by SingleCellExperiment:::.rse_to_sce
-  # old <- S4Vectors:::disableValidity()
-  # if (!isTRUE(old)) {
-  #   S4Vectors:::disableValidity(TRUE)
-  #   on.exit(S4Vectors:::disableValidity(old))
-  # }
-
-  if (is.null(SummarizedExperiment::assayNames(x))) {
-    anames. <- paste0("adata", seq(SummarizedExperiment::assays(x)) - 1L)
-    anames. <- sub("a0$", "a", anames.)
-    x <- SummarizedExperiment::`assayNames<-`(x, value = anames.)
   }
 
   sinfo <- .init_pdata(x, ...)
@@ -32,6 +21,13 @@ facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
   sinfo <- S4Vectors::DataFrame(sinfo)
 
   finfo <- .init_fdata(x, assay_name = assay_name, ...)
+  # because of dds@rowRanges, we can't have GRanges-like names in here
+  axe.cols <- c("seqnames", "ranges", "strand", "start", "end", "width",
+                "element")
+  axe.cols <- intersect(colnames(finfo), axe.cols)
+  if (length(axe.cols)) {
+    finfo <- finfo[, !colnames(finfo) %in% axe.cols]
+  }
   rownames(x) <- finfo[["feature_id"]]
   finfo <- S4Vectors::DataFrame(finfo)
 
@@ -39,7 +35,10 @@ facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
   x <- SummarizedExperiment::`rowData<-`(x, value = finfo)
 
 
-  out <- new("FacileSummarizedExperiment",
+  out <- new("FacileDESeqDataSet",
+             design = x@design,
+             dispersionFunction = x@dispersionFunction,
+             rowRanges = x@rowRanges,
              colData = x@colData,
              assays = x@assays,
              NAMES = x@NAMES,
@@ -51,17 +50,17 @@ facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.SummarizedExperiment <- function(x, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
+fdata.DESeqDataSet <- function(x, ...) {
+  if (!requireNamespace("DESeq2", quietly = TRUE)) {
+    stop("DESeq2 package required, please install it.",
          call. = FALSE)
   }
   as.data.frame(SummarizedExperiment::rowData(x))
 }
 
 #' @noRd
-pdata.SummarizedExperiment <- function(x, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+pdata.DESeqDataSet <- function(x, ...) {
+  if (!requireNamespace("DESeq2", quietly = TRUE)) {
     stop("SummarizedExperiment package required, please install it.",
          call. = FALSE)
   }
@@ -69,8 +68,8 @@ pdata.SummarizedExperiment <- function(x, ...) {
 }
 
 #' @noRd
-adata.SummarizedExperiment <- function(x, name = NULL, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+adata.DESeqDataSet <- function(x, name = NULL, ...) {
+  if (!requireNamespace("DESeq2", quietly = TRUE)) {
     stop("SummarizedExperiment package required, please install it.",
          call. = FALSE)
   }
@@ -81,8 +80,8 @@ adata.SummarizedExperiment <- function(x, name = NULL, ...) {
 }
 
 #' @noRd
-anames.SummarizedExperiment <- function(x, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+anames.DESeqDataSet <- function(x, ...) {
+  if (!requireNamespace("DESeq2", quietly = TRUE)) {
     stop("SummarizedExperiment package required, please install it.",
          call. = FALSE)
   }

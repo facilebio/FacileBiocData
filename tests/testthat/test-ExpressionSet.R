@@ -19,10 +19,11 @@ if (!exists("eset")) {
 }
 
 test_that("facilitate.ExpressionSet works", {
-  f <- facilitate(eset, rename_fdata = c(name = "symbol"))
+  f <- facilitate(eset)
   expect_s4_class(f, "FacileExpressionSet")
   expect_s4_class(f, "FacileBiocDataStore")
   expect_s4_class(f, "FacileDataStore")
+  expect_s4_class(f, "ExpressionSet")
 
   covs <- samples(f) %>%
     with_sample_covariates("sex") %>%

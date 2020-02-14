@@ -1,6 +1,9 @@
 #' @include api.R
 NULL
 
+# Why don't we have to `@importClassesFrom Biobase ExpressionSet` here like we
+# do for DESeqDataSet?
+
 #' @export
 setClass("FacileExpressionSet",
          contains = c("FacileBiocDataStore", "ExpressionSet"))
@@ -15,13 +18,23 @@ facilitate.ExpressionSet <- function(x, assay_name = NULL, ...) {
          call. = FALSE)
   }
 
+  # out <- new("FacileExpressionSet",
+  #            experimentData = Biobase::experimentData(x),
+  #            assayData = Biobase::assayData(x),
+  #            phenoData = Biobase::phenoData(x),
+  #            featureData = Biobase::featureData(x),
+  #            anotation = Biobase::annotation(x),
+  #            protocolData = Biobase::protocolData(x))
+  #
+  # We are already digging directly into the slotNames of the ExpressionSet
+  # class, so just use the `@` accessor directly
   out <- new("FacileExpressionSet",
-             experimentData = Biobase::experimentData(x),
-             assayData = Biobase::assayData(x),
-             phenoData = Biobase::phenoData(x),
-             featureData = Biobase::featureData(x),
-             anotation = Biobase::annotation(x),
-             protocolData = Biobase::protocolData(x))
+             experimentData = x@experimentData,
+             assayData = x@assayData,
+             phenoData = x@phenoData,
+             featureData = x@featureData,
+             anotation = x@annotation,
+             protocolData = x@protocolData)
 
   sinfo <- .init_pdata(x, ...)
   colnames(out) <- sinfo[["sample_id"]]

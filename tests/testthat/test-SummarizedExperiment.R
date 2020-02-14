@@ -1,23 +1,25 @@
-context("DGEList")
+context("SummarizedExperiment")
 
-library(edgeR)
-
-if (!exists("dgelist")) {
-  dlist <- local({
+if (!exists("se")) {
+  ns <- loadNamespace("SummarizedExperiment")
+  se <- local({
     efds <- FacileData::exampleFacileDataSet()
     y <- FacileData::as.DGEList(efds)
+
     y$samples$samid <- NULL
     colnames(y) <- y$samples$sample_id
-    y
+
+    SummarizedExperiment::SummarizedExperiment(
+      y$counts, rowData = y$genes, colData = y$samples)
   })
 }
 
-test_that("facilitate.DGEList works", {
-  f <- facilitate(dlist)
-  expect_s4_class(f, "FacileDGEList")
+test_that("facilitate.ExpressionSet works", {
+  f <- facilitate(se)
+  expect_s4_class(f, "FacileSummarizedExperiment")
   expect_s4_class(f, "FacileBiocDataStore")
   expect_s4_class(f, "FacileDataStore")
-  expect_s4_class(f, "DGEList")
+  expect_s4_class(f, "SummarizedExperiment")
 
   covs <- samples(f) %>%
     with_sample_covariates("sex") %>%
@@ -26,6 +28,4 @@ test_that("facilitate.DGEList works", {
   expect_equal(nrow(covs), unname(ncol(f)))
   checkmate::expect_factor(covs[["sex"]], c("m", "f"))
   checkmate::expect_factor(covs[["sample_type"]], c("normal", "tumor"))
-
-  expect_s4_class(fds(covs), "FacileDGEList")
 })
