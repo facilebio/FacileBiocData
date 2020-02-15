@@ -8,18 +8,23 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 #' @noRd
 #' @rdname facilitate
 #' @method facilitate DGEList
-facilitate.DGEList <- function(x, ...) {
+facilitate.DGEList <- function(x, assay_type = "rnaseq", feature_type = "infer",
+                               ...) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
+  colnames(x) <- sinfo[["sample_id"]]
+
   counts <- x[["counts"]]
   colnames(counts) <- rownames(sinfo)
-  out <- new("FacileDGEList",
-             list(counts = counts,
-                  samples = sinfo,
-                  genes = x[["genes"]]))
-  # eav <- as.EAVtable(sinfo)
-  # out@facile[["eav"]] <- eav
-  # out@facile[["covariate_def"]] <- attr(eav, "covariate_def")
+
+  # Currently we only support one assay
+  finfo <- .init_fdata(x, ...)
+  rownames(counts) <- finfo[["feature_id"]]
+
+  x$counts <- counts
+  x$samples <- sinfo
+  x$genes <- finfo
+  out <- new("FacileDGEList", lapply(x, identity))
   out
 }
 

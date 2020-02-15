@@ -9,7 +9,8 @@ setClass("FacileSummarizedExperiment",
 #' @noRd
 #' @rdname facilitate
 #' @method facilitate SummarizedExperiment
-facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
+facilitate.SummarizedExperiment <- function(x, assay_type = "infer",
+                                            feature_type = "infer", ...) {
   reqpkg("SummarizedExperiment")
   if (is.null(SummarizedExperiment::assayNames(x))) {
     anames. <- paste0("adata", seq(SummarizedExperiment::assays(x)) - 1L)
@@ -21,7 +22,7 @@ facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
   colnames(x) <- sinfo[["sample_id"]]
   sinfo <- S4Vectors::DataFrame(sinfo)
 
-  finfo <- .init_fdata(x, assay_name = assay_name, ...)
+  finfo <- .init_fdata(x, ...)
   rownames(x) <- finfo[["feature_id"]]
   finfo <- S4Vectors::DataFrame(finfo)
 
@@ -35,6 +36,10 @@ facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
              NAMES = x@NAMES,
              elementMetadata = x@elementMetadata,
              metadata = x@metadata)
+
+  out@facile[["assay_info"]] <- .init_assay_info(out, assay_type = assay_type,
+                                                 feature_type = feature_type,
+                                                 ...)
   out
 }
 

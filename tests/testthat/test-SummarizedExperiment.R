@@ -9,6 +9,7 @@ test_that("facilitate.ExpressionSet works", {
   expect_s4_class(f, "FacileBiocDataStore")
   expect_s4_class(f, "FacileDataStore")
   expect_s4_class(f, "SummarizedExperiment")
+  checkmate::expect_list(ifacile(f))
 
   covs <- samples(f) %>%
     with_sample_covariates("sex") %>%

@@ -10,14 +10,15 @@ setClass("FacileDESeqDataSet",
 #' @noRd
 #' @rdname facilitate
 #' @method facilitate SummarizedExperiment
-facilitate.DESeqDataSet <- function(x, assay_name = NULL, ...) {
+facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
+                                    feature_type = "infer", ...) {
   reqpkg("DESeq2")
 
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- sinfo[["sample_id"]]
   sinfo <- S4Vectors::DataFrame(sinfo)
 
-  finfo <- .init_fdata(x, assay_name = assay_name, ...)
+  finfo <- .init_fdata(x, ...)
   # because of dds@rowRanges, we can't have GRanges-like names in here
   axe.cols <- c("seqnames", "ranges", "strand", "start", "end", "width",
                 "element")
@@ -30,7 +31,6 @@ facilitate.DESeqDataSet <- function(x, assay_name = NULL, ...) {
 
   x <- SummarizedExperiment::`colData<-`(x, value = sinfo)
   x <- SummarizedExperiment::`rowData<-`(x, value = finfo)
-
 
   out <- new("FacileDESeqDataSet",
              design = x@design,

@@ -8,17 +8,26 @@ setClass("FacileEList", contains = c("FacileBiocDataStore", "EList"))
 #' @export
 #' @noRd
 #' @method facilitate DGEList
-facilitate.EList <- function(x, ...) {
+facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
+                             ...) {
   reqpkg("limma")
-  stop("facilitate.EList not yet implemented")
-  x$facile <- list(
-    extra = NULL,
-    stuff = NULL,
-    here = NULL)
 
-  class(x) <- c("FacileEList", "FacileBiocDataStore", "FacileBiocDataStore",
-                class(x))
-  x
+  sinfo <- .init_pdata(x, ...)
+  colnames(x) <- sinfo[["sample_id"]]
+
+  E <- x[["E"]]
+  colnames(E) <- rownames(sinfo)
+
+  # Currently we only support one assay
+  finfo <- .init_fdata(x, ...)
+  rownames(E) <- finfo[["feature_id"]]
+
+  x$E <- E
+  x$targets <- sinfo
+  x$genes <- finfo
+
+  out <- new("FacileEList", lapply(x, identity))
+  out
 }
 
 # bioc data retrieval methods --------------------------------------------------
@@ -39,7 +48,7 @@ pdata.EList <- function(x, ...) {
 adata.EList <- function(x, name = default_assay(x), ...) {
   reqpkg("limma")
   out <- x[[name]]
-  assert_matrix(out, "numeric", nrows = nrow(fdata(x)), ncols = ncol(pdata(x)))
+  assert_matrix(out, "numeric", nrows = nrow(x), ncols = ncol(x))
   out
 }
 
@@ -49,5 +58,5 @@ adata.EList <- function(x, name = default_assay(x), ...) {
 #' @export
 assay_names.EList <- function(x, ...) {
   reqpkg("limma")
-  anames.DGEList(x, ..., .required = "E")
+  assay_names.DGEList(x, ..., .required = "E")
 }

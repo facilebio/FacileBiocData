@@ -12,22 +12,13 @@ setClass("FacileExpressionSet",
 #' @noRd
 #' @rdname facilitate
 #' @method facilitate ExpressionSet
-facilitate.ExpressionSet <- function(x, assay_name = NULL, ...) {
+facilitate.ExpressionSet <- function(x, assay_type = "infer",
+                                     feature_type = "infer", ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {
     stop("Biobase package required, please install it.",
          call. = FALSE)
   }
 
-  # out <- new("FacileExpressionSet",
-  #            experimentData = Biobase::experimentData(x),
-  #            assayData = Biobase::assayData(x),
-  #            phenoData = Biobase::phenoData(x),
-  #            featureData = Biobase::featureData(x),
-  #            anotation = Biobase::annotation(x),
-  #            protocolData = Biobase::protocolData(x))
-  #
-  # We are already digging directly into the slotNames of the ExpressionSet
-  # class, so just use the `@` accessor directly
   out <- new("FacileExpressionSet",
              experimentData = x@experimentData,
              assayData = x@assayData,
@@ -41,7 +32,7 @@ facilitate.ExpressionSet <- function(x, assay_name = NULL, ...) {
   out <- Biobase::`pData<-`(out, sinfo)
 
   # Currently we only support one assay
-  finfo <- .init_fdata(x, assay_name = assay_name, ...)
+  finfo <- .init_fdata(x, ...)
   rownames(out) <- finfo[["feature_id"]]
   out <- Biobase::`fData<-`(out, finfo)
   # eav <- as.EAVtable(sinfo)
@@ -76,7 +67,7 @@ adata.ExpressionSet <- function(x, name = default_assay(x), ...) {
   if (is.null(name)) {
     name <- Biobase::assayDataElementNames(eset)[1L]
   }
-  Biobase::assayDataElementy(x, name)
+  Biobase::assayDataElement(x, name)
 }
 
 # facile -----------------------------------------------------------------------
