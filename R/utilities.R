@@ -34,7 +34,7 @@
                         feature_type = "unk_ftype", ...) {
   stopifnot(is.data.frame(finfo))
 
-  assay_names <- anames(x)
+  assay_names <- assay_names(x)
   if (is.null(assay_name)) {
     assay_name <- assay_names[1L]
   }
@@ -110,4 +110,11 @@
     out <- as_facile_frame(out, x, .valid_sample_check = FALSE)
   }
   out
+}
+
+reqpkg <- function(pkg, quietly = TRUE, ...) {
+  assert_string(pkg)
+  if (!requireNamespace(pkg, ..., quietly = quietly)) {
+    stop("'", pkg, "' package required, please install it.", call. = FALSE)
+  }
 }

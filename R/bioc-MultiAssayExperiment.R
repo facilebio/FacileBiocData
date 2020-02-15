@@ -13,34 +13,34 @@ setClass("FacileMultiAssayExperiment",
 #' @rdname facilitate
 #' @method facilitate MultiAssayExperiment
 facilitate.MultiAssayExperiment <- function(x, ...) {
-
+  reqpkg("MultiAssayExperiment")
 }
 
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
 fdata.MultiAssayExperiment <- function(x, ...) {
-  if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
-    stop("MultiAssayExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("MultiAssayExperiment")
   stop("MultiAssayExpermient support not yet implemented")
 }
 
 #' @noRd
 pdata.MultiAssayExperiment <- function(x, ...) {
-  if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
-    stop("MultiAssayExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("MultiAssayExperiment")
   stop("MultiAssayExpermient support not yet implemented")
 }
 
 #' @noRd
-adata.MultiAssayExperiment <- function(x, name = NULL, ...) {
-  if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
-    stop("MultiAssayExperiment package required, please install it.",
-         call. = FALSE)
-  }
+adata.MultiAssayExperiment <- function(x, name = default_assay(x), ...) {
+  reqpkg("MultiAssayExperiment")
+  stop("MultiAssayExpermient support not yet implemented")
+}
+
+# facile -----------------------------------------------------------------------
+
+#' @noRd
+#' @export
+assay_names.MultiAssayExperiment <- function(x, ...) {
+  reqpkg("MultiAssayExperiment")
   stop("MultiAssayExpermient support not yet implemented")
 }

@@ -1,22 +1,7 @@
 context("ExpressionSet")
 
-if (!exists("eset")) {
-  bb <- loadNamespace("Biobase")
-  eset <- local({
-    efds <- FacileData::exampleFacileDataSet()
-    y <- FacileData::as.DGEList(efds)
-
-    y$samples$samid <- NULL
-    colnames(y) <- y$samples$sample_id
-
-    eset <- bb$ExpressionSet(y$counts)
-    # pData(eset) <- y$samples
-    # fData(eset) <- y$genes
-    eset <- bb$`pData<-`(eset, y$samples)
-    eset <- bb$`fData<-`(eset, y$genes)
-    eset
-  })
-}
+if (!exists("Y")) Y <- NULL
+if (!exists("eset")) eset <- example_bioc_data("ExpressionSet", y = Y)
 
 test_that("facilitate.ExpressionSet works", {
   f <- facilitate(eset)

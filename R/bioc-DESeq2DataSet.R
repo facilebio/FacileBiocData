@@ -11,10 +11,7 @@ setClass("FacileDESeqDataSet",
 #' @rdname facilitate
 #' @method facilitate SummarizedExperiment
 facilitate.DESeqDataSet <- function(x, assay_name = NULL, ...) {
-  if (!requireNamespace("DESeq2", quietly = TRUE)) {
-    stop("DESeq2 package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("DESeq2")
 
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- sinfo[["sample_id"]]
@@ -44,6 +41,7 @@ facilitate.DESeqDataSet <- function(x, assay_name = NULL, ...) {
              NAMES = x@NAMES,
              elementMetadata = x@elementMetadata,
              metadata = x@metadata)
+  out@facile[["default_assay"]] <- "counts"
   out
 }
 
@@ -51,39 +49,27 @@ facilitate.DESeqDataSet <- function(x, assay_name = NULL, ...) {
 
 #' @noRd
 fdata.DESeqDataSet <- function(x, ...) {
-  if (!requireNamespace("DESeq2", quietly = TRUE)) {
-    stop("DESeq2 package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("DESeq2")
   as.data.frame(SummarizedExperiment::rowData(x))
 }
 
 #' @noRd
 pdata.DESeqDataSet <- function(x, ...) {
-  if (!requireNamespace("DESeq2", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("DESeq2")
   as.data.frame(SummarizedExperiment::colData(x))
 }
 
 #' @noRd
-adata.DESeqDataSet <- function(x, name = NULL, ...) {
-  if (!requireNamespace("DESeq2", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
-  if (is.null(name)) {
-    name <- SummarizedExperiment::assayNames(x)[1L]
-  }
+adata.DESeqDataSet <- function(x, name = default_assay(x), ...) {
+  reqpkg("DESeq2")
   SummarizedExperiment::assay(x, name)
 }
 
+# facile -----------------------------------------------------------------------
+
 #' @noRd
-anames.DESeqDataSet <- function(x, ...) {
-  if (!requireNamespace("DESeq2", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
+#' @export
+assay_names.DESeqDataSet <- function(x, ...) {
+  reqpkg("DESeq2")
   SummarizedExperiment::assayNames(x)
 }

@@ -9,6 +9,7 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 #' @rdname facilitate
 #' @method facilitate DGEList
 facilitate.DGEList <- function(x, ...) {
+  reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
   counts <- x[["counts"]]
   colnames(counts) <- rownames(sinfo)
@@ -26,16 +27,19 @@ facilitate.DGEList <- function(x, ...) {
 
 #' @noRd
 fdata.DGEList <- function(x, ...) {
+  reqpkg("edgeR")
   x[["genes"]]
 }
 
 #' @noRd
 pdata.DGEList <- function(x, ...) {
+  reqpkg("edgeR")
   x[["samples"]]
 }
 
 #' @noRd
-adata.DGEList <- function(x, name = NULL, ...) {
+adata.DGEList <- function(x, name = default_assay(x), ...) {
+  reqpkg("edgeR")
   if (is.null(name)) {
     name <- "counts"
   }
@@ -44,8 +48,12 @@ adata.DGEList <- function(x, name = NULL, ...) {
   out
 }
 
+# facile -----------------------------------------------------------------------
+
 #' @noRd
-anames.DGEList <- function(x, ..., .required = "counts") {
+#' @export
+assay_names.DGEList <- function(x, ..., .required = "counts") {
+  reqpkg("edgeR")
   dnames <- names(x)
   if (!.required %in% dnames) {
     stop("`counts` not found in DGEList, you've got problems")

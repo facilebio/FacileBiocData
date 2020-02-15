@@ -10,17 +10,7 @@ setClass("FacileSummarizedExperiment",
 #' @rdname facilitate
 #' @method facilitate SummarizedExperiment
 facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
-  # Implementation inspired by SingleCellExperiment:::.rse_to_sce
-  # old <- S4Vectors:::disableValidity()
-  # if (!isTRUE(old)) {
-  #   S4Vectors:::disableValidity(TRUE)
-  #   on.exit(S4Vectors:::disableValidity(old))
-  # }
-
+  reqpkg("SummarizedExperiment")
   if (is.null(SummarizedExperiment::assayNames(x))) {
     anames. <- paste0("adata", seq(SummarizedExperiment::assays(x)) - 1L)
     anames. <- sub("a0$", "a", anames.)
@@ -52,39 +42,30 @@ facilitate.SummarizedExperiment <- function(x, assay_name = NULL, ...) {
 
 #' @noRd
 fdata.SummarizedExperiment <- function(x, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("SummarizedExperiment")
   as.data.frame(SummarizedExperiment::rowData(x))
 }
 
 #' @noRd
 pdata.SummarizedExperiment <- function(x, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("SummarizedExperiment")
   as.data.frame(SummarizedExperiment::colData(x))
 }
 
 #' @noRd
-adata.SummarizedExperiment <- function(x, name = NULL, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
+adata.SummarizedExperiment <- function(x, name = default_assay(x), ...) {
+  reqpkg("SummarizedExperiment")
   if (is.null(name)) {
     name <- SummarizedExperiment::assayNames(x)[1L]
   }
   SummarizedExperiment::assay(x, name)
 }
 
+# facile -----------------------------------------------------------------------
+
 #' @noRd
-anames.SummarizedExperiment <- function(x, ...) {
-  if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-    stop("SummarizedExperiment package required, please install it.",
-         call. = FALSE)
-  }
+#' @export
+assay_names.SummarizedExperiment <- function(x, ...) {
+  reqpkg("SummarizedExperiment")
   SummarizedExperiment::assayNames(x)
 }

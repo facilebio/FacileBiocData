@@ -1,16 +1,7 @@
 context("DGEList")
 
-library(edgeR)
-
-if (!exists("dgelist")) {
-  dlist <- local({
-    efds <- FacileData::exampleFacileDataSet()
-    y <- FacileData::as.DGEList(efds)
-    y$samples$samid <- NULL
-    colnames(y) <- y$samples$sample_id
-    y
-  })
-}
+if (!exists("Y")) Y <- NULL
+if (!exists("dlist")) dlist <- example_bioc_data("DGEList", y = Y)
 
 test_that("facilitate.DGEList works", {
   f <- facilitate(dlist)

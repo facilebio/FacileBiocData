@@ -22,6 +22,12 @@ ifacile <- function(x, ...) {
   UseMethod("ifacile", x)
 }
 
+#'@noRd
+ifacile.FacileBiocDataStore <- function(x, ...) {
+  x@facile
+}
+
+#
 # Data retrieval methods for bioconductor objects ------------------------------
 #
 # These functions are intentionally not exported

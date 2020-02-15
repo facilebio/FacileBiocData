@@ -1,19 +1,7 @@
 context("SummarizedExperiment")
 
-if (!exists("dds")) {
-  ns <- loadNamespace("DESeq2")
-  dds <- local({
-    efds <- FacileData::exampleFacileDataSet()
-    y <- FacileData::as.DGEList(efds)
-
-    y$samples$samid <- NULL
-    colnames(y) <- y$samples$sample_id
-
-    se <- SummarizedExperiment::SummarizedExperiment(
-      y$counts, rowData = y$genes, colData = y$samples)
-    ns$DESeqDataSet(se, design = ~ sample_type)
-  })
-}
+if (!exists("Y")) Y <- NULL
+if (!exists("dds")) dds <- example_bioc_data("DESeqDataSet", y = Y)
 
 test_that("facilitate.ExpressionSet works", {
   f <- facilitate(dds)

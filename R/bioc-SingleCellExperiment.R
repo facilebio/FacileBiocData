@@ -15,34 +15,36 @@ setClass("FacileSingleCellExperiment",
 #' @rdname facilitate
 #' @method facilitate SingleCellExperiment
 facilitate.SingleCellExperiment <- function(x, ...) {
-
+  reqpkg("SingleCellExperiment")
+  stop("SingleCellExperiment support not yet implemented")
 }
 
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
 fdata.SingleCellExperiment <- function(x, ...) {
-  if (!requireNamespace("SingleCellExperiment", quietly = TRUE)) {
-    stop("SingleCellExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("SingleCellExperiment")
   as.data.frame(SingleCellExperiment::rowData(x))
 }
 
 #' @noRd
 pdata.SingleCellExperiment <- function(x, ...) {
-  if (!requireNamespace("SingleCellExperiment", quietly = TRUE)) {
-    stop("SingleCellExperiment package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("SingleCellExperiment")
   as.data.frame(SingleCellExperiment::colData(x))
 }
 
 #' @noRd
-adata.SingleCellExperiment <- function(x, name = NULL, ...) {
-  if (!requireNamespace("SingleCellExperiment", quietly = TRUE)) {
-    stop("SingleCellExperiment package required, please install it.",
-         call. = FALSE)
-  }
+adata.SingleCellExperiment <- function(x, name = default_assay(x), ...) {
+  reqpkg("SingleCellExperiment")
   SingleCellExperiment::assay(x, name)
 }
+
+# facile -----------------------------------------------------------------------
+
+#' @noRd
+#' @export
+assay_names.SingleCellExperiment <- function(x, ...) {
+  reqpkg("SingleCellExperiment")
+  stop("SingleCellExperiment support not yet implemented")
+}
+

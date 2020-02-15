@@ -66,30 +66,28 @@ fdata.ExpressionSet <- function(x, ...) {
 
 #' @noRd
 pdata.ExpressionSet <- function(x, ...) {
-  if (!requireNamespace("Biobase", quietly = TRUE)) {
-    stop("Biobase package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("Biobase")
   Biobase::pData(x)
 }
 
 #' @noRd
-adata.ExpressionSet <- function(x, name = "exprs", ...) {
-  if (!requireNamespace("Biobase", quietly = TRUE)) {
-    stop("Biobase package required, please install it.",
-         call. = FALSE)
-  }
+adata.ExpressionSet <- function(x, name = default_assay(x), ...) {
+  reqpkg("Biobase")
   if (is.null(name)) {
     name <- Biobase::assayDataElementNames(eset)[1L]
   }
   Biobase::assayDataElementy(x, name)
 }
 
+# facile -----------------------------------------------------------------------
+
 #' @noRd
-anames.ExpressionSet <- function(x, ...) {
-  if (!requireNamespace("Biobase", quietly = TRUE)) {
-    stop("Biobase package required, please install it.",
-         call. = FALSE)
+#' @export
+assay_names.ExpressionSet <- function(x, ...) {
+  reqpkg("Biobase")
+  out <- Biobase::assayDataElementNames(x)
+  if ("exprs" %in% out) {
+    out <- c("exprs", setdiff(out, "exprs"))
   }
-  Biobase::assayDataElementNames(x)
+  out
 }

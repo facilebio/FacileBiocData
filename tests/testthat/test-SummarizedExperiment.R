@@ -1,18 +1,7 @@
 context("SummarizedExperiment")
 
-if (!exists("se")) {
-  ns <- loadNamespace("SummarizedExperiment")
-  se <- local({
-    efds <- FacileData::exampleFacileDataSet()
-    y <- FacileData::as.DGEList(efds)
-
-    y$samples$samid <- NULL
-    colnames(y) <- y$samples$sample_id
-
-    SummarizedExperiment::SummarizedExperiment(
-      y$counts, rowData = y$genes, colData = y$samples)
-  })
-}
+if (!exists("Y")) Y <- NULL
+if (!exists("se")) se <- example_bioc_data("SummarizedExperiment", y = Y)
 
 test_that("facilitate.ExpressionSet works", {
   f <- facilitate(se)
