@@ -19,7 +19,9 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
   sinfo <- S4Vectors::DataFrame(sinfo)
 
   finfo <- .init_fdata(x, ...)
-  # because of dds@rowRanges, we can't have GRanges-like names in here
+  # This was first developed during bioc3.6, and at the time a DESeqDataSet had
+  # a GRanges-like @rowRanges slot, which prohibits granges-like colnames in our
+  # feature information.
   axe.cols <- c("seqnames", "ranges", "strand", "start", "end", "width",
                 "element")
   axe.cols <- intersect(colnames(finfo), axe.cols)
@@ -42,6 +44,7 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
              elementMetadata = x@elementMetadata,
              metadata = x@metadata)
   out@facile[["default_assay"]] <- "counts"
+  out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
 

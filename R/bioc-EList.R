@@ -27,6 +27,7 @@ facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
   x$genes <- finfo
 
   out <- new("FacileEList", lapply(x, identity))
+  out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
 

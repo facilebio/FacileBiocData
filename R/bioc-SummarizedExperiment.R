@@ -37,9 +37,7 @@ facilitate.SummarizedExperiment <- function(x, assay_type = "infer",
              elementMetadata = x@elementMetadata,
              metadata = x@metadata)
 
-  out@facile[["assay_info"]] <- .init_assay_info(out, assay_type = assay_type,
-                                                 feature_type = feature_type,
-                                                 ...)
+  out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
 

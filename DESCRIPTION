@@ -12,12 +12,13 @@ Description: Enables the use of standard Bioconductor assay containers, like
 URL: https://github.com/facilebio/FacileBiocData
 BugReports: https://github.com/facilebio/FacileBiocData/issues
 Depends:
-    FacileData
+    FacileData (>= 0.10.10)
 Imports:
     broom,
     checkmate,
     FacileData,
     dplyr,
+    Matrix,
     methods,
     reshape2,
     tidyr
@@ -48,7 +49,9 @@ Collate:
     'bioc-SingleCellExperiment.R'
     'bioc-SummarizedExperiment.R'
     'example_bioc_data.R'
+    'facile-init.R'
     'facileapi-assay.R'
+    'facileapi-features.R'
     'facileapi-sample-covariates.R'
     'facileapi-samples.R'
     'package.R'

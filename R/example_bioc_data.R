@@ -35,6 +35,13 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
     y[["samples"]][["samid"]] <- NULL
     colnames(y) <- y$samples$sample_id
     y[["samples"]][["group"]] <- y$samples$sample_type
+
+    # remove some columns that came from the faciledataset
+    axe.cols <- c("feature_type", "seqnames", "start", "end", "strand",
+                  "effective_length", "source", "hdf5_index", "assay_type",
+                  "assay")
+    keep.cols <- !colnames(y[["genes"]]) %in% axe.cols
+    y[["genes"]] <- y[["genes"]][, keep.cols, drop = FALSE]
   }
 
   fn.name <- paste0(".to_", class)

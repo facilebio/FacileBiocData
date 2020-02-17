@@ -38,6 +38,7 @@ facilitate.ExpressionSet <- function(x, assay_type = "infer",
   # eav <- as.EAVtable(sinfo)
   # out@facile[["eav"]] <- eav
   # out@facile[["covariate_def"]] <- attr(eav, "covariate_def")
+  out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
 

@@ -3,7 +3,10 @@ context("Facile API over facilitated containers")
 
 .classes <- c("DESeqDataSet", "DGEList", "EList", "ExpressionSet",
               "SummarizedExperiment")
-if (!exists("Y")) Y <- example_bioc_data("DGEList")
+.rnaseq.class <- setdiff(.classes, "EList")
+
+if (!exists("FDS")) FDS <- FacileData::exampleFacileDataSet()
+if (!exists("Y")) Y <- example_bioc_data("DGEList", efds = FDS)
 
 BIOC <- sapply(.classes, example_bioc_data, Y = Y, simplify = FALSE)
 
@@ -37,7 +40,7 @@ test_that("assay_info returns legit metadata for all containers", {
   for (bclass in names(BIOC)) {
     obj <- BIOC[[bclass]]
     f <- facilitate(obj)
-    ainfo <- expect_warning(assay_info(f), "improve")
+    ainfo <- assay_info(f)
     expect_s3_class(ainfo, "data.frame")
 
     # check each column is of expected data type
@@ -51,5 +54,54 @@ test_that("assay_info returns legit metadata for all containers", {
     expect_equal(ainfo[["feature_type"]][1L], "entrez", info = blcass)
     expect_equal(ainfo[["nfeatures"]][1L], unname(nrow(obj)), info = bclass)
     checkmate::expect_set_equal(ainfo[["assay"]], assay_names(f), info = bclass)
+  }
+})
+
+test_that("(fetch|with)_assay_data retrieval works across containers", {
+  # This test is restricted to rnaseq containers for now
+  features.all <- features(FDS)
+  features.some <- sample_n(features.all, 5)
+  samples.all <- samples(FDS) %>% collect()
+  samples.some <- sample_n(samples.all, 10)
+
+  adat.all.fds <- fetch_assay_data(FDS, features.some, samples.all)
+  adat.some.fds <- fetch_assay_data(FDS, features.some, samples.some)
+
+  # Exercising the `with_` call here simultaneously tests the with_
+  # decoration funcitonality as well as the normalization procedure, since
+  # the default for `with_assay_data` is `normalized = TRUE`
+  with.adat.fds <- samples.some %>%
+    with_assay_data(features.some, assay_name = "rnaseq") %>%
+    arrange(sample_id)
+
+  for (bclass in .rnaseq.class) {
+    obj <- BIOC[[bclass]]
+    f <- facilitate(obj)
+    bsamples.all <- samples(f)
+    bsamples.some <- semi_join(bsamples.all, samples.some,
+                               by = c("dataset", "sample_id"))
+
+    adat.all.bioc <- fetch_assay_data(f, features.some, bsamples.all)
+    adat.some.bioc <- fetch_assay_data(f, features.some, bsamples.some)
+
+    # The names of the assays are different among containers, so we explicitly
+    # do not test those
+    expect_equal(select(adat.all.bioc, -assay), select(adat.all.fds, -assay),
+                 info = bclass)
+    expect_equal(select(adat.some.bioc, -assay), select(adat.some.fds, -assay),
+                 info = bclass)
+
+    # The order of the samples returned isn't guaranteed, so we force them
+    # to be lexicographical order just so that we check the values are the
+    # same
+    with.adat.bioc <- bsamples.some %>%
+      with_assay_data(features.some, assay_name = default_assay(f)) %>%
+      arrange(sample_id)
+
+    expect_equal(with.adat.bioc, with.adat.fds)
+
+    # Let's just double-check we have been checking results from the right
+    # bioconductor container
+    expect_equal(class(fds(with.adat.bioc)), class(f), info = bclass)
   }
 })
