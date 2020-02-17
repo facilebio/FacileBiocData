@@ -76,37 +76,35 @@
 badges: start
 checkout https://lazappi.github.io/clustree/ package for some badge-inspiration
 
-[![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Lifecycle: Experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build status](https://travis-ci.org/facilebio/FacileBiocData.svg?branch=master)](https://travis-ci.org/facilebio/FacileBiocData)
 [![Codecov test coverage](https://codecov.io/gh/facilebio/FacileBioc/branch/master/graph/badge.svg)](https://codecov.io/gh/facilebio/FacileBiocData?branch=master)
 
 badges: end -->
-<p><strong>NOTE</strong>: This package is incomplete. An alpha version should be available for use in early March, 2020.</p>
-<p>The <code>FacileBiocData</code> package will define the FacileData API over Bioconductor-standard assay containers, like a <code>SummarizedExperiment</code>, <code>MultiAssayExperiment</code>, <code>DGEList</code>, etc.</p>
-<p>This will enable them to be used as “first-class” data-providers within the facile ecosystem, so that they can take advantage of all the goodness we have on offer here.</p>
+
+<p><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: Experimental"></a></p>
+<p><strong>NOTE</strong>: This package is being actively developed and not yet feature complete.</p>
+<p>The <code>FacileBiocData</code> package enables the use of Bioconductor-standard data containers, like a <code>SummarizedExperiment</code>, <code>DGEList</code>, <code>DESeqDataSet</code>, etc. as “first-class” data-providers within the facile ecosystem.</p>
 <div id="example-usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-usage" class="anchor"></a>Example Usage</h2>
-<p>The current plan is to implement <code><a href="https://rdrr.io/pkg/FacileData/man/facilitate.html">FacileData::facilitate()</a></code> functions over the the assay containers (eg. <code>facilitate.DGEList()</code>) so that they return a “facile-wrapped” version of the data container.</p>
+<p>The user simply needs to call the <code>facilitate</code> function on their data container in order to enable its use in the facile ecosystem.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(FacileBiocData)</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a>efds &lt;-<span class="st"> </span>FacileData<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/FacileData/man/exampleFacileDataSet.html">exampleFacileDataSet</a></span>()</span>
-<span id="cb1-4"><a href="#cb1-4"></a>y &lt;-<span class="st"> </span>FacileData<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/FacileData/man/as.BiocContainer.html">as.DGEList</a></span>(efds)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>yf &lt;-<span class="st"> </span><span class="kw">facilitate</span>(y)</span></code></pre></div>
-<p>Once we’ve decorated the base Bioconductor assay container, we can use it within the facile.bio ecosystem. For instance, we can now perform a differential gene expression analysis using the `FacileAnalysis package.</p>
+<span id="cb1-2"><a href="#cb1-2"></a>y &lt;-<span class="st"> </span><span class="kw"><a href="reference/example_bioc_data.html">example_bioc_data</a></span>(<span class="st">"DGEList"</span>) <span class="co"># Materialize an edgeR::DGEList</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>yf &lt;-<span class="st"> </span><span class="kw">facilitate</span>(y)               <span class="co"># wrap it for facile exploration</span></span></code></pre></div>
+<p>We can now use <code>yf</code> within the facile framework, ie. we can analyze it using the <a href="https://facilebio.github.io/FacileAnalysis/">FacileAnalysis</a> package:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(FacileAnalysis)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>dge.facile &lt;-<span class="st"> </span>yf <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/FacileAnalysis/man/flm_def.html">flm_def</a></span>(<span class="dt">group =</span> <span class="st">"sample_type"</span>, <span class="dt">numer =</span> <span class="st">"tumor"</span>, <span class="dt">denom =</span> <span class="st">"normal"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/FacileAnalysis/man/fdge.html">fdge</a></span>(<span class="dt">method =</span> <span class="st">"edgeR-qlf"</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/pkg/FacileAnalysis/man/FacileAnalysisResultViz.html">shine</a></span>(dge.facile)</span></code></pre></div>
-<p>We should still be able to use the <code>FacileDGEList</code> object (<code>yf</code>) as a normal <code>DGEList</code>, so that the “normal” edgeR moves would work as well.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>genes &lt;-<span class="st"> </span><span class="kw">features</span>(dge.facile)<span class="op">$</span>feature_id <span class="co"># restrict to genes used in fdge()</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>yf &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/calcNormFactors.html">calcNormFactors</a></span>(yf[genes,,<span class="dt">keep.lib.sizes =</span> <span class="ot">FALSE</span>])</span>
-<span id="cb4-3"><a href="#cb4-3"></a>yf &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/estimateDisp.html">estimateDisp</a></span>(yf, <span class="kw"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(<span class="op">~</span><span class="st"> </span>sample_type, <span class="dt">data =</span> yf<span class="op">$</span>samples))</span>
-<span id="cb4-4"><a href="#cb4-4"></a>fit &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/glmQLFTest.html">glmQLFit</a></span>(yf, yf<span class="op">$</span>design, <span class="dt">robust =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb4-5"><a href="#cb4-5"></a>results &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/glmQLFTest.html">glmQLFTest</a></span>(fit, <span class="dt">coef =</span> <span class="st">"sample_typetumor"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6"></a>dge.standard &lt;-<span class="st"> </span>edgeR<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/topTags.html">topTags</a></span>(results, <span class="dt">n =</span> <span class="ot">Inf</span>, <span class="dt">sort.by =</span> <span class="st">"none"</span>)</span></code></pre></div>
+<p>The “facilitated” DGEList can still be used as a normal DGEList, so that you never have to leave the standard bioconductor ecosystem:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(edgeR)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>genes &lt;-<span class="st"> </span><span class="kw">features</span>(dge.facile)<span class="op">$</span>feature_id <span class="co"># restrict to genes used in fdge()</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>yf &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/calcNormFactors.html">calcNormFactors</a></span>(yf[genes,,<span class="dt">keep.lib.sizes =</span> <span class="ot">FALSE</span>])</span>
+<span id="cb4-4"><a href="#cb4-4"></a>yf &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/estimateDisp.html">estimateDisp</a></span>(yf, <span class="kw"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span>(<span class="op">~</span><span class="st"> </span>sample_type, <span class="dt">data =</span> yf<span class="op">$</span>samples))</span>
+<span id="cb4-5"><a href="#cb4-5"></a>fit &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/glmQLFTest.html">glmQLFit</a></span>(yf, yf<span class="op">$</span>design, <span class="dt">robust =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>results &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/glmQLFTest.html">glmQLFTest</a></span>(fit, <span class="dt">coef =</span> <span class="st">"sample_typetumor"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>dge.standard &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/edgeR/man/topTags.html">topTags</a></span>(results, <span class="dt">n =</span> <span class="ot">Inf</span>, <span class="dt">sort.by =</span> <span class="st">"none"</span>)</span></code></pre></div>
 <p>And these two results are equivalent</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/FacileAnalysis/man/reexports.html">tidy</a></span>(dge.facile)<span class="op">$</span>logFC, dge.standard<span class="op">$</span>logFC)</span></code></pre></div>
 </div>
@@ -137,7 +135,13 @@ badges: end -->
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 

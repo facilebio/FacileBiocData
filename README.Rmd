@@ -61,9 +61,10 @@ dge.facile <- yf %>%
 shine(dge.facile)
 ```
 
-and we can still use it as a normal DGEList, as well:
+The "facilitated" DGEList can still be used as a normal DGEList, so that you
+never have to leave the standard bioconductor ecosystem:
 
-```{r}
+```{r, eval=FALSE}
 library(edgeR)
 genes <- features(dge.facile)$feature_id # restrict to genes used in fdge()
 yf <- calcNormFactors(yf[genes,,keep.lib.sizes = FALSE])
