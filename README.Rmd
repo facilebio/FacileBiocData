@@ -27,7 +27,6 @@ checkout https://lazappi.github.io/clustree/ package for some badge-inspiration
 badges: end -->
 
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-
 [![Lifecycle: Experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 **NOTE**: This package is being actively developed and not yet feature complete.
