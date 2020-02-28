@@ -76,6 +76,7 @@ fetch_custom_sample_covariates.FacileBiocDataStore <- function(
   .empty_sample_covariates(x)
 }
 
+#' @noRd
 .empty_sample_covariates <- function(x = NULL) {
   out <- tibble(
     dataset = character(),

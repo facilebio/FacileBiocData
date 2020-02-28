@@ -1,6 +1,6 @@
 #' Gets the FacileDataStore to play with S4 mojo(?)
+#'
 #' @noRd
-#' @export
 setOldClass("FacileDataStore")
 
 
