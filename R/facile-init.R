@@ -16,7 +16,7 @@
     !any(duplicated(sinfo[["sample_id"]])),
     is.character(sinfo[["dataset"]]))
 
-  rownames(sinfo) <- sinfo[["sample_id"]]
+  rownames(sinfo) <- paste(sinfo[["dataset"]], sinfo[["sample_id"]], sep = "__")
   sinfo
 }
 
@@ -114,6 +114,9 @@
 #'
 #' This was first developed to get the libsize and normfactor columns onto a
 #' samples frame for fetch_assay_data(..., normalized = TRUE) to work.
+#'
+#' **NOTE**: currently any rnaseq assay will return normalized value using
+#' edgeR::cpm mojo, even a DESeqDataSet
 #'
 #' Each assay will be given its own dataset,sample table where assay-level
 #' metadata can be stored.

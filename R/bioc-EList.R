@@ -12,7 +12,7 @@ facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
   reqpkg("limma")
 
   sinfo <- .init_pdata(x, ...)
-  colnames(x) <- sinfo[["sample_id"]]
+  colnames(x) <- rownames(sinfo)
 
   E <- x[["E"]]
   colnames(E) <- rownames(sinfo)

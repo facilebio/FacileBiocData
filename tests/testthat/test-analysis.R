@@ -1,15 +1,10 @@
 context("FacileAnalysis")
 
-suppressWarnings(library(FacileAnalysis))
+# suppressWarnings(library(FacileAnalysis))
+devtools::load_all("/Users/lianoglou/workspace/facilebio/public/packages/FacileAnalysis")
 
-if (!exists("dgelist")) {
-  dlist <- local({
-    efds <- FacileData::exampleFacileDataSet()
-    y <- FacileData::as.DGEList(efds)
-    y$samples$samid <- NULL
-    colnames(y) <- y$samples$sample_id
-    y
-  })
+if (!exists("dlist")) {
+  dlist <- example_bioc_data("DGEList")
 }
 
 test_that("flm_def defines t-test and anova models on FacileBiocDataStore", {
@@ -21,6 +16,21 @@ test_that("flm_def defines t-test and anova models on FacileBiocDataStore", {
   des.anova <- flm_def(f, covariate = "stage", batch = "sex")
   expect_s3_class(des.anova, "FacileAnovaModelDefinition")
 })
+
+test_that("biocbox can be constructed from a FacileLinearModelDefinition", {
+  f <- facilitate(dlist)
+  des.ttest <- flm_def(f, covariate = "sample_type", "tumor", "normal",
+                       batch = "sex")
+  des <- design(des.ttest)
+
+  bb <- biocbox(des.ttest)
+
+  expect_s3_class(des.ttest, "FacileTtestModelDefinition")
+
+  des.anova <- flm_def(f, covariate = "stage", batch = "sex")
+  expect_s3_class(des.anova, "FacileAnovaModelDefinition")
+})
+
 
 test_that("flm_def defines models on facile_from from a FacileBiocDataStore", {
   f <- facilitate(dlist)
@@ -40,4 +50,12 @@ test_that("flm_def defines models on facile_from from a FacileBiocDataStore", {
   asamples <- with_sample_covariates(blca, c("sex", "stage"))
   expect_equal(samples(des.ttest), tsamples)
   expect_equal(samples(des.anova), asamples)
+})
+
+test_that("fdge can voom", {
+  f <- facilitate(dlist)
+  blca <- filter_samples(f, indication == "BLCA")
+  des.ttest <- flm_def(blca, covariate = "sample_type", "tumor", "normal",
+                       batch = "sex")
+  vmf <- fdge(des.ttest, method = "voom")
 })

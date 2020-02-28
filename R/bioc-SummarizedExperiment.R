@@ -17,7 +17,7 @@ facilitate.SummarizedExperiment <- function(x, assay_type = "infer",
   }
 
   sinfo <- .init_pdata(x, ...)
-  colnames(x) <- sinfo[["sample_id"]]
+  colnames(x) <- rownames(sinfo)
   sinfo <- S4Vectors::DataFrame(sinfo)
 
   finfo <- .init_fdata(x, ...)

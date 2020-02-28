@@ -9,7 +9,7 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
-  colnames(x) <- sinfo[["sample_id"]]
+  colnames(x) <- rownames(sinfo)
 
   counts <- x[["counts"]]
   colnames(counts) <- rownames(sinfo)

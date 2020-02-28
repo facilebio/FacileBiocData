@@ -66,19 +66,24 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
 
   # The names of the assay will differ accross bioc data container types,
   # so we remove that column from these results
-  adat.all.fds <- FDS %>%
-    fetch_assay_data(features.some, samples.all) %>%
-    select(-assay)
-  adat.some.fds <- FDS %>%
-    fetch_assay_data(features.some, samples.some) %>%
-    select(-assay)
-
-  # Exercising the `with_` call here simultaneously tests the with_
-  # decoration functionality as well as the normalization procedure, since
-  # the default for `with_assay_data` is `normalized = TRUE`
-  with.adat.fds <- samples.some %>%
-    with_assay_data(features.some, assay_name = "rnaseq") %>%
-    arrange(sample_id)
+  fds.res <- list(
+    tidy.all = FDS %>%
+      fetch_assay_data(features.some, samples.all) %>%
+      select(-assay),
+    tidy.some = FDS %>%
+      fetch_assay_data(features.some, samples.some) %>%
+      select(-assay),
+    # Exercising the `with_` call here simultaneously tests the with_
+    # decoration functionality as well as the normalization procedure, since
+    # the default for `with_assay_data` is `normalized = TRUE`
+    tidy.with = samples.some %>%
+      with_assay_data(features.some) %>%
+      arrange(sample_id),
+    matrix.all = FDS %>%
+      fetch_assay_data(features.some, samples.all, as.matrix = TRUE),
+    matrix.some.norm = FDS %>%
+      fetch_assay_data(features.some, samples.some, as.matrix = TRUE,
+                       normalized = TRUE))
 
   for (bclass in .rnaseq.class) {
     obj <- BIOC[[bclass]]
@@ -87,29 +92,42 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
     bsamples.some <- semi_join(bsamples.all, samples.some,
                                by = c("dataset", "sample_id"))
 
-    adat.all.bioc <- f %>%
-      fetch_assay_data(features.some, bsamples.all) %>%
-      select(-assay)
-    adat.some.bioc <- f %>%
-      fetch_assay_data(features.some, bsamples.some) %>%
-      select(-assay)
+    bioc.res <- list(
+      # exclude the assay name the tidied reuslts because they will differ
+      # across containers
+      tidy.all = f %>%
+        fetch_assay_data(features.some, bsamples.all) %>%
+        select(-assay),
+      tidy.some = f %>%
+        fetch_assay_data(features.some, bsamples.some) %>%
+        select(-assay),
+      tidy.with = bsamples.some %>%
+        with_assay_data(features.some) %>%
+        arrange(sample_id),
+      matrix.all = f %>%
+        fetch_assay_data(features.some, bsamples.all, as.matrix = TRUE),
+      matrix.some.norm = f %>%
+        fetch_assay_data(features.some, bsamples.some, as.matrix = TRUE,
+                         normalized = TRUE))
 
-    # The names of the assays are different among containers, so we explicitly
-    # do not test those
-    expect_equal(adat.all.bioc, adat.all.fds, info = bclass)
-    expect_equal(adat.some.bioc, adat.some.fds, info = bclass)
+    for (comp in names(bioc.res)) {
+      bres <- bioc.res[[comp]]
+      fres <- fds.res[[comp]]
+      is.tidy <- grepl("tidy\\.", comp)
+      info <- sprintf("[%s] %s (%s)", bclass, sub("^.*?\\.", "", comp),
+                      sub("\\..*$", "", comp))
 
-    # The order of the samples returned isn't guaranteed, so we force them
-    # to be lexicographical order just so that we check the values are the
-    # same
-    with.adat.bioc <- bsamples.some %>%
-      with_assay_data(features.some, assay_name = default_assay(f)) %>%
-      arrange(sample_id)
-
-    expect_equal(with.adat.bioc, with.adat.fds, info = bclass)
-
-    # Let's just double-check we have been checking results from the right
-    # bioconductor container
-    expect_equal(class(fds(with.adat.bioc)), class(f), info = bclass)
+      expect_is(fds(bres), is(f), info = info) # Ensure results were generated
+      expect_is(fds(bres), is(obj))            # from correct container type.
+      expect_is(bres, is(fres), info = info)   # Results are the same type.
+      if (is.tidy) {
+        expect_equal(bres, fres, info = info)
+      } else {
+        expect_set_equal(colnames(bres), colnames(fres))
+        expect_set_equal(rownames(bres), rownames(fres))
+        bres <- bres[rownames(fres), colnames(fres)]
+        expect_equal(bres, fres, check.attributes = FALSE, info = info)
+      }
+    }
   }
 })

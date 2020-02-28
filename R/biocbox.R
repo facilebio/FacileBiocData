@@ -7,21 +7,28 @@ biocbox.FacileBiocDataStore <- function(x, class = NULL,
   assert_choice(assay_name, assay_names(x))
   features.all <- features(x, assay_name = assay_name, ...)
 
-  if (is.null(features)) {
-    features <- features.all
-  } else {
-    if (is.data.frame(features)) {
-      features <- features[["feature_id"]]
-    }
+  if (!is.null(features)) {
+    if (is.data.frame(features)) features <- features[["feature_id"]]
     assert_character(features)
-    features <- filter(features.all, feature_id %in% features)
+    if (!test_subset(features, features.all[["feature_id"]])) {
+      stop("features requested that do not exist in the FacileBiocDataStore")
+    }
+    # FIXME: w ith MultiAssayExperiment, subsetting features like this won't work
+    x <- x[features,]
   }
 
-  x <- x[features[["feature_id"]],]
-
   if (!is.null(samples)) {
-    samples. <- assert_sample_subset(samples)
-    x <- x[, samples.[["sample_id"]]]
+    samples. <- assert_sample_subset(samples, fds = x)
+    if (nrow(samples.) == 0) {
+      stop("zero samples selected, can not return an empty data container")
+    }
+    # retrieve indices of requested samples, let's return the dataset in the
+    # same order that samples came in
+    idx <- match(
+      with(samples., paste0(dataset, sample_id)),
+      with(samples(x), paste0(dataset, sample_id)))
+
+    x <- x[, idx]
     x@facile[["assay_sample_info"]] <-
       lapply(x@facile[["assay_sample_info"]], semi_join, samples.,
              by = c("dataset", "sample_id"))

@@ -70,12 +70,16 @@ fetch_assay_data.FacileBiocDataStore <- function(
 
   features <- distinct(features, feature_id, .keep_all = TRUE)
 
-  adat.all <- adata(x, assay_name)[, samples[["sample_id"]], drop = FALSE]
-  adat <- adat.all[features[["feature_id"]],, drop = FALSE]
-  colnames(adat) <- with(samples, paste(dataset, sample_id, sep = "__"))
-  features[["assay_type"]] <- ainfo[["assay_type"]]
+  # adat.all <- adata(x, assay_name)[, samples[["sample_id"]], drop = FALSE]
+  # adat <- adat.all[features[["feature_id"]],, drop = FALSE]
+  # colnames(adat) <- with(samples, paste(dataset, sample_id, sep = "__"))
+  # features[["assay_type"]] <- ainfo[["assay_type"]]
+  # samples[["samid"]] <- colnames(adat)
 
-  samples[["samid"]] <- colnames(adat)
+  samples[["samid"]] <- with(samples, paste(dataset, sample_id, sep = "__"))
+  adat.all <- adata(x, assay_name)[, samples[["samid"]], drop = FALSE]
+  adat <- adat.all[features[["feature_id"]],, drop = FALSE]
+  features[["assay_type"]] <- ainfo[["assay_type"]]
 
   if (normalized) {
     # Adds sample-level assay data appropriate for whatever the assay is

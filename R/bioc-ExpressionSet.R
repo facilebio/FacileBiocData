@@ -26,7 +26,7 @@ facilitate.ExpressionSet <- function(x, assay_type = "infer",
              protocolData = x@protocolData)
 
   sinfo <- .init_pdata(x, ...)
-  colnames(out) <- sinfo[["sample_id"]]
+  colnames(x) <- rownames(sinfo)
   out <- Biobase::`pData<-`(out, sinfo)
 
   # Currently we only support one assay
