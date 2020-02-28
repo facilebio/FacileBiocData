@@ -10,8 +10,6 @@ setClass("FacileExpressionSet",
 
 #' @export
 #' @noRd
-#' @rdname facilitate
-#' @method facilitate ExpressionSet
 facilitate.ExpressionSet <- function(x, assay_type = "infer",
                                      feature_type = "infer", ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {

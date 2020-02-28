@@ -10,8 +10,6 @@ setClass("FacileMultiAssayExperiment",
 
 #' @export
 #' @noRd
-#' @rdname facilitate
-#' @method facilitate MultiAssayExperiment
 facilitate.MultiAssayExperiment <- function(x, ...) {
   reqpkg("MultiAssayExperiment")
 }

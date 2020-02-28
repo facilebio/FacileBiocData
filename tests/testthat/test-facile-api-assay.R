@@ -1,4 +1,4 @@
-context("Facile API over facilitated containers")
+context("Facile API: assay-level query and retrieval")
 
 
 .classes <- c("DESeqDataSet", "DGEList", "EList", "ExpressionSet",
@@ -64,11 +64,17 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
   samples.all <- samples(FDS) %>% collect()
   samples.some <- sample_n(samples.all, 10)
 
-  adat.all.fds <- fetch_assay_data(FDS, features.some, samples.all)
-  adat.some.fds <- fetch_assay_data(FDS, features.some, samples.some)
+  # The names of the assay will differ accross bioc data container types,
+  # so we remove that column from these results
+  adat.all.fds <- FDS %>%
+    fetch_assay_data(features.some, samples.all) %>%
+    select(-assay)
+  adat.some.fds <- FDS %>%
+    fetch_assay_data(features.some, samples.some) %>%
+    select(-assay)
 
   # Exercising the `with_` call here simultaneously tests the with_
-  # decoration funcitonality as well as the normalization procedure, since
+  # decoration functionality as well as the normalization procedure, since
   # the default for `with_assay_data` is `normalized = TRUE`
   with.adat.fds <- samples.some %>%
     with_assay_data(features.some, assay_name = "rnaseq") %>%
@@ -81,15 +87,17 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
     bsamples.some <- semi_join(bsamples.all, samples.some,
                                by = c("dataset", "sample_id"))
 
-    adat.all.bioc <- fetch_assay_data(f, features.some, bsamples.all)
-    adat.some.bioc <- fetch_assay_data(f, features.some, bsamples.some)
+    adat.all.bioc <- f %>%
+      fetch_assay_data(features.some, bsamples.all) %>%
+      select(-assay)
+    adat.some.bioc <- f %>%
+      fetch_assay_data(features.some, bsamples.some) %>%
+      select(-assay)
 
     # The names of the assays are different among containers, so we explicitly
     # do not test those
-    expect_equal(select(adat.all.bioc, -assay), select(adat.all.fds, -assay),
-                 info = bclass)
-    expect_equal(select(adat.some.bioc, -assay), select(adat.some.fds, -assay),
-                 info = bclass)
+    expect_equal(adat.all.bioc, adat.all.fds, info = bclass)
+    expect_equal(adat.some.bioc, adat.some.fds, info = bclass)
 
     # The order of the samples returned isn't guaranteed, so we force them
     # to be lexicographical order just so that we check the values are the
@@ -98,7 +106,7 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
       with_assay_data(features.some, assay_name = default_assay(f)) %>%
       arrange(sample_id)
 
-    expect_equal(with.adat.bioc, with.adat.fds)
+    expect_equal(with.adat.bioc, with.adat.fds, info = bclass)
 
     # Let's just double-check we have been checking results from the right
     # bioconductor container

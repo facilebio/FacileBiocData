@@ -48,6 +48,7 @@ Collate:
     'bioc-MultiAssayExperiment.R'
     'bioc-SingleCellExperiment.R'
     'bioc-SummarizedExperiment.R'
+    'biocbox.R'
     'example_bioc_data.R'
     'facile-init.R'
     'facileapi-assay.R'

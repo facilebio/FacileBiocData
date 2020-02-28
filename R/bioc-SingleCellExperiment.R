@@ -12,8 +12,6 @@ setClass("FacileSingleCellExperiment",
 
 #' @export
 #' @noRd
-#' @rdname facilitate
-#' @method facilitate SingleCellExperiment
 facilitate.SingleCellExperiment <- function(x, ...) {
   reqpkg("SingleCellExperiment")
   stop("SingleCellExperiment support not yet implemented")

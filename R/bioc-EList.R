@@ -7,7 +7,6 @@ setClass("FacileEList", contains = c("FacileBiocDataStore", "EList"))
 
 #' @export
 #' @noRd
-#' @method facilitate DGEList
 facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
                              ...) {
   reqpkg("limma")

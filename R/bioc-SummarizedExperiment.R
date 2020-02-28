@@ -7,8 +7,6 @@ setClass("FacileSummarizedExperiment",
 
 #' @export
 #' @noRd
-#' @rdname facilitate
-#' @method facilitate SummarizedExperiment
 facilitate.SummarizedExperiment <- function(x, assay_type = "infer",
                                             feature_type = "infer", ...) {
   reqpkg("SummarizedExperiment")

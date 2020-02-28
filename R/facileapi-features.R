@@ -2,8 +2,10 @@
 #' @export
 features.FacileBiocDataStore <- function(x, assay_name = NULL,
                                          feature_type = NULL,
-                                         feature_ids = NULL, ...) {
+                                         feature_ids = NULL, ...,
+                                         .developer = getOption("fbioc.developer", FALSE)) {
   if (is(x, "MultiAssayExperiment")) {
+    stop("MUltiAssayExperiment support not yet implemented")
     # This is the only data type that has features from multiple universes,
     # otherwise the bioc container only has info for one type of feature.
     null.aname <- onull.aname <- is.null(assay_name)
@@ -27,8 +29,10 @@ features.FacileBiocDataStore <- function(x, assay_name = NULL,
     }
   } else {
     if (!is.null(assay_name) || !is.null(feature_type)) {
-      # warning("`assay_name` and `feature_type` are ignored for, '",
-      #         class(x)[1L], "' data containers")
+      if (.developer) {
+        warning("`assay_name` and `feature_type` are ignored for, '",
+                class(x)[1L], "' data containers")
+      }
     }
     out <- fdata(x)
   }

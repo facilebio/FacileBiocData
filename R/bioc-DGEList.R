@@ -6,8 +6,6 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 
 #' @export
 #' @noRd
-#' @rdname facilitate
-#' @method facilitate DGEList
 facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)

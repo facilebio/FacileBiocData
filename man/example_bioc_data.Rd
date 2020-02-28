@@ -7,6 +7,12 @@
 example_bioc_data(class = "DGEList", efds = NULL, y = NULL, ...)
 }
 \arguments{
+\item{efds}{An already loaded example FacileDataStore to convert to a
+Bioconductor container.}
+
+\item{y}{A DGEList for direct conversion to another Bioconductor object.
+This does not to anything with any FacileDataStore anywhere.}
+
 \item{type}{The type of assay container. Pick from the ones enumerated above.}
 }
 \value{

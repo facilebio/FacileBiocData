@@ -23,6 +23,10 @@
 #'
 #' @export
 #' @param type The type of assay container. Pick from the ones enumerated above.
+#' @param efds An already loaded example FacileDataStore to convert to a
+#'   Bioconductor container.
+#' @param y A DGEList for direct conversion to another Bioconductor object.
+#'   This does not to anything with any FacileDataStore anywhere.
 #' @return The Bioconductor container
 example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
   info <- filter(.bioc_types, .data$class == .env$class)
@@ -31,7 +35,7 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
 
   if (!is(y, "DGEList")) {
     if (!is(efds, "FacileDataSet")) efds <- FacileData::exampleFacileDataSet()
-    y <- FacileData::as.DGEList(efds)
+    y <- biocbox(efds, "DGEList")
     y[["samples"]][["samid"]] <- NULL
     colnames(y) <- y$samples$sample_id
     y[["samples"]][["group"]] <- y$samples$sample_type

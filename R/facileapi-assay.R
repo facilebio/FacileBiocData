@@ -17,9 +17,15 @@ assay_sample_info.FacileBiocDataStore <- function(x, assay_name, samples = NULL,
 
 #' Assay data retrieval from a FacileBiocDataStore
 #'
-#' required output format:
-#' dataset sample_id assay assay_type feature_type feature_id feature_name value
-#' [chr]   [chr]     [chr] [chr]      [chr]        [chr]      [chr]        [int]
+#' required output columns:
+#' * dataset [chr]
+#' * sample_id [chr]
+#' * assay [chr]
+#' * assay_type [chr]
+#' * feature_type [chr]
+#' * feature_id [chr]
+#' * feature_name [chr]
+#' * value [int]
 #'
 #' @noRd
 #' @examples
@@ -27,11 +33,12 @@ assay_sample_info.FacileBiocDataStore <- function(x, assay_name, samples = NULL,
 fetch_assay_data.FacileBiocDataStore <- function(
     x, features, samples = NULL, assay_name = default_assay(x),
     normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE,
-    ..., aggregate = FALSE, aggregate.by= "ewm",
-    verbose = FALSE) {
+    ..., aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
   assert_flag(as.matrix)
   assert_flag(normalized)
-
+  if (!normalized && !is.null(batch)) {
+    warning("No batch correction will happen when normalized = FALSE")
+  }
   ainfo <- assay_info(x, assay_name)
   if (is.null(samples)) {
     samples <- collect(samples(x), n = Inf)
@@ -83,9 +90,9 @@ fetch_assay_data.FacileBiocDataStore <- function(
     if (length(setdiff(colnames(asinfo), c("dataset", "sample_id")))) {
       samples <- left_join(samples, asinfo, by = c("dataset", "sample_id"))
     }
-    adat <- FacileData:::normalize_assay_data(adat, features, samples,
-                                              batch = batch, main = main,
-                                              verbose = verbose, ...)
+    adat <- normalize_assay_data(adat, features, samples,
+                                 batch = batch, main = main,
+                                 verbose = verbose, ...)
   }
 
   pdat <- pdata(x)
@@ -155,6 +162,7 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
       nfeatures = nrow(adat),
       storage_mode = class(adat[1L])[1L])
   })
+
   bind_rows(ainfo)
 }
 

@@ -8,8 +8,6 @@ setClass("FacileDESeqDataSet",
 
 #' @export
 #' @noRd
-#' @rdname facilitate
-#' @method facilitate SummarizedExperiment
 facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
                                     feature_type = "infer", ...) {
   reqpkg("DESeq2")
