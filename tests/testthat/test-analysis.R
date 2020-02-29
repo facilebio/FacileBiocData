@@ -1,6 +1,7 @@
 context("FacileAnalysis")
 
 # suppressWarnings(library(FacileAnalysis))
+devtools::load_all(".")
 devtools::load_all("/Users/lianoglou/workspace/facilebio/public/packages/FacileAnalysis")
 
 if (!exists("dlist")) {
@@ -9,8 +10,7 @@ if (!exists("dlist")) {
 
 test_that("flm_def defines t-test and anova models on FacileBiocDataStore", {
   f <- facilitate(dlist)
-  des.ttest <- flm_def(f, covariate = "sample_type", "tumor", "normal",
-                       batch = "sex")
+  des.ttest <- flm_def(f, "sample_type", "tumor", "normal", batch = "sex")
   expect_s3_class(des.ttest, "FacileTtestModelDefinition")
 
   des.anova <- flm_def(f, covariate = "stage", batch = "sex")
@@ -22,11 +22,12 @@ test_that("biocbox can be constructed from a FacileLinearModelDefinition", {
   des.ttest <- flm_def(f, covariate = "sample_type", "tumor", "normal",
                        batch = "sex")
   des <- design(des.ttest)
+  expect_equal(
+    rownames(des),
+    with(samples(f), paste(dataset, sample_id, sep = "__")))
 
   bb <- biocbox(des.ttest)
-
   expect_s3_class(des.ttest, "FacileTtestModelDefinition")
-
   des.anova <- flm_def(f, covariate = "stage", batch = "sex")
   expect_s3_class(des.anova, "FacileAnovaModelDefinition")
 })
