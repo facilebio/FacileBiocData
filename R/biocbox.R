@@ -5,6 +5,12 @@ biocbox.FacileBiocDataStore <- function(x, class = NULL,
                                         features = NULL, samples = NULL,
                                         custom_key = Sys.getenv("USER"), ...) {
   assert_choice(assay_name, assay_names(x))
+  if (class == "list") {
+    out <- biocbox(samples(x), class = "list", assay_name = assay_name,
+                   features = features, custom_key = custom_key, ...)
+    return(out)
+  }
+
   features.all <- features(x, assay_name = assay_name, ...)
 
   if (!is.null(features)) {

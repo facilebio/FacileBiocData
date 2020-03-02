@@ -28,10 +28,11 @@ assay_sample_info.FacileBiocDataStore <- function(x, assay_name, samples = NULL,
 #' * value [int]
 #'
 #' @noRd
+#' @export
 #' @examples
 #' yf <- example_bioc_data("DGEList") %>% facilitate()
 fetch_assay_data.FacileBiocDataStore <- function(
-    x, features, samples = NULL, assay_name = default_assay(x),
+    x, features = NULL, samples = NULL, assay_name = default_assay(x),
     normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE,
     ..., aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
   assert_flag(as.matrix)
@@ -48,17 +49,20 @@ fetch_assay_data.FacileBiocDataStore <- function(
                          by = c("dataset", "sample_id"))
   }
 
-  if (!is.null(assay_name) || is.character(assay_name)) {
-    assert_string(assay_name)
-    assert_choice(assay_name, assay_names(x))
-  }
+  # if (!is.null(assay_name) || is.character(assay_name)) {
+  #   assert_string(assay_name)
+  #   assert_choice(assay_name, assay_names(x))
+  # }
+  if (is.null(assay_name)) assay_name <- default_assay(x)
+  assert_choice(assay_name, assay_names(x))
 
-  if (missing(features) || is.null(features)) {
-    assert_string(assay_name)
-    features <- FacileBiocData::features(x, assay_name)
+  features.all <- features(x, assay_name)
+
+  if (is.null(features)) {
+    features <- features.all
   } else {
     if (is.character(features)) {
-      features <- tibble(feature_id=features, assay=assay_name)
+      features <- filter(features.all, feature_id %in% .env$features)
     }
     stopifnot(is(features, 'tbl') || is(features, 'data.frame'))
     if (!'assay' %in% colnames(features) || !is.character(features$assay)) {
@@ -69,12 +73,6 @@ fetch_assay_data.FacileBiocDataStore <- function(
   }
 
   features <- distinct(features, feature_id, .keep_all = TRUE)
-
-  # adat.all <- adata(x, assay_name)[, samples[["sample_id"]], drop = FALSE]
-  # adat <- adat.all[features[["feature_id"]],, drop = FALSE]
-  # colnames(adat) <- with(samples, paste(dataset, sample_id, sep = "__"))
-  # features[["assay_type"]] <- ainfo[["assay_type"]]
-  # samples[["samid"]] <- colnames(adat)
 
   samples[["samid"]] <- with(samples, paste(dataset, sample_id, sep = "__"))
   adat.all <- adata(x, assay_name)[, samples[["samid"]], drop = FALSE]

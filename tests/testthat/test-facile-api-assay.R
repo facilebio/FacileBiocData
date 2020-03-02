@@ -60,9 +60,9 @@ test_that("assay_info returns legit metadata for all containers", {
 test_that("(fetch|with)_assay_data retrieval works across containers", {
   # This test is restricted to rnaseq containers for now
   features.all <- features(FDS)
-  features.some <- sample_n(features.all, 5)
+  features.some <- dplyr::sample_n(features.all, 5)
   samples.all <- samples(FDS) %>% collect()
-  samples.some <- sample_n(samples.all, 10)
+  samples.some <- dplyr::sample_n(samples.all, 10)
 
   # The names of the assay will differ accross bioc data container types,
   # so we remove that column from these results
@@ -72,6 +72,9 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
       select(-assay),
     tidy.some = FDS %>%
       fetch_assay_data(features.some, samples.some) %>%
+      select(-assay),
+    tidy.some.fids = FDS %>%
+      fetch_assay_data(features.some$feature_id, samples.some) %>%
       select(-assay),
     # Exercising the `with_` call here simultaneously tests the with_
     # decoration functionality as well as the normalization procedure, since
@@ -100,6 +103,9 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
         select(-assay),
       tidy.some = f %>%
         fetch_assay_data(features.some, bsamples.some) %>%
+        select(-assay),
+      tidy.some.fids = f %>%
+        fetch_assay_data(features.some$feature_id, bsamples.some) %>%
         select(-assay),
       tidy.with = bsamples.some %>%
         with_assay_data(features.some) %>%
