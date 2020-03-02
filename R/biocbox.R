@@ -5,10 +5,17 @@ biocbox.FacileBiocDataStore <- function(x, class = NULL,
                                         features = NULL, samples = NULL,
                                         custom_key = Sys.getenv("USER"), ...) {
   assert_choice(assay_name, assay_names(x))
-  if (class == "list") {
-    out <- biocbox(samples(x), class = "list", assay_name = assay_name,
-                   features = features, custom_key = custom_key, ...)
-    return(out)
+  if (!is.null(class)) {
+    if (class == "list") {
+      out <- biocbox(samples(x), class = "list", assay_name = assay_name,
+                     features = features, custom_key = custom_key, ...)
+      return(out)
+    } else {
+      if (!is(x, class)) {
+        stop("Conversion from one Bioc data container to another is not, ",
+             "supported. Leave class parameter as `NULL`")
+      }
+    }
   }
 
   features.all <- features(x, assay_name = assay_name, ...)
