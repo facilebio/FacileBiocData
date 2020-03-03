@@ -34,7 +34,8 @@ pdata.SingleCellExperiment <- function(x, ...) {
 #' @noRd
 adata.SingleCellExperiment <- function(x, name = default_assay(x), ...) {
   reqpkg("SingleCellExperiment")
-  SingleCellExperiment::assay(x, name)
+  out <- SingleCellExperiment::assay(x, name)
+  .cleanup_adata(x, out, name = name, ...)
 }
 
 # facile -----------------------------------------------------------------------

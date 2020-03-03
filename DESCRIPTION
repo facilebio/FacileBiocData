@@ -1,6 +1,6 @@
 Package: FacileBiocData
 Type: Package
-Title: FacileData wrappers over Bioconductor assay containers
+Title: FacileData API wrappers over Bioconductor assay containers
 Version: 0.1.0
 Authors@R: c(
     person("Steve", "Lianoglou", , "lianoglou@dnli.com", c("aut", "cre")),
@@ -8,7 +8,7 @@ Authors@R: c(
     )
 Description: Enables the use of standard Bioconductor assay containers, like
     SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.
-    within the FacileData ecosystem.
+    within the facile.bio ecosystem.
 URL: https://github.com/facilebio/FacileBiocData
 BugReports: https://github.com/facilebio/FacileBiocData/issues
 Depends:
@@ -23,6 +23,7 @@ Imports:
     reshape2,
     tidyr
 Suggests:
+    airway,
     Biobase,
     FacileAnalysis,
     DESeq2,

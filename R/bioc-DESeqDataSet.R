@@ -63,7 +63,8 @@ pdata.DESeqDataSet <- function(x, ...) {
 #' @noRd
 adata.DESeqDataSet <- function(x, name = default_assay(x), ...) {
   reqpkg("DESeq2")
-  SummarizedExperiment::assay(x, name)
+  out <- SummarizedExperiment::assay(x, name)
+  .cleanup_adata(x, out, name = name, ...)
 }
 
 # facile -----------------------------------------------------------------------

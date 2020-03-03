@@ -49,7 +49,7 @@ adata.EList <- function(x, name = default_assay(x), ...) {
   reqpkg("limma")
   out <- x[[name]]
   assert_matrix(out, "numeric", nrows = nrow(x), ncols = ncol(x))
-  out
+  .cleanup_adata(x, out, name = name, ...)
 }
 
 # facile -----------------------------------------------------------------------

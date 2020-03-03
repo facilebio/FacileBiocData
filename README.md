@@ -15,10 +15,9 @@ badges: end -->
 [![Project
 Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Lifecycle:
-Experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
-**NOTE**: This package is being actively developed and not yet feature
-complete.
+**NOTE**: This code repository will be made public soon.
 
 The `FacileBiocData` package enables the use of Bioconductor-standard
 data containers, like a `SummarizedExperiment`, `DGEList`,
@@ -28,44 +27,68 @@ ecosystem.
 ## Example Usage
 
 The user simply needs to call the `facilitate` function on their data
-container in order to enable its use in the facile ecosystem.
+container in order to make its data available via the facile API, so
+that it can be analyzed within the facile framework.
 
 ``` r
 library(FacileBiocData)
-y <- example_bioc_data("DGEList") # Materialize an edgeR::DGEList
-yf <- facilitate(y)               # wrap it for facile exploration
+data("airway", package = "airway")
+airway.facile <- facilitate(airway)
 ```
 
-We can now use `yf` within the facile framework, ie. we can analyze it
-using the [FacileAnalysis](https://facilebio.github.io/FacileAnalysis/)
-package:
+We can now use `airway.facile` as a first-class data-providedr within
+the facile framework. For instance, we can use the
+[FacileAnalysis](https://facilebio.github.io/FacileAnalysis/) to perform
+a differential expression analysis using the edgeR or limma based
+framework:
 
 ``` r
 library(FacileAnalysis)
-dge.facile <- yf %>% 
-  flm_def(group = "sample_type", numer = "tumor", denom = "normal") %>% 
-  fdge(method = "edgeR-qlf")
+dge.facile <- airway.facile %>% 
+  flm_def("dex", numer = "trt", denom = "untrt", batch = "cell") %>% 
+  fdge(method = "voom")
 ```
+
+We can extract the statistics from the `fdge` result:
+
+``` r
+tidy(dge.facile) %>% 
+  select(feature_id, logFC, pval, padj) %>% 
+  arrange(pval) %>% 
+  head()
+#> # A tibble: 6 x 4
+#>   feature_id      logFC     pval        padj
+#>   <chr>           <dbl>    <dbl>       <dbl>
+#> 1 ENSG00000165995  3.28 4.29e-11 0.000000684
+#> 2 ENSG00000179593  8.06 3.14e-10 0.00000152 
+#> 3 ENSG00000120129  2.94 5.19e-10 0.00000152 
+#> 4 ENSG00000152583  4.56 5.82e-10 0.00000152 
+#> 5 ENSG00000162493  1.88 6.18e-10 0.00000152 
+#> 6 ENSG00000157214  1.97 7.07e-10 0.00000152
+```
+
+Produce an interactive visual (via using plotly/htmlwidgets) from one of
+the results using `viz()`
+
+``` r
+viz(dge.facile, "ENSG00000165995")
+```
+
+<img src="man/figures/README-viz-fdge.png" width="50%" />
+
+Or, finally, launch a shiny gadget over the `fdge()` result so that we
+can interactively explore the differential expression result in all of
+its glory:
 
 ``` r
 shine(dge.facile)
 ```
 
-The “facilitated” DGEList can still be used as a normal DGEList, so that
-you never have to leave the standard bioconductor ecosystem:
+<img src="man/figures/README-shine-fdge.png" width="75%" />
 
-``` r
-library(edgeR)
-genes <- features(dge.facile)$feature_id # restrict to genes used in fdge()
-yf <- calcNormFactors(yf[genes,,keep.lib.sizes = FALSE])
-yf <- estimateDisp(yf, model.matrix(~ sample_type, data = yf$samples))
-fit <- glmQLFit(yf, yf$design, robust = TRUE)
-results <- glmQLFTest(fit, coef = "sample_typetumor")
-dge.standard <- topTags(results, n = Inf, sort.by = "none")
-```
-
-And these two results are equivalent
-
-``` r
-all.equal(tidy(dge.facile)$logFC, dge.standard$logFC)
-```
+You can refer to the [RNA-seq analysis
+vignette](https://facilebio.github.io/FacileAnalysis/articles/FacileAnalysis-RNAseq.html)
+vignette in the
+[FacileAnalysis](https://facilebio.github.io/FacileAnalysis/) package in
+order to learn how you can interactively analyze and explore RNA-seq
+data in the facile.bio framework.

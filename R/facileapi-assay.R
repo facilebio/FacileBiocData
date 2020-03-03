@@ -146,7 +146,7 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
 
   ainfo <- lapply(anames, function(aname) {
     adat <- adata(x, aname)
-    finfo <- FacileData::infer_feature_type(rownames(adat))
+    finfo <- suppressWarnings(FacileData::infer_feature_type(rownames(adat)))
     ftype <- finfo[["id_type"]]
 
     if (length(unique(ftype)) == 1L) {

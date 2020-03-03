@@ -66,7 +66,8 @@ adata.ExpressionSet <- function(x, name = default_assay(x), ...) {
   if (is.null(name)) {
     name <- Biobase::assayDataElementNames(eset)[1L]
   }
-  Biobase::assayDataElement(x, name)
+  out <- Biobase::assayDataElement(x, name)
+  .cleanup_adata(x, out, name = name, ...)
 }
 
 # facile -----------------------------------------------------------------------
