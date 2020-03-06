@@ -17,8 +17,6 @@ Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostat
 [![Lifecycle:
 Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
-**NOTE**: This code repository will be made public soon.
-
 The `FacileBiocData` package enables the use of Bioconductor-standard
 data containers, like a `SummarizedExperiment`, `DGEList`,
 `DESeqDataSet`, etc. as “first-class” data-providers within the facile
