@@ -42,7 +42,7 @@ analyzed within the facile framework.
 ```{r data-init, message=FALSE, warning=FALSE}
 library(FacileBiocData)
 data("airway", package = "airway")
-airway.facile <- facilitate(airway)
+airway.facile <- facilitate(airway, assay_type = "rnaseq")
 ```
 
 We can now use `airway.facile` as a first-class data-providedr within the facile
@@ -67,7 +67,7 @@ tidy(dge.facile) %>%
 
 Produce an interactive visual (via using plotly/htmlwidgets) from one of the
 results using `viz()`
-```{r, eval = FALSE}
+```{r, eval = FALSE, message=FALSE, warning=FALSE}
 viz(dge.facile, "ENSG00000165995")
 ```
 <img src="man/figures/README-viz-fdge.png" width="50%" />
@@ -75,7 +75,7 @@ viz(dge.facile, "ENSG00000165995")
 Or, finally, launch a shiny gadget over the `fdge()` result so that we can
 interactively explore the differential expression result in all of its glory:
 
-```{r eval = FALSE}
+```{r eval = FALSE, message=FALSE, warning=FALSE}
 shine(dge.facile)
 ```
 <img src="man/figures/README-shine-fdge.png" width="75%" />

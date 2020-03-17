@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">FacileBiocData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@ badges: end -->
 <p>The user simply needs to call the <code>facilitate</code> function on their data container in order to make its data available via the facile API, so that it can be analyzed within the facile framework.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(FacileBiocData)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"airway"</span>, <span class="dt">package =</span> <span class="st">"airway"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>airway.facile &lt;-<span class="st"> </span><span class="kw">facilitate</span>(airway)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a>airway.facile &lt;-<span class="st"> </span><span class="kw">facilitate</span>(airway, <span class="dt">assay_type =</span> <span class="st">"rnaseq"</span>)</span></code></pre></div>
 <p>We can now use <code>airway.facile</code> as a first-class data-providedr within the facile framework. For instance, we can use the <a href="https://facilebio.github.io/FacileAnalysis/">FacileAnalysis</a> to perform a differential expression analysis using the edgeR or limma based framework:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(FacileAnalysis)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>dge.facile &lt;-<span class="st"> </span>airway.facile <span class="op">%&gt;%</span><span class="st"> </span></span>

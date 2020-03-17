@@ -31,7 +31,7 @@ that it can be analyzed within the facile framework.
 ``` r
 library(FacileBiocData)
 data("airway", package = "airway")
-airway.facile <- facilitate(airway)
+airway.facile <- facilitate(airway, assay_type = "rnaseq")
 ```
 
 We can now use `airway.facile` as a first-class data-providedr within
