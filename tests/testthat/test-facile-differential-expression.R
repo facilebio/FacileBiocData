@@ -8,7 +8,10 @@ if (!exists("FDS")) FDS <- FacileData::exampleFacileDataSet()
 if (!exists("Y")) Y <- example_bioc_data("DGEList", efds = FDS)
 
 BIOC <- sapply(.classes, example_bioc_data, Y = Y, simplify = FALSE)
-FBIOC <- lapply(BIOC, facilitate)
+FBIOC <- lapply(BIOC, function(b) {
+  assay_type <- if (is(b, "EList")) "lognorm" else "rnaseq"
+  facilitate(b, assay_type = assay_type, run_vst = FALSE)
+})
 
 suppressPackageStartupMessages(suppressWarnings(library(FacileAnalysis)))
 
@@ -38,6 +41,13 @@ test_that("biocbox can be constructed from a FacileLinearModelDefinition", {
 
     bb <- biocbox(des.ttest, filter = FALSE)
     expect_is(bb, "EList", info = bclass)
+    checkmate::expect_matrix(bb[["E"]], nrows = nrow(f), ncols = ncol(f),
+                             info = bclass)
+    if (bclass != "EList") {
+      # It would have been voomed
+      checkmate::expect_matrix(bb[["weights"]], nrows = nrow(f), ncols = ncol(f),
+                               info = bclass)
+    }
   }
 })
 

@@ -19,3 +19,5 @@ test_that("facilitate.ExpressionSet works", {
   checkmate::expect_factor(covs[["sex"]], c("m", "f"))
   checkmate::expect_factor(covs[["sample_type"]], c("normal", "tumor"))
 })
+
+# TODO: Add tests for fetching normalized assay data (vst, cpm)

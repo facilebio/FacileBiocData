@@ -10,12 +10,18 @@ setClass("FacileExpressionSet",
 
 #' @export
 #' @noRd
-facilitate.ExpressionSet <- function(x, assay_type = "infer",
-                                     feature_type = "infer", ...) {
+facilitate.ExpressionSet <- function(x, feature_type = "infer",
+                                     assay_type = NULL,
+                                     assay_info = NULL, ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {
     stop("Biobase package required, please install it.",
          call. = FALSE)
   }
+
+  if (test_string(assay_type) && is.null(assay_info)) {
+    assay_info <- list(exprs = list(assay_type = assay_type))
+  }
+  if (is.null(assay_info)) assay_info <- list()
 
   out <- new("FacileExpressionSet",
              experimentData = x@experimentData,
@@ -36,6 +42,7 @@ facilitate.ExpressionSet <- function(x, assay_type = "infer",
   # eav <- as.EAVtable(sinfo)
   # out@facile[["eav"]] <- eav
   # out@facile[["covariate_def"]] <- attr(eav, "covariate_def")
+  out@facile[["assay_info"]] <- assay_info
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }

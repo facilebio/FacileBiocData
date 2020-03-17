@@ -1,7 +1,8 @@
 #' @noRd
 #' @export
-assay_sample_info.FacileBiocDataStore <- function(x, assay_name, samples = NULL,
-                                                  ...) {
+assay_sample_info.FacileBiocDataStore <- function(
+    x, assay_name, samples = NULL, ...,
+    .developer = getOption("fbioc.developer", FALSE)) {
   assert_choice(assay_name, assay_names(x))
   if (is.null(samples)) {
     samples <- samples(x)
@@ -11,8 +12,16 @@ assay_sample_info.FacileBiocDataStore <- function(x, assay_name, samples = NULL,
   }
 
   samples <- collect(samples, n = Inf)
-  semi_join(ifacile(x)[["assay_sample_info"]][[assay_name]], samples,
-            by = c("dataset", "sample_id"))
+  assay.samples <- ifacile(x)[["assay_sample_info"]][[assay_name]]
+  if (is.null(assay.samples)) {
+    if (.developer) {
+      warning("The '", assay_name, "' assay was added after call to ",
+              "facilitate(), assay_sample_info data is missing")
+    }
+    assay.samples <- samples(x)
+  }
+
+  semi_join(assay.samples, samples, by = c("dataset", "sample_id"))
 }
 
 #' Assay data retrieval from a FacileBiocDataStore
@@ -61,6 +70,10 @@ fetch_assay_data.FacileBiocDataStore <- function(
   if (is.null(features)) {
     features <- features.all
   } else {
+    if (is.data.frame(features)) {
+      features <- features[["feature_id"]]
+    }
+    if (is.factor(features)) features <- as.character(features)
     if (is.character(features)) {
       features <- filter(features.all, feature_id %in% .env$features)
     }
@@ -73,7 +86,7 @@ fetch_assay_data.FacileBiocDataStore <- function(
   }
 
   features <- distinct(features, feature_id, .keep_all = TRUE)
-
+# browser()
   samples[["samid"]] <- with(samples, paste(dataset, sample_id, sep = "__"))
   adat.all <- adata(x, assay_name)[, samples[["samid"]], drop = FALSE]
   adat <- adat.all[features[["feature_id"]],, drop = FALSE]
@@ -138,31 +151,53 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
     warning("TODO: assay_info.FacileBiocDataStore needs improvement")
   }
 
-  anames <- assay_names(x)
+  anames <- assay_names(x, ...)
   if (!is.null(assay_name)) {
     assert_choice(assay_name, anames)
     anames <- assay_name
   }
 
+  assay_info. <- ifacile(x)[["assay_info"]]
+  # adding names(assay_info.) because we add "ghost" assays for some type
+  # of containers, ie. the DESeqDataSet has a "normcounts" ghost assay
+  # anames <- unique(anames, names(assay_info.))
+  # maybe not
+
   ainfo <- lapply(anames, function(aname) {
     adat <- adata(x, aname)
-    finfo <- suppressWarnings(FacileData::infer_feature_type(rownames(adat)))
-    ftype <- finfo[["id_type"]]
+    cached <- assay_info.[[aname]]
 
-    if (length(unique(ftype)) == 1L) {
-      ftype <- ftype[1L]
-    } else {
-      warning("Mixed feature_types in assay: ", aname, immediate. = TRUE)
-      ftype <- "mixed"
-    }
-
-    tibble(
+    ai <- list(
       assay = aname,
-      assay_type = .infer_assay_type(x, adat, ...),
-      feature_type = ftype,
-      description = paste("assay data from '", aname, "'", sep = ""),
+      assay_type = cached[["assay_type"]],
+      feature_type = cached[["feature_type"]],
+      description = cached[["description"]],
       nfeatures = nrow(adat),
       storage_mode = class(adat[1L])[1L])
+
+    if (is.null(ai[["feature_type"]])) {
+      finfo <- suppressWarnings(FacileData::infer_feature_type(rownames(adat)))
+      ftype <- finfo[["id_type"]]
+      if (is.null(ai[["feature_type"]])) {
+        if (length(unique(ftype)) == 1L) {
+          ftype <- ftype[1L]
+        } else {
+          warning("Mixed feature_types in assay: ", aname, immediate. = TRUE)
+          ftype <- "mixed"
+        }
+        ai[["feature_type"]] <- ftype
+      }
+    }
+
+    if (is.null(ai[["assay_type"]])) {
+      ai[["assay_type"]] <- .infer_assay_type(x, adat)
+    }
+
+    if (is.null(ai[["description"]])) {
+      ai[["description"]] <- paste("assay data from '", aname, "'", sep = "")
+    }
+
+    as_tibble(ai)
   })
 
   bind_rows(ainfo)
@@ -171,36 +206,26 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
 # Internal Helpers -------------------------------------------------------------
 
 #' @noRd
-#' @param x a FacileBiocDataStore
-.init_assay_info <- function(x, assay_type = "infer", feature_type = "infer",
-                             ...) {
-
-}
-
-#' @noRd
 #' @param x the BiocDataContainer the assay came from
 #' @param amatrix an assay matrix
-.infer_assay_type <- function(x, amatrix, ...,
+.infer_assay_type <- function(x, amatrix, assay_type = NULL, ...,
                               .developer = getOption("fbioc.developer", FALSE)) {
+  if (test_string(assay_type)) return(assay_type)
+
   if (.developer) {
     warning("TODO: .infer_assay_type needs serious improvement")
   }
   assert_matrix(amatrix)
   atype <- NULL
 
-  rnaseq.class <- c("DGEList", "DESeqDataSet", "SingleCellExperiment")
-  if (test_multi_class(x, rnaseq.class)) {
+  if (test_multi_class(x, .bioc_assume_count_container)) {
+    # NOTE: this should be "counts"?
     return("rnaseq")
   }
 
   asummary <- summary(as.vector(amatrix))
-  if (asummary["Min."] < 0 & asummary["Max."] < 20) {
-    return("lognorm")
-  }
-  if (asummary["Min."] >= 0) {
-    return("rnaseq")
-  }
+  if (asummary["Min."] < 0 & asummary["Max."] < 20) return("lognorm")
 
-  stop(".infer_assay_type This needs to be improved", call. = FALSE)
+  return("raw")
 }
 

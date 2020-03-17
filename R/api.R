@@ -3,12 +3,16 @@
 #' @noRd
 setOldClass("FacileDataStore")
 
+#' Bioconductor classes that we assume/assert provide count data, like
+#' rnaseq.
+#' @noRd
+.bioc_assume_count_container <- c(
+  "DGEList", "DESeqDataSet", "SingleCellExperiment")
 
 #' Root virtual class that signals object as a FacileDataStore
 #'
 #' All FacileBiocDataStore objects should inherit from this
 #'
-#' @noRd
 #' @export
 setClass("FacileBiocDataStore",
          contains = c("FacileDataStore", "VIRTUAL"),
@@ -53,6 +57,7 @@ adata <- function(x, assay = NULL, ...) {
 #' some bioc containers allow assay matrices w/ NULL rownames(), like the
 #' data in the airway SE. Currently we assume the rownames of the assay
 #' matrix are feature_ids, so making sure that's the case.
+#' @noRd
 .cleanup_adata <- function(x, adat, ...) {
   ids <- rownames(adat)
   # the rownames of the airway count matrix are NULL, so we have to be

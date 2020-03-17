@@ -7,7 +7,10 @@ if (!exists("FDS")) FDS <- FacileData::exampleFacileDataSet()
 if (!exists("Y")) Y <- example_bioc_data("DGEList", efds = FDS)
 
 BIOC <- sapply(.classes, example_bioc_data, Y = Y, simplify = FALSE)
-FBIOC <- lapply(BIOC, facilitate)
+FBIOC <- lapply(BIOC, function(b) {
+  assay_type <- if (is(b, "EList")) "lognorm" else "rnaseq"
+  facilitate(b, assay_type = assay_type, run_vst = FALSE)
+})
 
 suppressPackageStartupMessages(suppressWarnings(library(FacileAnalysis)))
 

@@ -12,9 +12,13 @@ setClass("FacileSingleCellExperiment",
 
 #' @export
 #' @noRd
-facilitate.SingleCellExperiment <- function(x, ...) {
+facilitate.SingleCellExperiment <- function(x, assay_info = NULL, ...) {
   reqpkg("SingleCellExperiment")
   stop("SingleCellExperiment support not yet implemented")
+  if (is.null(assay_info)) {
+    assay_info <- list(counts = list(assay_type = "rnaseq"),
+                       logcounts = list(assay_type = "lognorm"))
+  }
 }
 
 # bioc data retrieval methods --------------------------------------------------

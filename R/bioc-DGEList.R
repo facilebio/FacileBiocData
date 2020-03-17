@@ -22,6 +22,7 @@ facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
   x$samples <- sinfo
   x$genes <- finfo
   out <- new("FacileDGEList", lapply(x, identity))
+  out@facile[["assay_info"]] <- list(counts = list(assay_type = assay_type))
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }

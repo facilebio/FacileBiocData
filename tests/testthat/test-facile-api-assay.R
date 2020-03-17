@@ -23,8 +23,11 @@ test_that("assay_names is defined for base Bioconductor classes", {
 test_that("assay_names returns names of assays in the facilitated container", {
   for (bclass in names(BIOC)) {
     obj <- BIOC[[bclass]]
-    f <- facilitate(obj)
-    checkmate::expect_set_equal(assay_names(f), assay_names(obj), info = bclass)
+    f <- facilitate(obj, run_vst = FALSE)
+    checkmate::expect_set_equal(
+      assay_names(f, internal. = TRUE),
+      assay_names(obj, internal. = TRUE),
+      info = bclass)
   }
 })
 
@@ -39,8 +42,8 @@ test_that("assay_info returns legit metadata for all containers", {
 
   for (bclass in names(BIOC)) {
     obj <- BIOC[[bclass]]
-    f <- facilitate(obj)
-    ainfo <- assay_info(f)
+    f <- facilitate(obj, run_vst = FALSE)
+    ainfo <- assay_info(f, internal. = TRUE)
     expect_s3_class(ainfo, "data.frame")
 
     # check each column is of expected data type
@@ -53,7 +56,10 @@ test_that("assay_info returns legit metadata for all containers", {
 
     expect_equal(ainfo[["feature_type"]][1L], "entrez", info = blcass)
     expect_equal(ainfo[["nfeatures"]][1L], unname(nrow(obj)), info = bclass)
-    checkmate::expect_set_equal(ainfo[["assay"]], assay_names(f), info = bclass)
+    checkmate::expect_set_equal(
+      ainfo[["assay"]],
+      assay_names(f, internal. = TRUE),
+      info = bclass)
   }
 })
 
@@ -69,13 +75,16 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
   fds.res <- list(
     tidy.all = FDS %>%
       fetch_assay_data(features.some, samples.all) %>%
-      select(-assay),
+      select(-assay) %>%
+      arrange(sample_id, feature_id),
     tidy.some = FDS %>%
       fetch_assay_data(features.some, samples.some) %>%
-      select(-assay),
+      select(-assay) %>%
+      arrange(sample_id, feature_id),
     tidy.some.fids = FDS %>%
       fetch_assay_data(features.some$feature_id, samples.some) %>%
-      select(-assay),
+      select(-assay) %>%
+      arrange(sample_id, feature_id),
     # Exercising the `with_` call here simultaneously tests the with_
     # decoration functionality as well as the normalization procedure, since
     # the default for `with_assay_data` is `normalized = TRUE`
@@ -90,31 +99,40 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
 
   for (bclass in .rnaseq.class) {
     obj <- BIOC[[bclass]]
-    f <- facilitate(obj)
+
+    f <- facilitate(obj, assay_type = "rnaseq", run_vst = FALSE)
     bsamples.all <- samples(f)
     bsamples.some <- semi_join(bsamples.all, samples.some,
                                by = c("dataset", "sample_id"))
+    if (bclass == "DESeqDataSet") {
+      assay_name <- "cpm"
+    } else {
+      assay_name <- default_assay(f)
+    }
 
     bioc.res <- list(
       # exclude the assay name the tidied reuslts because they will differ
       # across containers
       tidy.all = f %>%
         fetch_assay_data(features.some, bsamples.all) %>%
-        select(-assay),
+        select(-assay) %>%
+        arrange(sample_id, feature_id),
       tidy.some = f %>%
         fetch_assay_data(features.some, bsamples.some) %>%
-        select(-assay),
+        select(-assay) %>%
+        arrange(sample_id, feature_id),
       tidy.some.fids = f %>%
         fetch_assay_data(features.some$feature_id, bsamples.some) %>%
-        select(-assay),
+        select(-assay) %>%
+        arrange(sample_id, feature_id),
       tidy.with = bsamples.some %>%
-        with_assay_data(features.some) %>%
+        with_assay_data(features.some, assay_name = assay_name) %>%
         arrange(sample_id),
       matrix.all = f %>%
         fetch_assay_data(features.some, bsamples.all, as.matrix = TRUE),
       matrix.some.norm = f %>%
-        fetch_assay_data(features.some, bsamples.some, as.matrix = TRUE,
-                         normalized = TRUE))
+        fetch_assay_data(features.some, bsamples.some, assay_name = assay_name,
+                         as.matrix = TRUE, normalized = TRUE))
 
     for (comp in names(bioc.res)) {
       bres <- bioc.res[[comp]]
@@ -127,7 +145,12 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
       expect_is(fds(bres), is(obj))            # from correct container type.
       expect_is(bres, is(fres), info = info)   # Results are the same type.
       if (is.tidy) {
-        expect_equal(bres, fres, info = info)
+        # expect_equal(bres, fres, info = info)
+        # if this is from deseqdataset, normfactor and libsize came along
+        # for the ride
+        ecols <- colnames(fres)
+        checkmate::expect_subset(ecols, colnames(bres), info = info)
+        expect_equal(bres[, ecols], fres)
       } else {
         expect_set_equal(colnames(bres), colnames(fres))
         expect_set_equal(rownames(bres), rownames(fres))

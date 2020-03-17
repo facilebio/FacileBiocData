@@ -74,6 +74,10 @@
     }
   }
 
+  if (!is.character(finfo[["symbol"]])) {
+    finfo[["symbol"]] <- finfo[["name"]]
+  }
+
   if (!is.character(finfo[["feature_type"]]) ||
       !(missing(feature_type) && feature_type[1L] == "infer")) {
     ftype <- FacileData::infer_feature_type(finfo[["feature_id"]])
@@ -125,7 +129,8 @@
 #' @importFrom edgeR calcNormFactors
 .init_assay_sample_info <- function(x, ...) {
   assert_class(x, "FacileBiocDataStore")
-  ainfo <- assay_info(x)
+  # this is only to support "ghost" assays like "cpm" in DESeqDataSet
+  ainfo <- assay_info(x, internal. = TRUE)
   pdat <- pdata(x)
   samples. <- samples(x)
   out <- lapply(seq(nrow(ainfo)), function(i) {
@@ -135,6 +140,8 @@
     if (is(x, "DGEList")) {
       samples. <- mutate(samples., libsize = pdat[["lib.size"]],
                          normfactor = pdat[["norm.factors"]])
+      assert_numeric(samples.[["libsize"]])
+      assert_numeric(samples.[["normfactor"]])
     }
     if (info[["assay_type"]] == "rnaseq") {
       lsize <- samples.[["libsize"]]
