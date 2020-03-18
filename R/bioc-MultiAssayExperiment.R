@@ -17,7 +17,7 @@ facilitate.MultiAssayExperiment <- function(x, ...) {
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.MultiAssayExperiment <- function(x, ...) {
+fdata.MultiAssayExperiment <- function(x, assay_name = default_assay(x), ...) {
   reqpkg("MultiAssayExperiment")
   stop("MultiAssayExpermient support not yet implemented")
 }

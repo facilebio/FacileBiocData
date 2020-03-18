@@ -4,8 +4,17 @@ NULL
 #' @export
 setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 
+#' @rdname FacileBiocDataStore
+#' @section DGEList:
+#' We assume the DGEList holds `"rnaseq"` assay data. Set the `assay_type`
+#' parameter if that's not the case.
+#'
 #' @export
-#' @noRd
+#' @examples
+#' # edgeR ---------------------------------------------------------------------
+#' y <- example_bioc_data(class = "DGEList")
+#' yf <- facilitate(y)
+#' fpca(yf)
 facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
@@ -23,6 +32,7 @@ facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
   x$genes <- finfo
   out <- new("FacileDGEList", lapply(x, identity))
   out@facile[["assay_info"]] <- list(counts = list(assay_type = assay_type))
+  out@facile[["default_assay"]] <- "counts"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
@@ -30,7 +40,7 @@ facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.DGEList <- function(x, ...) {
+fdata.DGEList <- function(x, assay_name = default_assay(x), ...) {
   reqpkg("edgeR")
   x[["genes"]]
 }

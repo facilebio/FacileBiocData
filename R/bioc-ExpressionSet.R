@@ -10,8 +10,8 @@ setClass("FacileExpressionSet",
 
 #' @export
 #' @noRd
-facilitate.ExpressionSet <- function(x, feature_type = "infer",
-                                     assay_type = NULL,
+facilitate.ExpressionSet <- function(x, assay_type = NULL,
+                                     feature_type = "infer",
                                      assay_info = NULL, ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {
     stop("Biobase package required, please install it.",
@@ -43,6 +43,7 @@ facilitate.ExpressionSet <- function(x, feature_type = "infer",
   # out@facile[["eav"]] <- eav
   # out@facile[["covariate_def"]] <- attr(eav, "covariate_def")
   out@facile[["assay_info"]] <- assay_info
+  out@facile[["default_assay"]] <- "exprs"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
@@ -53,7 +54,7 @@ ifacile.FacileExpressionSet <- function(x, ...) x@facile
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.ExpressionSet <- function(x, ...) {
+fdata.ExpressionSet <- function(x, assay_name = default_assay(x), ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {
     stop("Biobase package required, please install it.",
          call. = FALSE)

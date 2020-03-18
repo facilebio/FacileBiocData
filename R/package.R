@@ -5,11 +5,11 @@
 #' @import methods
 #' @import tidyr
 #' @import dplyr
-NULL
+"_PACKAGE"
 
 # Import and rexport -----------------------------------------------------------
 
 #' @importFrom broom tidy
-#' @export tidy
-NULL
+#' @export
+broom::tidy
 

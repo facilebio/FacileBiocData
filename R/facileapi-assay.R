@@ -176,13 +176,14 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
       storage_mode = class(adat[1L])[1L])
 
     if (is.null(ai[["feature_type"]])) {
-      finfo <- suppressWarnings(FacileData::infer_feature_type(rownames(adat)))
+      # finfo <- suppressWarnings(FacileData::infer_feature_type(rownames(adat)))
+      finfo <- fdata(x)
       ftype <- finfo[["id_type"]]
       if (is.null(ai[["feature_type"]])) {
         if (length(unique(ftype)) == 1L) {
           ftype <- ftype[1L]
         } else {
-          warning("Mixed feature_types in assay: ", aname, immediate. = TRUE)
+          # warning("Mixed feature_types in assay: ", aname, immediate. = TRUE)
           ftype <- "mixed"
         }
         ai[["feature_type"]] <- ftype
@@ -190,7 +191,7 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
     }
 
     if (is.null(ai[["assay_type"]])) {
-      ai[["assay_type"]] <- .infer_assay_type(x, adat)
+      ai[["assay_type"]] <- .infer_assay_type(x, assay_name = aname, ...)
     }
 
     if (is.null(ai[["description"]])) {
@@ -208,17 +209,18 @@ assay_info.FacileBiocDataStore <- function(x, assay_name = NULL, ...,
 #' @noRd
 #' @param x the BiocDataContainer the assay came from
 #' @param amatrix an assay matrix
-.infer_assay_type <- function(x, amatrix, assay_type = NULL, ...,
+.infer_assay_type <- function(x, assay_name, assay_type = NULL, ...,
                               .developer = getOption("fbioc.developer", FALSE)) {
   if (test_string(assay_type)) return(assay_type)
 
   if (.developer) {
     warning("TODO: .infer_assay_type needs serious improvement")
   }
-  assert_matrix(amatrix)
+  amatrix <- assert_matrix(adata(x, assay_name))
   atype <- NULL
 
-  if (test_multi_class(x, .bioc_assume_count_container)) {
+  if (test_multi_class(x, .bioc_assume_count_container) &&
+      assay_name == default_assay(x)) {
     # NOTE: this should be "counts"?
     return("rnaseq")
   }

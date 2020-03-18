@@ -11,9 +11,13 @@ setOldClass("FacileDataStore")
 
 #' Root virtual class that signals object as a FacileDataStore
 #'
-#' All FacileBiocDataStore objects should inherit from this
+#' Standard Bioconductor assay containers, like DGEList, DESeqDataSet,
+#' SummarizedExperiment, etc. are immersed into the facile.bio ecosystem by
+#' calling the `facilitate()` function on them.
 #'
 #' @export
+#' @rdname FacileBiocDataStore
+#' @aliases FacileBiocDataStore
 setClass("FacileBiocDataStore",
          contains = c("FacileDataStore", "VIRTUAL"),
          slots = c(facile = "list"),

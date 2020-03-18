@@ -27,6 +27,7 @@ facilitate.EList <- function(x, feature_type = "infer", assay_type = "lognorm",
 
   out <- new("FacileEList", lapply(x, identity))
   out@facile[["assay_info"]] <- list(E = list(assay_type = assay_type))
+  out@facile[["default_assay"]] <- "E"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
@@ -34,7 +35,7 @@ facilitate.EList <- function(x, feature_type = "infer", assay_type = "lognorm",
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.EList <- function(x, ...) {
+fdata.EList <- function(x, assay_name = default_assay(x), ...) {
   reqpkg("limma")
   x[["genes"]]
 }

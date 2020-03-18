@@ -16,15 +16,19 @@ facilitate.SingleCellExperiment <- function(x, assay_info = NULL, ...) {
   reqpkg("SingleCellExperiment")
   stop("SingleCellExperiment support not yet implemented")
   if (is.null(assay_info)) {
-    assay_info <- list(counts = list(assay_type = "rnaseq"),
+    assay_info <- list(counts = list(assay_type = "rnaseq_sparse"),
                        logcounts = list(assay_type = "lognorm"))
   }
+  # I thing "logcounts" would be the default assay instead of "counts" because
+  # by the time someone would want to "facilitate" an SCE, it would have already
+  # gone through the pre-processing steps.
+  out@facile[["default_assay"]] <- "logcounts"
 }
 
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.SingleCellExperiment <- function(x, ...) {
+fdata.SingleCellExperiment <- function(x, assay_name = default_assay(x), ...) {
   reqpkg("SingleCellExperiment")
   as.data.frame(SingleCellExperiment::rowData(x))
 }

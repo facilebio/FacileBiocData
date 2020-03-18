@@ -130,7 +130,7 @@
 .init_assay_sample_info <- function(x, ...) {
   assert_class(x, "FacileBiocDataStore")
   # this is only to support "ghost" assays like "cpm" in DESeqDataSet
-  ainfo <- assay_info(x, internal. = TRUE)
+  ainfo <- assay_info(x)
   pdat <- pdata(x)
   samples. <- samples(x)
   out <- lapply(seq(nrow(ainfo)), function(i) {

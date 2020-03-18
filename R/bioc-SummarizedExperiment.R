@@ -59,6 +59,7 @@ facilitate.SummarizedExperiment <- function(x, feature_type = "infer",
     rownames(out) <- finfo[["feature_id"]]
   }
   out@facile[["assay_info"]] <- assay_info
+  out@facile[["default_assay"]] <- SummarizedExperiment::assayNames(out)[1L]
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
 }
@@ -101,7 +102,7 @@ facilitate.SummarizedExperiment <- function(x, feature_type = "infer",
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.SummarizedExperiment <- function(x, ...) {
+fdata.SummarizedExperiment <- function(x, assay_name = default_assay(x), ...) {
   reqpkg("SummarizedExperiment")
   as.data.frame(SummarizedExperiment::rowData(x))
 }

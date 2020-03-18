@@ -2,41 +2,59 @@
 NULL
 
 #' @export
+#' @noRd
 #' @importClassesFrom DESeq2 DESeqDataSet
 setClass("FacileDESeqDataSet",
          contains = c("FacileBiocDataStore", "DESeqDataSet"))
 
-#' @section DESeqDataSet
+#' @rdname FacileBiocDataStore
+#' @section DESeqDataSet:
+#'
+#' The FacileDESeqDataSet will look for variance stabilized versions of the
+#' data in the `"vst"` and `"rlog"` assay matrices. If no `"vst"` assay is
+#' present, it will be run and stored there, unless the `facilitate,run_vst`
+#' parameter is set to `FALSE`.
+#'
+#' Because DESeq uses a different normalization method than edgeR's TMM, when
+#' the user calls `fetch_assay_data(.., normalized = TRUE)`, the default will
+#' be to return the normalized count data retrieved from
+#' [DESeq2::counts()] with `normalized = TRUE`.
+#'
+#' To return [edgeR::cpm()] values, you can set `normalized = "cpm"`, but this
+#' must be working over the `"counts"` assay.
+#'
 #' 1. Add parameters to run vst/rlog?
 #' 2. Enable vst, rlog, and normcounts  to be retrieved via
 #'    fetch_assay_data(assay_name = {"vst"|"rlog"|"normcounts"})
 #'
 #' @export
-#' @noRd
 #' @examples
+#'
+#' # DESeq2 --------------------------------------------------------------------
 #' dds <- DESeq2::makeExampleDESeqDataSet(n=2000, m=20)
 #' fd <- facilitate(dds)
 #' fetch_assay_data(samples(fd), c("gene1", "gene20"))
 #' fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = TRUE)
-#' fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = TRUE,
-#'                  assay_name = "cpm")
+#' fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = "cpm")
+#'
 #' samples(fd) %>%
 #'   with_assay_data(c("gene1", "gene20"), normalized = TRUE)
 #'
-#' if (FALSE) {
+#' # Retrieiving different flavors of normalized expression data
 #' dat <- samples(fd) %>%
 #'   with_assay_data("gene1", normalized = TRUE) %>%
+#'   with_assay_data("gene1", normalized = "cpm") %>%
 #'   with_assay_data("gene1", assay_name = "vst") %>%
-#'   with_assay_data("gene1", assay_name = "cpm")
-#' pairs(as.matrix(dat[, -(1:2)]))
-#' abline(0, 1, col = "red")
-#' }
+#'   select(-(1:2))
+#' colnames(dat) <- c("normcounts", "cpm", "vst")
+#' pairs(dat)
 #'
-#'
+#' dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
 facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
                                     feature_type = "infer", ...,
-                                    run_vst = TRUE, blind = TRUE,
-                                    nsub = 1000, fitType = "parametric") {
+                                    run_vst = NULL, blind = TRUE,
+                                    nsub = 1000, fitType = "parametric",
+                                    prior.count = 0.1, verbose = FALSE) {
   reqpkg("DESeq2")
 
   sinfo <- .init_pdata(x, ...)
@@ -64,16 +82,25 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
   }
 
   anames <- SummarizedExperiment::assayNames(x)
-  if (!"vst" %in% anames) {
-    if (missing(run_vst)) {
-      message("Running vst on dataset, next time either include a vst assay, ",
-              "or set `run_vst = FALSE`")
+  if ("vst" %in% anames) {
+    if (is.null(run_vst)) run_vst <- FALSE
+  } else {
+    if (is.null(run_vst)) run_vst <- TRUE
+  }
+
+  if (isTRUE(run_vst)) {
+    if (verbose) {
+      if ("vst" %in% anames) {
+        message("Rerrunning VST even though it's already stored in ",
+                "the container")
+      } else {
+        message("Running variance stabilizing transform and storing results ",
+                "in the 'vst' assay_name")
+      }
     }
-    if (run_vst) {
-      vsd <- DESeq2::vst(x, blind = blind, nsub = nsub, fitType = fitType)
-      vst <- SummarizedExperiment::assay(vsd)
-      x <- SummarizedExperiment::`assay<-`(x, "vst", value = vst)
-    }
+    vsd <- DESeq2::vst(x, blind = blind, nsub = nsub, fitType = fitType)
+    vst <- SummarizedExperiment::assay(vsd)
+    x <- SummarizedExperiment::`assay<-`(x, "vst", value = vst)
   }
 
   out <- new("FacileDESeqDataSet",
@@ -111,7 +138,11 @@ fetch_assay_data.FacileDESeqDataSet <- function(
     ..., prior.count = 0.1, aggregate = FALSE, aggregate.by= "ewm",
     verbose = FALSE) {
   assert_string(assay_name)
-  if (assay_name == "counts") {
+  if (test_string(normalized) && normalized == "cpm") {
+    # This is for DESeqDataSet that wans to use edgeR normalized counts
+    normalized <- TRUE
+    assay_name <- "counts"
+  } else if (assay_name == "counts") {
     if (normalized) {
       assert_number(prior.count, lower = 0.001)
       nc <- log2(DESeq2::counts(x, normalized = TRUE) + prior.count)
@@ -128,10 +159,6 @@ fetch_assay_data.FacileDESeqDataSet <- function(
     }
     normalized <- TRUE
   }
-  if (assay_name == "cpm") {
-    normalized <- TRUE
-    assay_name <- "counts"
-  }
 
   fetch_assay_data.FacileBiocDataStore(
     x, features, samples, assay_name = assay_name, normalized = normalized,
@@ -142,7 +169,7 @@ fetch_assay_data.FacileDESeqDataSet <- function(
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
-fdata.DESeqDataSet <- function(x, ...) {
+fdata.DESeqDataSet <- function(x, assay_name = default_assay(x), ...) {
   reqpkg("DESeq2")
   as.data.frame(SummarizedExperiment::rowData(x))
 }
@@ -164,12 +191,7 @@ adata.DESeqDataSet <- function(x, name = default_assay(x), ...) {
 
 #' @noRd
 #' @export
-assay_names.DESeqDataSet <- function(x, ..., internal. = FALSE) {
+assay_names.DESeqDataSet <- function(x, ...) {
   reqpkg("DESeq2")
-  # unique(c(SummarizedExperiment::assayNames(x), c("cpm")))
-  if (internal.) {
-    SummarizedExperiment::assayNames(x)
-  } else {
-    unique(c(SummarizedExperiment::assayNames(x), c("cpm")))
-  }
+  SummarizedExperiment::assayNames(x)
 }

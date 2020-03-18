@@ -24,10 +24,7 @@ test_that("assay_names returns names of assays in the facilitated container", {
   for (bclass in names(BIOC)) {
     obj <- BIOC[[bclass]]
     f <- facilitate(obj, run_vst = FALSE)
-    checkmate::expect_set_equal(
-      assay_names(f, internal. = TRUE),
-      assay_names(obj, internal. = TRUE),
-      info = bclass)
+    checkmate::expect_set_equal(assay_names(f), assay_names(obj), info = bclass)
   }
 })
 
@@ -43,7 +40,7 @@ test_that("assay_info returns legit metadata for all containers", {
   for (bclass in names(BIOC)) {
     obj <- BIOC[[bclass]]
     f <- facilitate(obj, run_vst = FALSE)
-    ainfo <- assay_info(f, internal. = TRUE)
+    ainfo <- assay_info(f)
     expect_s3_class(ainfo, "data.frame")
 
     # check each column is of expected data type
@@ -58,7 +55,7 @@ test_that("assay_info returns legit metadata for all containers", {
     expect_equal(ainfo[["nfeatures"]][1L], unname(nrow(obj)), info = bclass)
     checkmate::expect_set_equal(
       ainfo[["assay"]],
-      assay_names(f, internal. = TRUE),
+      assay_names(f),
       info = bclass)
   }
 })
@@ -105,9 +102,9 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
     bsamples.some <- semi_join(bsamples.all, samples.some,
                                by = c("dataset", "sample_id"))
     if (bclass == "DESeqDataSet") {
-      assay_name <- "cpm"
+      normalized <- "cpm"
     } else {
-      assay_name <- default_assay(f)
+      normalized <- TRUE
     }
 
     bioc.res <- list(
@@ -126,13 +123,13 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
         select(-assay) %>%
         arrange(sample_id, feature_id),
       tidy.with = bsamples.some %>%
-        with_assay_data(features.some, assay_name = assay_name) %>%
+        with_assay_data(features.some, normalized = normalized) %>%
         arrange(sample_id),
       matrix.all = f %>%
         fetch_assay_data(features.some, bsamples.all, as.matrix = TRUE),
       matrix.some.norm = f %>%
-        fetch_assay_data(features.some, bsamples.some, assay_name = assay_name,
-                         as.matrix = TRUE, normalized = TRUE))
+        fetch_assay_data(features.some, bsamples.some, normalized = normalized,
+                         as.matrix = TRUE))
 
     for (comp in names(bioc.res)) {
       bres <- bioc.res[[comp]]
