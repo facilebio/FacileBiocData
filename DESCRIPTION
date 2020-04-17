@@ -39,6 +39,7 @@ Suggests:
 Remotes:
     facilebio/FacileAnalysis,
     facilebio/FacileData
+biocViews: Infrastructure, DataRepresentation
 License: Apache Version 2.0
 Encoding: UTF-8
 LazyData: true
