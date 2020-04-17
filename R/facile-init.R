@@ -21,7 +21,8 @@
 }
 
 #' Preps the fdata() from bioconductor containers to look like a
-#' facile_feature_frame
+#' facile_feature_frame.
+#'
 #' @noRd
 #' @param x the bioconductor container
 #' @param finfo the data.frame from `fdata(x)`
@@ -29,19 +30,11 @@
 #'   the expected facile feature_info colnames()
 #'   (.ie `colnames(.empte_feature_frame()`), the values are the colnames of
 #'   `finfo()` that map to them
+#' @return a facile_feature_frame tibble
 .init_fdata <- function(x, finfo = fdata(x), rename_fdata = NULL,
                         feature_type = "infer", feature_source = "unknown",
                         ...) {
   stopifnot(is.data.frame(finfo))
-
-  # assay_names <- assay_names(x)
-  # if (is.null(assay_name)) {
-  #   assay_name <- assay_names[1L]
-  # }
-  # assert_choice(assay_name, assay_names)
-  #
-  # assert_string(assay_type)
-  # assert_string(feature_type)
 
   ftmpl <- .empty_feature_frame()
   if (is.character(rename_fdata)) {
@@ -85,6 +78,7 @@
     ftype <- ftype[["id_type"]]
     if (length(unique(ftype)) > 1L) {
       warning("Mixed feature_types in assay fdata()", immediate. = TRUE)
+      ftype <- "mixed"
     }
     finfo[["feature_type"]] <- ftype
   }
@@ -111,6 +105,27 @@
   }
   rownames(finfo) <- finfo[["feature_id"]]
   finfo
+}
+
+#' Inititalize some info we can put in the assay_info() for the default assays
+#'
+#' NOTE: This function isn't written for bioc boxes w/ multiple feature spaces
+#'
+#' @noRd
+#' @param x the bioc data container
+#' @param finfo the output from [.init_fdata()]
+#' @return a tibble with cached assay_info for the assays
+.init_assay_info <- function(x, finfo, assay_type = NULL,
+                             feature_type = "summarize", ...) {
+  out <- tibble(assay_type = assay_type)
+  if (feature_type == "summarize") {
+    ftypes <- unique(finfo[["feature_type"]])
+    feature_type <- if (length(ftypes) == 1L) ftypes else "mixed"
+  } else if (!test_string(feature_type)) {
+    feature_type <- "unknown"
+  }
+  out[["feature_type"]] <- feature_type
+  out
 }
 
 #' Initialize some sample-level assay information, like normfactor/sizefactor

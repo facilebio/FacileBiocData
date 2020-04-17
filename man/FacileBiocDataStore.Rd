@@ -21,7 +21,7 @@
   verbose = FALSE
 )
 
-\method{facilitate}{DGEList}(x, assay_type = "rnaseq", ...)
+\method{facilitate}{DGEList}(x, assay_type = "rnaseq", feature_type = "infer", ...)
 }
 \description{
 Standard Bioconductor assay containers, like DGEList, DESeqDataSet,
@@ -39,8 +39,10 @@ parameter is set to \code{FALSE}.
 Because DESeq uses a different normalization method than edgeR's TMM, when
 the user calls \code{fetch_assay_data(.., normalized = TRUE)}, the default will
 be to return the normalized count data retrieved from
-\code{\link[DESeq2:counts]{DESeq2::counts()}} with \code{normalized = TRUE}. To return \code{\link[edgeR:cpm]{edgeR::cpm()}} data,
-you can ask to retrieve data from the "ghost" assay \code{"cpm"}
+\code{\link[DESeq2:counts]{DESeq2::counts()}} with \code{normalized = TRUE}.
+
+To return \code{\link[edgeR:cpm]{edgeR::cpm()}} values, you can set \code{normalized = "cpm"}, but this
+must be working over the \code{"counts"} assay.
 \enumerate{
 \item Add parameters to run vst/rlog?
 \item Enable vst, rlog, and normcounts  to be retrieved via
@@ -61,17 +63,19 @@ dds <- DESeq2::makeExampleDESeqDataSet(n=2000, m=20)
 fd <- facilitate(dds)
 fetch_assay_data(samples(fd), c("gene1", "gene20"))
 fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = TRUE)
-fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = TRUE,
-                 assay_name = "cpm")
+fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = "cpm")
+
 samples(fd) \%>\%
   with_assay_data(c("gene1", "gene20"), normalized = TRUE)
 
 # Retrieiving different flavors of normalized expression data
 dat <- samples(fd) \%>\%
   with_assay_data("gene1", normalized = TRUE) \%>\%
+  with_assay_data("gene1", normalized = "cpm") \%>\%
   with_assay_data("gene1", assay_name = "vst") \%>\%
-  with_assay_data("gene1", assay_name = "cpm")
-pairs(as.matrix(dat[, -(1:2)]))
+  select(-(1:2))
+colnames(dat) <- c("normcounts", "cpm", "vst")
+pairs(dat)
 
 dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
 # edgeR ---------------------------------------------------------------------

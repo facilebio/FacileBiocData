@@ -88,8 +88,3 @@ adata <- function(x, assay = NULL, ...) {
   adat
 }
 
-#' Retrieves names of assay elements in the container
-#' @noRd
-anames <- function(x, ...) {
-  UseMethod("anames", x)
-}

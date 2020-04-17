@@ -7,7 +7,7 @@ setClass("FacileEList", contains = c("FacileBiocDataStore", "EList"))
 
 #' @export
 #' @noRd
-facilitate.EList <- function(x, feature_type = "infer", assay_type = "lognorm",
+facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
                              ...) {
   reqpkg("limma")
 
@@ -18,15 +18,18 @@ facilitate.EList <- function(x, feature_type = "infer", assay_type = "lognorm",
   colnames(E) <- rownames(sinfo)
 
   # Currently we only support one assay
-  finfo <- .init_fdata(x, ...)
+  finfo <- .init_fdata(x, feature_type = feature_type, ...)
   rownames(E) <- finfo[["feature_id"]]
 
   x$E <- E
   x$targets <- sinfo
   x$genes <- finfo
 
+  ainfo <- .init_assay_info(x, finfo, assay_type = assay_type, ...)
+
   out <- new("FacileEList", lapply(x, identity))
-  out@facile[["assay_info"]] <- list(E = list(assay_type = assay_type))
+  out@facile[["assay_info"]] <- list(
+    E = list(assay_type = assay_type, feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "E"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out

@@ -7,9 +7,9 @@ setClass("FacileSummarizedExperiment",
 
 #' @export
 #' @noRd
-facilitate.SummarizedExperiment <- function(x, feature_type = "infer",
-                                            assay_type = NULL,
-                                            assay_info = NULL, ...) {
+facilitate.SummarizedExperiment <- function(x, assay_type = "lognorm",
+                                            feature_type = "infer",
+                                            ...) {
   reqpkg("SummarizedExperiment")
   is.ranged <- is(x, "RangedSummarizedExperiment") # airway dataset killed me
 
@@ -19,20 +19,15 @@ facilitate.SummarizedExperiment <- function(x, feature_type = "infer",
     x <- SummarizedExperiment::`assayNames<-`(x, value = anames.)
   }
 
-  if (test_string(assay_type) && is.null(assay_info)) {
-    assay_info <- list(info = list(assay_type = assay_type))
-    names(assay_info) <- SummarizedExperiment::assayNames(x)[1L]
-  }
-
-  if (is.null(assay_info)) assay_info <- list()
-
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- rownames(sinfo)
   sinfo <- S4Vectors::DataFrame(sinfo)
 
-  finfo <- .init_fdata(x, ...)
+  finfo <- .init_fdata(x, feature_type = feature_type, ...)
   rownames(x) <- finfo[["feature_id"]]
   finfo <- S4Vectors::DataFrame(finfo)
+
+  ainfo <- .init_assay_info(x, finfo, assay_type = assay_type, ...)
 
   x <- SummarizedExperiment::`colData<-`(x, value = sinfo)
   x <- SummarizedExperiment::`rowData<-`(x, value = finfo)
@@ -58,7 +53,12 @@ facilitate.SummarizedExperiment <- function(x, feature_type = "infer",
     # I still don't get how this happens, since rownames(x) was set
     rownames(out) <- finfo[["feature_id"]]
   }
-  out@facile[["assay_info"]] <- assay_info
+
+  out@facile[["assay_info"]] <- sapply(assay_names(out), function(name) {
+    list(
+      assay_type = assay_type,
+      feature_type = ainfo[["feature_type"]])
+  }, simplify = FALSE)
   out@facile[["default_assay"]] <- SummarizedExperiment::assayNames(out)[1L]
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out

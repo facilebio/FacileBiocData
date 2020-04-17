@@ -10,18 +10,12 @@ setClass("FacileExpressionSet",
 
 #' @export
 #' @noRd
-facilitate.ExpressionSet <- function(x, assay_type = NULL,
-                                     feature_type = "infer",
-                                     assay_info = NULL, ...) {
+facilitate.ExpressionSet <- function(x, assay_type = "lognorm",
+                                     feature_type = "infer", ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {
     stop("Biobase package required, please install it.",
          call. = FALSE)
   }
-
-  if (test_string(assay_type) && is.null(assay_info)) {
-    assay_info <- list(exprs = list(assay_type = assay_type))
-  }
-  if (is.null(assay_info)) assay_info <- list()
 
   out <- new("FacileExpressionSet",
              experimentData = x@experimentData,
@@ -36,13 +30,17 @@ facilitate.ExpressionSet <- function(x, assay_type = NULL,
   out <- Biobase::`pData<-`(out, sinfo)
 
   # Currently we only support one assay
-  finfo <- .init_fdata(x, ...)
+  finfo <- .init_fdata(x, feature_type = feature_type, ...)
   rownames(out) <- finfo[["feature_id"]]
   out <- Biobase::`fData<-`(out, finfo)
-  # eav <- as.EAVtable(sinfo)
-  # out@facile[["eav"]] <- eav
-  # out@facile[["covariate_def"]] <- attr(eav, "covariate_def")
-  out@facile[["assay_info"]] <- assay_info
+
+  ainfo <- .init_assay_info(x, finfo, assay_type = assay_type, ...)
+
+  out@facile[["assay_info"]] <- sapply(assay_names(out), function(name) {
+    list(
+      assay_type = assay_type,
+      feature_type = ainfo[["feature_type"]])
+  }, simplify = FALSE)
   out@facile[["default_assay"]] <- "exprs"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out

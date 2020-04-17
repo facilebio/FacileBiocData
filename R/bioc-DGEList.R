@@ -15,7 +15,8 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 #' y <- example_bioc_data(class = "DGEList")
 #' yf <- facilitate(y)
 #' fpca(yf)
-facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
+facilitate.DGEList <- function(x, assay_type = "rnaseq", feature_type = "infer",
+                               ...) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- rownames(sinfo)
@@ -24,14 +25,19 @@ facilitate.DGEList <- function(x, assay_type = "rnaseq", ...) {
   colnames(counts) <- rownames(sinfo)
 
   # Currently we only support one assay
-  finfo <- .init_fdata(x, assay_type = assay_type, ...)
+  finfo <- .init_fdata(x, feature_type = feature_type, ...)
+  ainfo <- .init_assay_info(x, finfo, assay_type = assay_type, ...)
+
   rownames(counts) <- finfo[["feature_id"]]
 
   x$counts <- counts
   x$samples <- sinfo
   x$genes <- finfo
   out <- new("FacileDGEList", lapply(x, identity))
-  out@facile[["assay_info"]] <- list(counts = list(assay_type = assay_type))
+  out@facile[["assay_info"]] <- list(
+    counts = list(
+      assay_type = assay_type,
+      feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "counts"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out

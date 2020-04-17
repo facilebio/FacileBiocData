@@ -51,7 +51,7 @@ test_that("assay_info returns legit metadata for all containers", {
       expect_is(ainfo[[cname]], ctype, info = info)
     }
 
-    expect_equal(ainfo[["feature_type"]][1L], "entrez", info = blcass)
+    expect_equal(ainfo[["feature_type"]][1L], "entrez", info = bclass)
     expect_equal(ainfo[["nfeatures"]][1L], unname(nrow(obj)), info = bclass)
     checkmate::expect_set_equal(
       ainfo[["assay"]],
@@ -147,7 +147,7 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
         # for the ride
         ecols <- colnames(fres)
         checkmate::expect_subset(ecols, colnames(bres), info = info)
-        expect_equal(bres[, ecols], fres)
+        expect_equal(bres[, ecols], fres, info = info)
       } else {
         expect_set_equal(colnames(bres), colnames(fres))
         expect_set_equal(rownames(bres), rownames(fres))

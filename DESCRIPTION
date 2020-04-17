@@ -14,24 +14,24 @@ BugReports: https://github.com/facilebio/FacileBiocData/issues
 Depends:
     FacileData (>= 0.10.10)
 Imports:
+    Biobase,
     broom,
     checkmate,
+    DESeq2,
     FacileData,
     dplyr,
     Matrix,
     methods,
+    MultiAssayExperiment,
     reshape2,
+    SingleCellExperiment,
+    SummarizedExperiment,
     tidyr
 Suggests:
     airway,
-    Biobase,
     FacileAnalysis,
-    DESeq2,
     edgeR,
     knitr,
-    MultiAssayExperiment,
-    SingleCellExperiment,
-    SummarizedExperiment,
     testthat
 Remotes:
     facilebio/FacileData
@@ -39,7 +39,7 @@ License: Apache Version 2.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Collate: 
     'api.R'
     'bioc-DESeqDataSet.R'
@@ -53,6 +53,7 @@ Collate:
     'example_bioc_data.R'
     'facile-init.R'
     'facileapi-assay.R'
+    'facileapi-base.R'
     'facileapi-features.R'
     'facileapi-sample-covariates.R'
     'facileapi-samples.R'

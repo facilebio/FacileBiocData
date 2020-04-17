@@ -17,17 +17,12 @@ knitr::opts_chunk$set(
 
 # FacileBiocData
 
-<!-- 
-badges: start
-checkout https://lazappi.github.io/clustree/ package for some badge-inspiration
-
-[![Travis build status](https://travis-ci.org/facilebio/FacileBiocData.svg?branch=master)](https://travis-ci.org/facilebio/FacileBiocData)
-[![Codecov test coverage](https://codecov.io/gh/facilebio/FacileBioc/branch/master/graph/badge.svg)](https://codecov.io/gh/facilebio/FacileBiocData?branch=master)
-
-badges: end -->
-
-[![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+<!-- badges: start -->
+[![R build status](https://github.com/facilebio/FacileBiocData/workflows/R-CMD-check/badge.svg)](https://github.com/facilebio/FacileBiocData/actions)
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Lifecycle: Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Codecov test coverage](https://codecov.io/gh/facilebio/FacileBiocData/branch/master/graph/badge.svg)](https://codecov.io/gh/facilebio/FacileBiocData?branch=master)
+<!-- badges: end -->
 
 The `FacileBiocData` package enables the use of Bioconductor-standard  data
 containers, like a `SummarizedExperiment`, `DGEList`, `DESeqDataSet`, etc. as

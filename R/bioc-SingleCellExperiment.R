@@ -12,7 +12,7 @@ setClass("FacileSingleCellExperiment",
 
 #' @export
 #' @noRd
-facilitate.SingleCellExperiment <- function(x, assay_info = NULL, ...) {
+facilitate.SingleCellExperiment <- function(x, ...) {
   reqpkg("SingleCellExperiment")
   stop("SingleCellExperiment support not yet implemented")
   if (is.null(assay_info)) {

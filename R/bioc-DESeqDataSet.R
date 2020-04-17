@@ -61,7 +61,9 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
   colnames(x) <- rownames(sinfo)
   sinfo <- S4Vectors::DataFrame(sinfo)
 
-  finfo <- .init_fdata(x, ...)
+  finfo <- .init_fdata(x, feature_type = feature_type, ...)
+  ainfo <- .init_assay_info(x, finfo, assay_type = assay_type, ...)
+
   # This was first developed during bioc3.6, and at the time a DESeqDataSet had
   # a GRanges-like @rowRanges slot, which prohibits granges-like colnames in our
   # feature information.
@@ -113,10 +115,18 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
              elementMetadata = x@elementMetadata,
              metadata = x@metadata)
   out@facile[["assay_info"]] <- list(
-    counts = list(assay_type = assay_type),
-    vst = list(assay_type = "lognorm"),
-    rlog = list(assay_type = "lognorm"),
-    normcounts = list(assay_type = "lognorm"))
+    counts = list(
+      assay_type = assay_type,
+      feature_type = ainfo[["feature_type"]]),
+    vst = list(
+      assay_type = "lognorm",
+      feature_type = ainfo[["feature_type"]]),
+    rlog = list(
+      assay_type = "lognorm",
+      feature_type = ainfo[["feature_type"]]),
+    normcounts = list(
+      assay_type = "lognorm",
+      feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "counts"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
   out
