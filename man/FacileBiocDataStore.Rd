@@ -81,5 +81,5 @@ dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
 # edgeR ---------------------------------------------------------------------
 y <- example_bioc_data(class = "DGEList")
 yf <- facilitate(y)
-fpca(yf)
+FacileAnalysis::fpca(yf)
 }

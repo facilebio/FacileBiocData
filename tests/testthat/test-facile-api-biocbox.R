@@ -1,4 +1,4 @@
-context("Facile API: biocbox")
+context("FacileData API: biocbox")
 
 .classes <- c("DESeqDataSet", "DGEList", "EList", "ExpressionSet",
               "SummarizedExperiment")

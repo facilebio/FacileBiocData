@@ -14,7 +14,7 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 #' # edgeR ---------------------------------------------------------------------
 #' y <- example_bioc_data(class = "DGEList")
 #' yf <- facilitate(y)
-#' fpca(yf)
+#' FacileAnalysis::fpca(yf)
 facilitate.DGEList <- function(x, assay_type = "rnaseq", feature_type = "infer",
                                ...) {
   reqpkg("edgeR")

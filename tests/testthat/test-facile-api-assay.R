@@ -1,4 +1,4 @@
-context("Facile API: assay-level query and retrieval")
+context("FacileData API: assay-level query and retrieval")
 
 
 .classes <- c("DESeqDataSet", "DGEList", "EList", "ExpressionSet",

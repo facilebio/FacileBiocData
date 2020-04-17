@@ -42,13 +42,10 @@ assay_sample_info.FacileBiocDataStore <- function(
 #' yf <- example_bioc_data("DGEList") %>% facilitate()
 fetch_assay_data.FacileBiocDataStore <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
-    normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE,
-    ..., aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
+    normalized = FALSE, as.matrix = FALSE, ..., aggregate = FALSE,
+    aggregate.by= "ewm", verbose = FALSE) {
   assert_flag(as.matrix)
   assert_flag(normalized)
-  if (!normalized && !is.null(batch)) {
-    warning("No batch correction will happen when normalized = FALSE")
-  }
   ainfo <- assay_info(x, assay_name)
   if (is.null(samples)) {
     samples <- collect(samples(x), n = Inf)
@@ -58,10 +55,6 @@ fetch_assay_data.FacileBiocDataStore <- function(
                          by = c("dataset", "sample_id"))
   }
 
-  # if (!is.null(assay_name) || is.character(assay_name)) {
-  #   assert_string(assay_name)
-  #   assert_choice(assay_name, assay_names(x))
-  # }
   if (is.null(assay_name)) assay_name <- default_assay(x)
   assert_choice(assay_name, assay_names(x))
 
@@ -86,7 +79,7 @@ fetch_assay_data.FacileBiocDataStore <- function(
   }
 
   features <- distinct(features, feature_id, .keep_all = TRUE)
-# browser()
+
   samples[["samid"]] <- with(samples, paste(dataset, sample_id, sep = "__"))
   adat.all <- adata(x, assay_name)[, samples[["samid"]], drop = FALSE]
   adat <- adat.all[features[["feature_id"]],, drop = FALSE]
@@ -106,7 +99,6 @@ fetch_assay_data.FacileBiocDataStore <- function(
       samples <- left_join(samples, asinfo, by = c("dataset", "sample_id"))
     }
     adat <- normalize_assay_data(adat, features, samples,
-                                 batch = batch, main = main,
                                  verbose = verbose, ...)
   }
 
