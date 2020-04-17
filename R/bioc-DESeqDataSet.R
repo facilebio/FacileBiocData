@@ -144,9 +144,8 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
 #' @export
 fetch_assay_data.FacileDESeqDataSet <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
-    normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE,
-    ..., prior.count = 0.1, aggregate = FALSE, aggregate.by= "ewm",
-    verbose = FALSE) {
+    normalized = FALSE, as.matrix = FALSE, ..., prior.count = 0.1,
+    aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
   assert_string(assay_name)
   if (test_string(normalized) && normalized == "cpm") {
     # This is for DESeqDataSet that wans to use edgeR normalized counts

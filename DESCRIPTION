@@ -25,14 +25,12 @@ Imports:
     Matrix,
     methods,
     MultiAssayExperiment,
-    reshape2,
     SingleCellExperiment,
     SummarizedExperiment,
     tidyr
 Suggests:
     airway,
     FacileAnalysis,
-    edgeR,
     knitr,
     S4Vectors,
     testthat
