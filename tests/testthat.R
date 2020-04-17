@@ -7,5 +7,4 @@ library("FacileBiocData")
 FDS <- FacileData::exampleFacileDataSet()
 Y <- example_bioc_data("DGEList", FDS)
 
-test_package("FacileAnalysis")
-
+test_check("FacileBiocData")
