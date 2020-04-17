@@ -34,6 +34,7 @@ Suggests:
     FacileAnalysis,
     edgeR,
     knitr,
+    S4Vectors,
     testthat
 Remotes:
     facilebio/FacileAnalysis,

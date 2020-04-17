@@ -11,6 +11,7 @@ facilitate.SummarizedExperiment <- function(x, assay_type = "lognorm",
                                             feature_type = "infer",
                                             ...) {
   reqpkg("SummarizedExperiment")
+  reqpkg("S4Vectors")
   is.ranged <- is(x, "RangedSummarizedExperiment") # airway dataset killed me
 
   if (is.null(SummarizedExperiment::assayNames(x))) {

@@ -4,7 +4,6 @@ NULL
 #' @export
 #' @importFrom utils packageVersion
 #' @importClassesFrom MultiAssayExperiment MultiAssayExperiment
-#' @importClassesFrom S4Vectors DataFrame SimpleList
 setClass("FacileMultiAssayExperiment",
          contains = c("FacileBiocDataStore", "MultiAssayExperiment"))
 

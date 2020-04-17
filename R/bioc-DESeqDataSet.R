@@ -56,7 +56,7 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
                                     nsub = 1000, fitType = "parametric",
                                     prior.count = 0.1, verbose = FALSE) {
   reqpkg("DESeq2")
-
+  reqpkg("S4Vectors")
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- rownames(sinfo)
   sinfo <- S4Vectors::DataFrame(sinfo)

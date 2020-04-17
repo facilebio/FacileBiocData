@@ -6,7 +6,6 @@ NULL
 #' @export
 #' @importFrom utils packageVersion
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
-#' @importClassesFrom S4Vectors DataFrame SimpleList
 setClass("FacileSingleCellExperiment",
          contains = c("FacileBiocDataStore", "SingleCellExperiment"))
 
