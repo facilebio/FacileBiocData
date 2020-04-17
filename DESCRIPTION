@@ -20,6 +20,8 @@ Imports:
     DESeq2,
     FacileData,
     dplyr,
+    edgeR,
+    limma,
     Matrix,
     methods,
     MultiAssayExperiment,
