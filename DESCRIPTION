@@ -32,6 +32,7 @@ Suggests:
     airway,
     FacileAnalysis,
     knitr,
+    magrittr,
     S4Vectors,
     testthat
 Remotes:

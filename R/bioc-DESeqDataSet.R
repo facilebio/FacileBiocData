@@ -171,8 +171,8 @@ fetch_assay_data.FacileDESeqDataSet <- function(
 
   fetch_assay_data.FacileBiocDataStore(
     x, features, samples, assay_name = assay_name, normalized = normalized,
-    batch = batch, main = main, as.matrix = as.matrix, ...,
-    aggregate = aggregate, aggregate.by = aggregate.by, verbose = verbose)
+    as.matrix = as.matrix, ..., aggregate = aggregate,
+    aggregate.by = aggregate.by, verbose = verbose)
 }
 
 # bioc data retrieval methods --------------------------------------------------
