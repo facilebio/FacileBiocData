@@ -140,6 +140,15 @@ calling the <code>facilitate()</code> function on them.</p>
 <span class='co'># S3 method for DGEList</span>
 <span class='fu'>facilitate</span>(<span class='no'>x</span>, <span class='kw'>assay_type</span> <span class='kw'>=</span> <span class='st'>"rnaseq"</span>, <span class='kw'>feature_type</span> <span class='kw'>=</span> <span class='st'>"infer"</span>, <span class='no'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>assay_type</th>
+      <td><p>A string that indicates the type of assay stored in the
+primary assay of the container.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="deseqdataset"><a class="anchor" href="#deseqdataset"></a>DESeqDataSet</h2>
 
@@ -244,7 +253,8 @@ parameter if that's not the case.</p>
   <span class='fu'>select</span>(-(<span class='fl'>1</span>:<span class='fl'>2</span>))
 <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>dat</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normcounts"</span>, <span class='st'>"cpm"</span>, <span class='st'>"vst"</span>)
 <span class='fu'><a href='https://rdrr.io/r/graphics/pairs.html'>pairs</a></span>(<span class='no'>dat</span>)</div><div class='img'><img src='FacileBiocDataStore-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>dpca</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>FacileAnalysis</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='no'>fd</span>, <span class='kw'>assay_name</span> <span class='kw'>=</span> <span class='st'>"vst"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::last’ by ‘dplyr::last’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::first’ by ‘dplyr::first’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::between’ by ‘dplyr::between’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘dplyr::combine’ by ‘multiGSEA::combine’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='input'><span class='co'># edgeR ---------------------------------------------------------------------</span>
+<span class='no'>dpca</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>FacileAnalysis</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='no'>fd</span>, <span class='kw'>assay_name</span> <span class='kw'>=</span> <span class='st'>"vst"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::last’ by ‘dplyr::last’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::first’ by ‘dplyr::first’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::between’ by ‘dplyr::between’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘dplyr::combine’ by ‘multiGSEA::combine’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='input'>
+<span class='co'># edgeR ---------------------------------------------------------------------</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='example_bioc_data.html'>example_bioc_data</a></span>(<span class='kw'>class</span> <span class='kw'>=</span> <span class='st'>"DGEList"</span>)
 <span class='no'>yf</span> <span class='kw'>&lt;-</span> <span class='fu'>facilitate</span>(<span class='no'>y</span>)
 <span class='kw pkg'>FacileAnalysis</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='no'>yf</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `event_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `tte_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; ===========================================================
