@@ -41,7 +41,7 @@ Remotes:
     facilebio/FacileAnalysis,
     facilebio/FacileData
 biocViews: Infrastructure, DataRepresentation
-License: Apache License (>= 2.0)
+License: Apache License (>= 2.0) + LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

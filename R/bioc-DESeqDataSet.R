@@ -147,8 +147,9 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
 #' @export
 fetch_assay_data.FacileDESeqDataSet <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
-    normalized = FALSE, as.matrix = FALSE, ..., prior.count = 0.1,
-    aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
+    normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE, ...,
+    prior.count = 0.1, aggregate = FALSE, aggregate.by= "ewm",
+    verbose = FALSE) {
   assert_string(assay_name)
   if (test_string(normalized) && normalized == "cpm") {
     # This is for DESeqDataSet that wans to use edgeR normalized counts
@@ -174,8 +175,8 @@ fetch_assay_data.FacileDESeqDataSet <- function(
 
   fetch_assay_data.FacileBiocDataStore(
     x, features, samples, assay_name = assay_name, normalized = normalized,
-    as.matrix = as.matrix, ..., aggregate = aggregate,
-    aggregate.by = aggregate.by, verbose = verbose)
+    batch = batch, main = main, as.matrix = as.matrix, ...,
+    aggregate = aggregate, aggregate.by = aggregate.by, verbose = verbose)
 }
 
 # bioc data retrieval methods --------------------------------------------------

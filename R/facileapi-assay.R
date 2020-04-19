@@ -43,8 +43,8 @@ assay_sample_info.FacileBiocDataStore <- function(
 #' yf <- example_bioc_data("DGEList") %>% facilitate()
 fetch_assay_data.FacileBiocDataStore <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
-    normalized = FALSE, as.matrix = FALSE, ..., aggregate = FALSE,
-    aggregate.by= "ewm", verbose = FALSE) {
+    normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE, ...,
+    aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
   assert_flag(as.matrix)
   assert_flag(normalized)
   ainfo <- assay_info(x, assay_name)
@@ -86,6 +86,10 @@ fetch_assay_data.FacileBiocDataStore <- function(
   adat <- adat.all[features[["feature_id"]],, drop = FALSE]
   features[["assay_type"]] <- ainfo[["assay_type"]]
 
+  if (!is.null(batch)) {
+    normalized <- TRUE
+  }
+
   if (normalized) {
     # Adds sample-level assay data appropriate for whatever the assay is
     asinfo <- assay_sample_info(x, assay_name, samples)
@@ -99,8 +103,8 @@ fetch_assay_data.FacileBiocDataStore <- function(
     if (length(setdiff(colnames(asinfo), c("dataset", "sample_id")))) {
       samples <- left_join(samples, asinfo, by = c("dataset", "sample_id"))
     }
-    adat <- normalize_assay_data(adat, features, samples,
-                                 verbose = verbose, ...)
+    adat <- normalize_assay_data(adat, features, samples, batch = batch,
+                                 main = main, verbose = verbose, ...)
   }
 
   pdat <- pdata(x)

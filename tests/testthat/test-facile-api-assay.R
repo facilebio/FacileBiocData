@@ -149,8 +149,8 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
         checkmate::expect_subset(ecols, colnames(bres), info = info)
         expect_equal(bres[, ecols], fres, info = info)
       } else {
-        expect_set_equal(colnames(bres), colnames(fres))
-        expect_set_equal(rownames(bres), rownames(fres))
+        checkmate::expect_set_equal(colnames(bres), colnames(fres))
+        checkmate::expect_set_equal(rownames(bres), rownames(fres))
         bres <- bres[rownames(fres), colnames(fres)]
         expect_equal(bres, fres, check.attributes = FALSE, info = info)
       }
