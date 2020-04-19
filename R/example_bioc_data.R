@@ -1,3 +1,5 @@
+#' Map the Bioconductor assay container class to the package it comes from.
+#' @noRd
 .bioc_types <- tribble(
   ~class,                 ~package,
   "DGEList",              "edgeR",
@@ -57,14 +59,18 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
   fn(y, ...)
 }
 
+#' @noRd
 .to_DGEList <- function(x, ...) {
   x
 }
 
+#' @noRd
+#' @importFrom stats model.matrix
 .to_EList <- function(x, design = ~ group, ...) {
   limma::voom(x, model.matrix(design, data = x[["samples"]]))
 }
 
+#' @noRd
 .to_ExpressionSet <- function(x, ...) {
   eset <- Biobase::ExpressionSet(x[["counts"]])
   eset <- Biobase::`pData<-`(eset, x[["samples"]])
@@ -72,6 +78,7 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
   eset
 }
 
+#' @noRd
 .to_SummarizedExperiment <- function(x, ...) {
   SummarizedExperiment::SummarizedExperiment(
     list(counts = x[["counts"]]),
@@ -79,14 +86,17 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
     colData = x[["samples"]])
 }
 
+#' @noRd
 .to_DESeqDataSet <- function(x, design = ~ group, ...) {
   DESeq2::DESeqDataSet(.to_SummarizedExperiment(x), design = design)
 }
 
+#' @noRd
 .to_SingleCellExperiment <- function(x, ...) {
   stop("SingleCellExperiment support not yet implemented")
 }
 
+#' @noRd
 .to_MultiAssayExperiment <- function(x, ...) {
   stop("MultiAssayExperiment support not yet implemented")
 }

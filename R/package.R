@@ -5,6 +5,7 @@
 #' @import methods
 #' @import tidyr
 #' @import dplyr
+#' @importFrom rlang .data .env
 "_PACKAGE"
 
 # Import and rexport -----------------------------------------------------------

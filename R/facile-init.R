@@ -24,6 +24,7 @@
 #' facile_feature_frame.
 #'
 #' @noRd
+#' @importFrom tidyselect all_of
 #' @param x the bioconductor container
 #' @param finfo the data.frame from `fdata(x)`
 #' @param rename_fdata a character vector with `names(rename_fdata)` being

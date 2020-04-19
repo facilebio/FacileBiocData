@@ -50,6 +50,9 @@ setClass("FacileDESeqDataSet",
 #' pairs(dat)
 #'
 #' dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
+#'
+#' @param assay_type A string that indicates the type of assay stored in the
+#'   primary assay of the container.
 facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
                                     feature_type = "infer", ...,
                                     run_vst = NULL, blind = TRUE,

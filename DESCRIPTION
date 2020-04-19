@@ -18,16 +18,18 @@ Imports:
     broom,
     checkmate,
     DESeq2,
-    FacileData,
     dplyr,
     edgeR,
     limma,
     Matrix,
     methods,
     MultiAssayExperiment,
+    rlang,
+    stats,
     SingleCellExperiment,
     SummarizedExperiment,
-    tidyr
+    tidyr,
+    tidyselect
 Suggests:
     airway,
     FacileAnalysis,
@@ -39,7 +41,7 @@ Remotes:
     facilebio/FacileAnalysis,
     facilebio/FacileData
 biocViews: Infrastructure, DataRepresentation
-License: Apache Version 2.0
+License: Apache License (>= 2.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

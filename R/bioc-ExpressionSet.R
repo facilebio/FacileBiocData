@@ -70,7 +70,7 @@ pdata.ExpressionSet <- function(x, ...) {
 adata.ExpressionSet <- function(x, name = default_assay(x), ...) {
   reqpkg("Biobase")
   if (is.null(name)) {
-    name <- Biobase::assayDataElementNames(eset)[1L]
+    name <- Biobase::assayDataElementNames(x)[1L]
   }
   out <- Biobase::assayDataElement(x, name)
   .cleanup_adata(x, out, name = name, ...)

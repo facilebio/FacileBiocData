@@ -35,7 +35,7 @@ fetch_sample_covariates.FacileBiocDataStore <- function(
       warning("Unknown sample covariates: ", paste(bad.covs, collapse = ","))
       covariates <- intersect(covariates, all.covs)
     }
-    sinfo <- select(sinfo, dataset, sample_id, {{covariates}})
+    sinfo <- select(sinfo, .data$dataset, .data$sample_id, {{covariates}})
   }
 
   if (nrow(samples) == 0 || length(all.covs) == 0L) {
@@ -72,7 +72,7 @@ covariate_definitions.FacileBiocDataStore <- function(x, as.list = TRUE, ...) {
 #' @export
 fetch_custom_sample_covariates.FacileBiocDataStore <- function(
   x, samples = NULL, covariates = NULL, custom_key = Sys.getenv("USER"),
-  with_source = FALSE, file.prefix = "facile", ...) {
+  file.prefix = "facile", ...) {
   .empty_sample_covariates(x)
 }
 

@@ -3,7 +3,7 @@
 samples.FacileBiocDataStore <- function(x, ...) {
   pdata(x) %>%
     as.tbl() %>%
-    dplyr::select(dataset, sample_id) %>%
+    dplyr::select(.data$dataset, .data$sample_id) %>%
     as_facile_frame(x, .valid_sample_check = FALSE)
 }
 
@@ -19,7 +19,7 @@ filter_samples.FacileBiocDataStore <- function(x, ..., samples. = samples(x),
     semi_join(samples., by = c("dataset", "sample_id")) %>%
     filter(...)
   if (!with_covariates) {
-    out <- select(out, dataset, sample_id)
+    out <- select(out, .data$dataset, .data$sample_id)
   }
   if (nrow(out) == 0L) {
     warning("All samples have been filtered out", immediate. = TRUE)

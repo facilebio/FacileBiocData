@@ -40,7 +40,7 @@ features.FacileBiocDataStore <- function(x, assay_name = default_assay(x),
 
   if (!is.null(feature_ids)) {
     assert_character(feature_ids)
-    out <- filter(out, feature_id %in% feature_ids)
+    out <- filter(out, .data$feature_id %in% feature_ids)
   }
 
   as.tbl(out)

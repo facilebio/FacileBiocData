@@ -8,7 +8,8 @@ assay_sample_info.FacileBiocDataStore <- function(
     samples <- samples(x)
   } else {
     assert_sample_subset(samples, x)
-    samples <- distinct(samples, dataset, sample_id, .keep_all = TRUE)
+    samples <- distinct(samples, .data$dataset, .data$sample_id,
+                        .keep_all = TRUE)
   }
 
   samples <- collect(samples, n = Inf)
@@ -68,7 +69,7 @@ fetch_assay_data.FacileBiocDataStore <- function(
     }
     if (is.factor(features)) features <- as.character(features)
     if (is.character(features)) {
-      features <- filter(features.all, feature_id %in% .env$features)
+      features <- filter(features.all, .data$feature_id %in% .env$features)
     }
     stopifnot(is(features, 'tbl') || is(features, 'data.frame'))
     if (!'assay' %in% colnames(features) || !is.character(features$assay)) {
@@ -78,9 +79,9 @@ fetch_assay_data.FacileBiocDataStore <- function(
     assert_assay_feature_descriptor(features)
   }
 
-  features <- distinct(features, feature_id, .keep_all = TRUE)
+  features <- distinct(features, .data$feature_id, .keep_all = TRUE)
 
-  samples[["samid"]] <- with(samples, paste(dataset, sample_id, sep = "__"))
+  samples[["samid"]] <- paste(samples$dataset, samples$sample_id, sep = "__")
   adat.all <- adata(x, assay_name)[, samples[["samid"]], drop = FALSE]
   adat <- adat.all[features[["feature_id"]],, drop = FALSE]
   features[["assay_type"]] <- ainfo[["assay_type"]]

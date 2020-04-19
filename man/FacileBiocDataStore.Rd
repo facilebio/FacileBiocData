@@ -23,6 +23,10 @@
 
 \method{facilitate}{DGEList}(x, assay_type = "rnaseq", feature_type = "infer", ...)
 }
+\arguments{
+\item{assay_type}{A string that indicates the type of assay stored in the
+primary assay of the container.}
+}
 \description{
 Standard Bioconductor assay containers, like DGEList, DESeqDataSet,
 SummarizedExperiment, etc. are immersed into the facile.bio ecosystem by
@@ -78,6 +82,7 @@ colnames(dat) <- c("normcounts", "cpm", "vst")
 pairs(dat)
 
 dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
+
 # edgeR ---------------------------------------------------------------------
 y <- example_bioc_data(class = "DGEList")
 yf <- facilitate(y)
