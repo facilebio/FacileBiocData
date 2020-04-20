@@ -255,22 +255,7 @@ parameter if that's not the case.</p>
 <span class='fu'><a href='https://rdrr.io/r/graphics/pairs.html'>pairs</a></span>(<span class='no'>dat</span>)</div><div class='img'><img src='FacileBiocDataStore-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>dpca</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>FacileAnalysis</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='no'>fd</span>, <span class='kw'>assay_name</span> <span class='kw'>=</span> <span class='st'>"vst"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::last’ by ‘dplyr::last’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::first’ by ‘dplyr::first’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::between’ by ‘dplyr::between’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘dplyr::combine’ by ‘multiGSEA::combine’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='input'>
 <span class='co'># edgeR ---------------------------------------------------------------------</span>
-<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='example_bioc_data.html'>example_bioc_data</a></span>(<span class='kw'>class</span> <span class='kw'>=</span> <span class='st'>"DGEList"</span>)
-<span class='no'>yf</span> <span class='kw'>&lt;-</span> <span class='fu'>facilitate</span>(<span class='no'>y</span>)
-<span class='kw pkg'>FacileAnalysis</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='no'>yf</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `event_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `tte_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; ===========================================================
-#&gt; FacilePcaAnalysisResult
-#&gt; -----------------------------------------------------------
-#&gt; Assay used: counts
-#&gt; Number of features used: 1000
-#&gt; Number of PCs: 5
-#&gt; Variance explained:
-#&gt;   PC1: 62.47%
-#&gt;   PC2: 15.28%
-#&gt;   PC3: 7.83%
-#&gt;   PC4: 7.64%
-#&gt;   PC5: 6.79%
-#&gt; ===========================================================
-#&gt;  </div></span></pre>
+<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='example_bioc_data.html'>example_bioc_data</a></span>(<span class='kw'>class</span> <span class='kw'>=</span> <span class='st'>"DGEList"</span>)</div><div class='output co'>#&gt; <span class='error'>Error: Negative counts not allowed</span></div><div class='input'><span class='no'>yf</span> <span class='kw'>&lt;-</span> <span class='fu'>facilitate</span>(<span class='no'>y</span>)</div><div class='output co'>#&gt; <span class='error'>Error in facilitate(y): object 'y' not found</span></div><div class='input'><span class='kw pkg'>FacileAnalysis</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='no'>yf</span>)</div><div class='output co'>#&gt; <span class='error'>Error in FacileAnalysis::fpca(yf): object 'yf' not found</span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
