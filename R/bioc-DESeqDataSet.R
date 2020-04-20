@@ -28,8 +28,13 @@ setClass("FacileDESeqDataSet",
 #'    fetch_assay_data(assay_name = {"vst"|"rlog"|"normcounts"})
 #'
 #' @export
+#' @param run_vst should we re-run the vst transformation for a DESeqDataSet.
+#'   If the `DESeqDataSet` already has a `"vst"` assay, then we'll just take
+#'   that, otherwise if this isn't set to `FALSE` it will be run.
+#' @param blind,nsub,fitType parameters to send to [DESeq2::vst()] to tweak
+#'   how it is run internally
+#' @param
 #' @examples
-#'
 #' # DESeq2 --------------------------------------------------------------------
 #' dds <- DESeq2::makeExampleDESeqDataSet(n=2000, m=20)
 #' fd <- facilitate(dds)
@@ -50,14 +55,11 @@ setClass("FacileDESeqDataSet",
 #' pairs(dat)
 #'
 #' dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
-#'
-#' @param assay_type A string that indicates the type of assay stored in the
-#'   primary assay of the container.
 facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
                                     feature_type = "infer", ...,
                                     run_vst = NULL, blind = TRUE,
                                     nsub = 1000, fitType = "parametric",
-                                    prior.count = 0.1, verbose = FALSE) {
+                                    verbose = FALSE) {
   reqpkg("DESeq2")
   reqpkg("S4Vectors")
   sinfo <- .init_pdata(x, ...)

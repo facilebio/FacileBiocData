@@ -17,20 +17,23 @@
   blind = TRUE,
   nsub = 1000,
   fitType = "parametric",
-  prior.count = 0.1,
   verbose = FALSE
 )
 
 \method{facilitate}{DGEList}(x, assay_type = "rnaseq", feature_type = "infer", ...)
 }
 \arguments{
-\item{assay_type}{A string that indicates the type of assay stored in the
-primary assay of the container.}
+\item{run_vst}{should we re-run the vst transformation for a DESeqDataSet.
+If the \code{DESeqDataSet} already has a \code{"vst"} assay, then we'll just take
+that, otherwise if this isn't set to \code{FALSE} it will be run.}
+
+\item{blind, nsub, fitType}{parameters to send to \code{\link[DESeq2:vst]{DESeq2::vst()}} to tweak
+how it is run internally}
 }
 \description{
-Standard Bioconductor assay containers, like DGEList, DESeqDataSet,
-SummarizedExperiment, etc. are immersed into the facile.bio ecosystem by
-calling the \code{facilitate()} function on them.
+Sublcassees of this virtual class are intantiated by calling \code{facilitate()}
+on a standard Bioconductor assay containter, like a DGEList, DESeqDataSet,
+SummarizedExperiment, etc.
 }
 \section{DESeqDataSet}{
 
@@ -61,7 +64,6 @@ parameter if that's not the case.
 }
 
 \examples{
-
 # DESeq2 --------------------------------------------------------------------
 dds <- DESeq2::makeExampleDESeqDataSet(n=2000, m=20)
 fd <- facilitate(dds)
@@ -82,7 +84,6 @@ colnames(dat) <- c("normcounts", "cpm", "vst")
 pairs(dat)
 
 dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
-
 # edgeR ---------------------------------------------------------------------
 y <- example_bioc_data(class = "DGEList")
 yf <- facilitate(y)

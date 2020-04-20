@@ -11,9 +11,9 @@ setOldClass("FacileDataStore")
 
 #' Root virtual class that signals object as a FacileDataStore
 #'
-#' Standard Bioconductor assay containers, like DGEList, DESeqDataSet,
-#' SummarizedExperiment, etc. are immersed into the facile.bio ecosystem by
-#' calling the `facilitate()` function on them.
+#' Sublcassees of this virtual class are intantiated by calling `facilitate()`
+#' on a standard Bioconductor assay containter, like a DGEList, DESeqDataSet,
+#' SummarizedExperiment, etc.
 #'
 #' @export
 #' @rdname FacileBiocDataStore
@@ -39,6 +39,17 @@ ifacile.FacileBiocDataStore <- function(x, ...) {
 # Data retrieval methods for bioconductor objects ------------------------------
 #
 # These functions are intentionally not exported
+
+#' @rdname facilitate
+#' @param assay_type A string that indicates the type of assay stored in the
+#'   primary assay of the container. For some assay containers, like
+#'   `DESeqDataSet`, `DGEList`, and `SingleCellExperiment`, we can assume the
+#'   default value for this to be `"rnaseq"`. For the rest, we assume it's
+#'   `"lognorm"`.
+#' @param feature_type A string that indicates the type of features identifiers
+#'   the assay containers is using. Default is `"infer"` to try to guess, but
+#'   this is not the most accurate.
+NULL
 
 #' Retrieves feature-level metadata from a bioc container
 #' @noRd
