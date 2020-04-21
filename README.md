@@ -7,6 +7,7 @@
 
 [![R build
 status](https://github.com/facilebio/FacileBiocData/workflows/R-CMD-check/badge.svg)](https://github.com/facilebio/FacileBiocData/actions)
+![pkgdown](https://github.com/facilebio/FacileBiocData/workflows/pkgdown/badge.svg)
 [![Project Status:
 Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Lifecycle:
