@@ -1,7 +1,7 @@
 Package: FacileBiocData
 Type: Package
 Title: FacileData API wrappers over Bioconductor assay containers
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Steve", "Lianoglou", , "lianoglou@dnli.com", c("aut", "cre")),
     person("Denali Therapeutics", role = c("cph", "fnd"))
@@ -41,7 +41,7 @@ Remotes:
     facilebio/FacileAnalysis,
     facilebio/FacileData
 biocViews: Infrastructure, DataRepresentation
-License: Apache License (>= 2.0) + LICENSE
+License: Apache License (>= 2.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

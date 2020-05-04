@@ -11,7 +11,8 @@ setClass("FacileExpressionSet",
 #' @export
 #' @noRd
 facilitate.ExpressionSet <- function(x, assay_type = "lognorm",
-                                     feature_type = "infer", ...) {
+                                     feature_type = "infer",
+                                     organism = "unknown", ...) {
   if (!requireNamespace("Biobase", quietly = TRUE)) {
     stop("Biobase package required, please install it.",
          call. = FALSE)
@@ -43,6 +44,7 @@ facilitate.ExpressionSet <- function(x, assay_type = "lognorm",
   }, simplify = FALSE)
   out@facile[["default_assay"]] <- "exprs"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
+  out@facile[["organism"]] <- organism
   out
 }
 

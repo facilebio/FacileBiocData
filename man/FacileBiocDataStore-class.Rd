@@ -3,15 +3,17 @@
 \docType{class}
 \name{FacileBiocDataStore-class}
 \alias{FacileBiocDataStore-class}
+\alias{facilitate}
 \alias{FacileBiocDataStore}
 \alias{facilitate.DESeqDataSet}
 \alias{facilitate.DGEList}
-\title{Root virtual class that signals object as a FacileDataStore}
+\title{Immerse bioconductor assay containers into the facile.bio ecosystem.}
 \usage{
 \method{facilitate}{DESeqDataSet}(
   x,
   assay_type = "rnaseq",
   feature_type = "infer",
+  organism = "unknown",
   ...,
   run_vst = NULL,
   blind = TRUE,
@@ -20,20 +22,51 @@
   verbose = FALSE
 )
 
-\method{facilitate}{DGEList}(x, assay_type = "rnaseq", feature_type = "infer", ...)
+\method{facilitate}{DGEList}(
+  x,
+  assay_type = "rnaseq",
+  feature_type = "infer",
+  organism = "unknown",
+  ...
+)
 }
 \arguments{
+\item{assay_type}{A string that indicates the type of assay stored in the
+primary assay of the container. For some assay containers, like
+\code{DESeqDataSet}, \code{DGEList}, and \code{SingleCellExperiment}, we can assume the
+default value for this to be \code{"rnaseq"}. For the rest, we assume it's
+\code{"lognorm"}.}
+
+\item{feature_type}{A string that indicates the type of features identifiers
+the assay containers is using. Default is \code{"infer"} to try to guess, but
+this is not the most accurate.}
+
+\item{organism}{the organism the dataset is for (Homo sapiens, Mus musculus,
+etc.)}
+
 \item{run_vst}{should we re-run the vst transformation for a DESeqDataSet.
 If the \code{DESeqDataSet} already has a \code{"vst"} assay, then we'll just take
 that, otherwise if this isn't set to \code{FALSE} it will be run.}
 
 \item{blind, nsub, fitType}{parameters to send to \code{\link[DESeq2:vst]{DESeq2::vst()}} to tweak
 how it is run internally}
+
+\item{verbose}{make some noise}
 }
 \description{
-Sublcassees of this virtual class are intantiated by calling \code{facilitate()}
-on a standard Bioconductor assay containter, like a DGEList, DESeqDataSet,
-SummarizedExperiment, etc.
+Bioconductor assay containers, like a DGEList, DESeqDataSet,
+SummarizedExperiment, etc. can be used within the facie.bio ecosystem by
+invoking the \code{facilitate()} method on them. This will return a \verb{Facile*}
+subclass of the container itself.
+}
+\details{
+For instance, \code{facilitate(DGEList)} will return a \code{FacileDGEList}, which can
+be used a "normal" DGEList in all the same ways, but is also wrapped with
+the facile api api and can be used by methods withing the \code{FacileAnalysis},
+for instance.
+
+These classes are also all subclass of the abstract \code{FacileBiocDataStore}
+virtual class.
 }
 \section{DESeqDataSet}{
 

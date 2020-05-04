@@ -4,7 +4,7 @@ NULL
 #' @export
 setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 
-#' @rdname FacileBiocDataStore
+#' @rdname FacileBiocDataStore-class
 #' @section DGEList:
 #' We assume the DGEList holds `"rnaseq"` assay data. Set the `assay_type`
 #' parameter if that's not the case.
@@ -16,7 +16,7 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 #' yf <- facilitate(y)
 #' FacileAnalysis::fpca(yf)
 facilitate.DGEList <- function(x, assay_type = "rnaseq", feature_type = "infer",
-                               ...) {
+                               organism = "unknown", ...) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- rownames(sinfo)
@@ -40,6 +40,7 @@ facilitate.DGEList <- function(x, assay_type = "rnaseq", feature_type = "infer",
       feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "counts"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
+  out@facile[["organism"]] <- organism
   out
 }
 

@@ -9,7 +9,7 @@ setClass("FacileSummarizedExperiment",
 #' @noRd
 facilitate.SummarizedExperiment <- function(x, assay_type = "lognorm",
                                             feature_type = "infer",
-                                            ...) {
+                                            organism = "unknown", ...) {
   reqpkg("SummarizedExperiment")
   reqpkg("S4Vectors")
   is.ranged <- is(x, "RangedSummarizedExperiment") # airway dataset killed me
@@ -62,6 +62,7 @@ facilitate.SummarizedExperiment <- function(x, assay_type = "lognorm",
   }, simplify = FALSE)
   out@facile[["default_assay"]] <- SummarizedExperiment::assayNames(out)[1L]
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
+  out@facile[["organism"]] <- organism
   out
 }
 

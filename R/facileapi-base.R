@@ -1,5 +1,7 @@
 #' @noRd
 #' @export
 organism.FacileBiocDataStore <- function(x, ...) {
-  "unknown"
+  out <- ifacile(x)[["organism"]]
+  if (is.null(out)) out <- "unknown"
+  out
 }

@@ -7,7 +7,7 @@ NULL
 setClass("FacileDESeqDataSet",
          contains = c("FacileBiocDataStore", "DESeqDataSet"))
 
-#' @rdname FacileBiocDataStore
+#' @rdname FacileBiocDataStore-class
 #' @section DESeqDataSet:
 #'
 #' The FacileDESeqDataSet will look for variance stabilized versions of the
@@ -33,7 +33,6 @@ setClass("FacileDESeqDataSet",
 #'   that, otherwise if this isn't set to `FALSE` it will be run.
 #' @param blind,nsub,fitType parameters to send to [DESeq2::vst()] to tweak
 #'   how it is run internally
-#' @param
 #' @examples
 #' # DESeq2 --------------------------------------------------------------------
 #' dds <- DESeq2::makeExampleDESeqDataSet(n=2000, m=20)
@@ -56,7 +55,8 @@ setClass("FacileDESeqDataSet",
 #'
 #' dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
 facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
-                                    feature_type = "infer", ...,
+                                    feature_type = "infer",
+                                    organism = "unknown", ...,
                                     run_vst = NULL, blind = TRUE,
                                     nsub = 1000, fitType = "parametric",
                                     verbose = FALSE) {
@@ -134,6 +134,7 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
       feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "counts"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
+  out@facile[["organism"]] <- organism
   out
 }
 

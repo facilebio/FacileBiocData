@@ -9,15 +9,36 @@ setOldClass("FacileDataStore")
 .bioc_assume_count_container <- c(
   "DGEList", "DESeqDataSet", "SingleCellExperiment")
 
-#' Root virtual class that signals object as a FacileDataStore
+#' Immerse bioconductor assay containers into the facile.bio ecosystem.
 #'
-#' Sublcassees of this virtual class are intantiated by calling `facilitate()`
-#' on a standard Bioconductor assay containter, like a DGEList, DESeqDataSet,
-#' SummarizedExperiment, etc.
+#' Bioconductor assay containers, like a DGEList, DESeqDataSet,
+#' SummarizedExperiment, etc. can be used within the facie.bio ecosystem by
+#' invoking the `facilitate()` method on them. This will return a `Facile*`
+#' subclass of the container itself.
+#'
+#' For instance, `facilitate(DGEList)` will return a `FacileDGEList`, which can
+#' be used a "normal" DGEList in all the same ways, but is also wrapped with
+#' the facile api api and can be used by methods withing the `FacileAnalysis`,
+#' for instance.
+#'
+#' These classes are also all subclass of the abstract `FacileBiocDataStore`
+#' virtual class.
 #'
 #' @export
-#' @rdname FacileBiocDataStore
+#' @aliases facilitate
 #' @aliases FacileBiocDataStore
+#'
+#' @param assay_type A string that indicates the type of assay stored in the
+#'   primary assay of the container. For some assay containers, like
+#'   `DESeqDataSet`, `DGEList`, and `SingleCellExperiment`, we can assume the
+#'   default value for this to be `"rnaseq"`. For the rest, we assume it's
+#'   `"lognorm"`.
+#' @param feature_type A string that indicates the type of features identifiers
+#'   the assay containers is using. Default is `"infer"` to try to guess, but
+#'   this is not the most accurate.
+#' @param organism the organism the dataset is for (Homo sapiens, Mus musculus,
+#'   etc.)
+#' @param verbose make some noise
 setClass("FacileBiocDataStore",
          contains = c("FacileDataStore", "VIRTUAL"),
          slots = c(facile = "list"),
@@ -39,17 +60,6 @@ ifacile.FacileBiocDataStore <- function(x, ...) {
 # Data retrieval methods for bioconductor objects ------------------------------
 #
 # These functions are intentionally not exported
-
-#' @rdname facilitate
-#' @param assay_type A string that indicates the type of assay stored in the
-#'   primary assay of the container. For some assay containers, like
-#'   `DESeqDataSet`, `DGEList`, and `SingleCellExperiment`, we can assume the
-#'   default value for this to be `"rnaseq"`. For the rest, we assume it's
-#'   `"lognorm"`.
-#' @param feature_type A string that indicates the type of features identifiers
-#'   the assay containers is using. Default is `"infer"` to try to guess, but
-#'   this is not the most accurate.
-NULL
 
 #' Retrieves feature-level metadata from a bioc container
 #' @noRd

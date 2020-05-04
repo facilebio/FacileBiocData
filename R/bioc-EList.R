@@ -8,7 +8,7 @@ setClass("FacileEList", contains = c("FacileBiocDataStore", "EList"))
 #' @export
 #' @noRd
 facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
-                             ...) {
+                             organism = "unknown", ...) {
   reqpkg("limma")
 
   sinfo <- .init_pdata(x, ...)
@@ -32,6 +32,7 @@ facilitate.EList <- function(x, assay_type = "lognorm", feature_type = "infer",
     E = list(assay_type = assay_type, feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "E"
   out@facile[["assay_sample_info"]] <- .init_assay_sample_info(out)
+  out@facile[["organism"]] <- organism
   out
 }
 
