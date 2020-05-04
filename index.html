@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">FacileBiocData</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
 <p>The user simply needs to call the <code>facilitate</code> function on their data container in order to make its data available via the facile API, so that it can be analyzed within the facile framework.</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">FacileBiocData</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"airway"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"airway"</span>)
-<span class="no">airway.facile</span> <span class="kw">&lt;-</span> <span class="fu">facilitate</span>(<span class="no">airway</span>, <span class="kw">assay_type</span> <span class="kw">=</span> <span class="st">"rnaseq"</span>)</pre></div>
+<span class="no">airway.facile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/FacileBiocDataStore-class.html">facilitate</a></span>(<span class="no">airway</span>, <span class="kw">assay_type</span> <span class="kw">=</span> <span class="st">"rnaseq"</span>)</pre></div>
 <p>We can now use <code>airway.facile</code> as a first-class data-providedr within the facile framework. For instance, we can use the <a href="https://facilebio.github.io/FacileAnalysis/">FacileAnalysis</a> to perform a differential expression analysis using the edgeR or limma based framework:</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">FacileAnalysis</span>)
 <span class="no">dge.facile</span> <span class="kw">&lt;-</span> <span class="no">airway.facile</span> <span class="kw">%&gt;%</span>
@@ -124,7 +124,7 @@
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small>Apache License (&gt;= 2.0) + <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small>Apache License (&gt;= 2.0)</small></li>
 </ul>
 </div>
 <div class="developers">
