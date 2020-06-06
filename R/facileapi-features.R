@@ -43,5 +43,5 @@ features.FacileBiocDataStore <- function(x, assay_name = default_assay(x),
     out <- filter(out, .data$feature_id %in% feature_ids)
   }
 
-  as.tbl(out)
+  as_tibble(out)
 }

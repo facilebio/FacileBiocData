@@ -2,7 +2,7 @@
 #' @export
 samples.FacileBiocDataStore <- function(x, ...) {
   pdata(x) %>%
-    as.tbl() %>%
+    as_tibble() %>%
     dplyr::select(.data$dataset, .data$sample_id) %>%
     as_facile_frame(x, .valid_sample_check = FALSE)
 }

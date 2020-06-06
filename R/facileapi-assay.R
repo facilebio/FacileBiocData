@@ -115,7 +115,7 @@ fetch_assay_data.FacileBiocDataStore <- function(
     ftype <- ainfo[["feature_type"]]
     vals <- FacileData:::.melt.assay.matrix(adat, assay_name, atype, ftype,
                                             features)
-    vals <- as.tbl(vals)
+    vals <- as_tibble(vals)
     if (isTRUE(aggregate)) {
       vals <- mutate(vals,
                      feature_type = "aggregated",
