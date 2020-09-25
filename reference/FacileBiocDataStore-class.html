@@ -126,27 +126,27 @@ subclass of the container itself.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for DESeqDataSet</span>
-<span class='fu'>facilitate</span>(
-  <span class='kw'>x</span>,
-  assay_type = <span class='st'>"rnaseq"</span>,
-  feature_type = <span class='st'>"infer"</span>,
-  organism = <span class='st'>"unknown"</span>,
-  <span class='kw'>...</span>,
-  run_vst = <span class='kw'>NULL</span>,
-  blind = <span class='fl'>TRUE</span>,
-  nsub = <span class='fl'>1000</span>,
-  fitType = <span class='st'>"parametric"</span>,
-  verbose = <span class='fl'>FALSE</span>
-)
+<span class='fu'>facilitate</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  assay_type <span class='op'>=</span> <span class='st'>"rnaseq"</span>,
+  feature_type <span class='op'>=</span> <span class='st'>"infer"</span>,
+  organism <span class='op'>=</span> <span class='st'>"unknown"</span>,
+  <span class='va'>...</span>,
+  run_vst <span class='op'>=</span> <span class='cn'>NULL</span>,
+  blind <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  nsub <span class='op'>=</span> <span class='fl'>1000</span>,
+  fitType <span class='op'>=</span> <span class='st'>"parametric"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for DGEList</span>
-<span class='fu'>facilitate</span>(
-  <span class='kw'>x</span>,
-  assay_type = <span class='st'>"rnaseq"</span>,
-  feature_type = <span class='st'>"infer"</span>,
-  organism = <span class='st'>"unknown"</span>,
-  <span class='kw'>...</span>
-)</pre>
+<span class='fu'>facilitate</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  assay_type <span class='op'>=</span> <span class='st'>"rnaseq"</span>,
+  feature_type <span class='op'>=</span> <span class='st'>"infer"</span>,
+  organism <span class='op'>=</span> <span class='st'>"unknown"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -224,9 +224,9 @@ parameter if that's not the case.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># DESeq2 --------------------------------------------------------------------</span>
-<span class='kw'>dds</span> <span class='op'>&lt;-</span> <span class='kw'>DESeq2</span>::<span class='fu'><a href='https://rdrr.io/pkg/DESeq2/man/makeExampleDESeqDataSet.html'>makeExampleDESeqDataSet</a></span>(n=<span class='fl'>2000</span>, m=<span class='fl'>20</span>)
-<span class='kw'>fd</span> <span class='op'>&lt;-</span> <span class='fu'>facilitate</span>(<span class='kw'>dds</span>)
-</div><div class='output co'>#&gt; <span class='warning'>Warning: 2000 identifiers were either ambiguous or unknown</span></div><div class='input'><span class='fu'>fetch_assay_data</span>(<span class='fu'>samples</span>(<span class='kw'>fd</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gene1"</span>, <span class='st'>"gene20"</span>))
+<span class='va'>dds</span> <span class='op'>&lt;-</span> <span class='fu'>DESeq2</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/DESeq2/man/makeExampleDESeqDataSet.html'>makeExampleDESeqDataSet</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fl'>2000</span>, m<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span>
+<span class='va'>fd</span> <span class='op'>&lt;-</span> <span class='fu'>facilitate</span><span class='op'>(</span><span class='va'>dds</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: 2000 identifiers were either ambiguous or unknown</span></div><div class='input'><span class='fu'>fetch_assay_data</span><span class='op'>(</span><span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene1"</span>, <span class='st'>"gene20"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 40 x 8</span><span>
 #&gt;    dataset sample_id assay assay_type feature_type feature_id feature_name value
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
@@ -240,7 +240,7 @@ parameter if that's not the case.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> dataset sample4   coun… rnaseq     unknown      gene20     gene20           4
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> dataset sample5   coun… rnaseq     unknown      gene1      gene1            1
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> dataset sample5   coun… rnaseq     unknown      gene20     gene20           2
-#&gt; </span><span style='color: #949494;'># … with 30 more rows</span><span></div><div class='input'><span class='fu'>fetch_assay_data</span>(<span class='fu'>samples</span>(<span class='kw'>fd</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gene1"</span>, <span class='st'>"gene20"</span>), normalized = <span class='fl'>TRUE</span>)
+#&gt; </span><span style='color: #949494;'># … with 30 more rows</span><span></div><div class='input'><span class='fu'>fetch_assay_data</span><span class='op'>(</span><span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene1"</span>, <span class='st'>"gene20"</span><span class='op'>)</span>, normalized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 40 x 8</span><span>
 #&gt;    dataset sample_id assay assay_type feature_type feature_id feature_name
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       
@@ -254,7 +254,7 @@ parameter if that's not the case.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> dataset sample4   norm… lognorm    unknown      gene20     gene20      
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> dataset sample5   norm… lognorm    unknown      gene1      gene1       
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> dataset sample5   norm… lognorm    unknown      gene20     gene20      
-#&gt; </span><span style='color: #949494;'># … with 30 more rows, and 1 more variable: value </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'>fetch_assay_data</span>(<span class='fu'>samples</span>(<span class='kw'>fd</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gene1"</span>, <span class='st'>"gene20"</span>), normalized = <span class='st'>"cpm"</span>)
+#&gt; </span><span style='color: #949494;'># … with 30 more rows, and 1 more variable: value </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'>fetch_assay_data</span><span class='op'>(</span><span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene1"</span>, <span class='st'>"gene20"</span><span class='op'>)</span>, normalized <span class='op'>=</span> <span class='st'>"cpm"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 40 x 10</span><span>
 #&gt;    dataset sample_id libsize normfactor assay assay_type feature_type feature_id
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     
@@ -269,8 +269,8 @@ parameter if that's not the case.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> dataset sample5     </span><span style='text-decoration: underline;'>78</span><span>906      0.980 coun… rnaseq     unknown      gene1     
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> dataset sample5     </span><span style='text-decoration: underline;'>78</span><span>906      0.980 coun… rnaseq     unknown      gene20    
 #&gt; </span><span style='color: #949494;'># … with 30 more rows, and 2 more variables: feature_name </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, value </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
-<span class='fu'>samples</span>(<span class='kw'>fd</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'>with_assay_data</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gene1"</span>, <span class='st'>"gene20"</span>), normalized = <span class='fl'>TRUE</span>)
+<span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene1"</span>, <span class='st'>"gene20"</span><span class='op'>)</span>, normalized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 20 x 4</span><span>
 #&gt;    dataset sample_id   gene1  gene20
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -295,19 +295,19 @@ parameter if that's not the case.</p>
 #&gt; </span><span style='color: #BCBCBC;'>19</span><span> dataset sample19   2.78    4.13  
 #&gt; </span><span style='color: #BCBCBC;'>20</span><span> dataset sample20  -</span><span style='color: #BB0000;'>3.32</span><span>    0.051</span><span style='text-decoration: underline;'>5</span><span></div><div class='input'>
 <span class='co'># Retrieiving different flavors of normalized expression data</span>
-<span class='kw'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>samples</span>(<span class='kw'>fd</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'>with_assay_data</span>(<span class='st'>"gene1"</span>, normalized = <span class='fl'>TRUE</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'>with_assay_data</span>(<span class='st'>"gene1"</span>, normalized = <span class='st'>"cpm"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'>with_assay_data</span>(<span class='st'>"gene1"</span>, assay_name = <span class='st'>"vst"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'>select</span>(<span class='op'>-</span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>dat</span>) <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normcounts"</span>, <span class='st'>"cpm"</span>, <span class='st'>"vst"</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/pairs.html'>pairs</a></span>(<span class='kw'>dat</span>)
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='st'>"gene1"</span>, normalized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='st'>"gene1"</span>, normalized <span class='op'>=</span> <span class='st'>"cpm"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='st'>"gene1"</span>, assay_name <span class='op'>=</span> <span class='st'>"vst"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>select</span><span class='op'>(</span><span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normcounts"</span>, <span class='st'>"cpm"</span>, <span class='st'>"vst"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/pairs.html'>pairs</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
 </div><div class='img'><img src='FacileBiocDataStore-class-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='kw'>dpca</span> <span class='op'>&lt;-</span> <span class='kw'>FacileAnalysis</span>::<span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='kw'>fd</span>, assay_name = <span class='st'>"vst"</span>)
+<span class='va'>dpca</span> <span class='op'>&lt;-</span> <span class='fu'>FacileAnalysis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span><span class='op'>(</span><span class='va'>fd</span>, assay_name <span class='op'>=</span> <span class='st'>"vst"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::last’ by ‘dplyr::last’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::first’ by ‘dplyr::first’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘data.table::between’ by ‘dplyr::between’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='warning'>Warning: replacing previous import ‘dplyr::combine’ by ‘multiGSEA::combine’ when loading ‘multiGSEA.shiny’</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='input'><span class='co'># edgeR ---------------------------------------------------------------------</span>
-<span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='example_bioc_data.html'>example_bioc_data</a></span>(class = <span class='st'>"DGEList"</span>)
-<span class='kw'>yf</span> <span class='op'>&lt;-</span> <span class='fu'>facilitate</span>(<span class='kw'>y</span>)
-<span class='kw'>FacileAnalysis</span>::<span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span>(<span class='kw'>yf</span>)
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='example_bioc_data.html'>example_bioc_data</a></span><span class='op'>(</span>class <span class='op'>=</span> <span class='st'>"DGEList"</span><span class='op'>)</span>
+<span class='va'>yf</span> <span class='op'>&lt;-</span> <span class='fu'>facilitate</span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>
+<span class='fu'>FacileAnalysis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span><span class='op'>(</span><span class='va'>yf</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `event_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `tte_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; ===========================================================
 #&gt; FacilePcaAnalysisResult
 #&gt; -----------------------------------------------------------

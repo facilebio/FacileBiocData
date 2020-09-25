@@ -78,23 +78,21 @@
 <a href="#example-usage" class="anchor"></a>Example Usage</h2>
 <p>The user simply needs to call the <code>facilitate</code> function on their data container in order to make its data available via the facile API, so that it can be analyzed within the facile framework.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/facilebio/FacileBiocData">FacileBiocData</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"airway"</span>, package = <span class="st">"airway"</span>)
-<span class="kw">airway.facile</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/FacileBiocDataStore-class.html">facilitate</a></span>(<span class="kw">airway</span>, assay_type = <span class="st">"rnaseq"</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/facilebio/FacileBiocData">FacileBiocData</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"airway"</span>, package <span class="op">=</span> <span class="st">"airway"</span><span class="op">)</span>
+<span class="va">airway.facile</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/FacileBiocDataStore-class.html">facilitate</a></span><span class="op">(</span><span class="va">airway</span>, assay_type <span class="op">=</span> <span class="st">"rnaseq"</span><span class="op">)</span></pre></div>
 <p>We can now use <code>airway.facile</code> as a first-class data-providedr within the facile framework. For instance, we can use the <a href="https://facilebio.github.io/FacileAnalysis/">FacileAnalysis</a> to perform a differential expression analysis using the edgeR or limma based framework:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/facilebio/FacileAnalysis">FacileAnalysis</a></span>)
-<span class="kw">dge.facile</span> <span class="op">&lt;-</span> <span class="kw">airway.facile</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/flm_def.html">flm_def</a></span>(<span class="st">"dex"</span>, numer = <span class="st">"trt"</span>, denom = <span class="st">"untrt"</span>, batch = <span class="st">"cell"</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/fdge.html">fdge</a></span>(method = <span class="st">"voom"</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/facilebio/FacileAnalysis">FacileAnalysis</a></span><span class="op">)</span>
+<span class="va">dge.facile</span> <span class="op">&lt;-</span> <span class="va">airway.facile</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/flm_def.html">flm_def</a></span><span class="op">(</span><span class="st">"dex"</span>, numer <span class="op">=</span> <span class="st">"trt"</span>, denom <span class="op">=</span> <span class="st">"untrt"</span>, batch <span class="op">=</span> <span class="st">"cell"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/fdge.html">fdge</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"voom"</span><span class="op">)</span></pre></div>
 <p>We can extract the statistics from the <code>fdge</code> result:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span>(<span class="kw">dge.facile</span>) <span class="op">%&gt;%</span> 
-  <span class="fu">select</span>(<span class="kw">feature_id</span>, <span class="kw">logFC</span>, <span class="kw">pval</span>, <span class="kw">padj</span>) <span class="op">%&gt;%</span> 
-  <span class="fu">arrange</span>(<span class="kw">pval</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>()
+<span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="va">dge.facile</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="va">feature_id</span>, <span class="va">logFC</span>, <span class="va">pval</span>, <span class="va">padj</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">arrange</span><span class="op">(</span><span class="va">pval</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;   feature_id      logFC     pval        padj</span>
 <span class="co">#&gt;   &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;</span>
@@ -103,17 +101,14 @@
 <span class="co">#&gt; 3 ENSG00000120129  2.94 5.19e-10 0.00000152 </span>
 <span class="co">#&gt; 4 ENSG00000152583  4.56 5.82e-10 0.00000152 </span>
 <span class="co">#&gt; 5 ENSG00000162493  1.88 6.18e-10 0.00000152 </span>
-<span class="co">#&gt; 6 ENSG00000157214  1.97 7.07e-10 0.00000152</span>
-</pre></div>
+<span class="co">#&gt; 6 ENSG00000157214  1.97 7.07e-10 0.00000152</span></pre></div>
 <p>Produce an interactive visual (via using plotly/htmlwidgets) from one of the results using <code><a href="https://rdrr.io/pkg/FacileAnalysis/man/FacileAnalysisResultViz.html">viz()</a></code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/FacileAnalysisResultViz.html">viz</a></span>(<span class="kw">dge.facile</span>, <span class="st">"ENSG00000165995"</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/FacileAnalysisResultViz.html">viz</a></span><span class="op">(</span><span class="va">dge.facile</span>, <span class="st">"ENSG00000165995"</span><span class="op">)</span></pre></div>
 <p><img src="reference/figures/README-viz-fdge.png" width="50%"></p>
 <p>Or, finally, launch a shiny gadget over the <code><a href="https://rdrr.io/pkg/FacileAnalysis/man/fdge.html">fdge()</a></code> result so that we can interactively explore the differential expression result in all of its glory:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/FacileAnalysisResultViz.html">shine</a></span>(<span class="kw">dge.facile</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/FacileAnalysis/man/FacileAnalysisResultViz.html">shine</a></span><span class="op">(</span><span class="va">dge.facile</span><span class="op">)</span></pre></div>
 <p><img src="reference/figures/README-shine-fdge.png" width="75%"></p>
 <p>You can refer to the <a href="https://facilebio.github.io/FacileAnalysis/articles/FacileAnalysis-RNAseq.html">RNA-seq analysis vignette</a> vignette in the <a href="https://facilebio.github.io/FacileAnalysis/">FacileAnalysis</a> package in order to learn how you can interactively analyze and explore RNA-seq data in the facile.bio framework.</p>
 </div>
