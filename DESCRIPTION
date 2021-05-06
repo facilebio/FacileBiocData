@@ -1,7 +1,7 @@
 Package: FacileBiocData
 Type: Package
 Title: FacileData API wrappers over Bioconductor assay containers
-Version: 0.1.3
+Version: 0.98.0
 Authors@R: c(
     person("Steve", "Lianoglou", , "lianoglou@dnli.com", c("aut", "cre")),
     person("Denali Therapeutics", role = c("cph", "fnd"))
@@ -12,7 +12,7 @@ Description: Enables the use of standard Bioconductor assay containers, like
 URL: https://github.com/facilebio/FacileBiocData
 BugReports: https://github.com/facilebio/FacileBiocData/issues
 Depends:
-    FacileData (>= 0.10.10)
+    FacileData (>= 0.98.0)
 Imports:
     Biobase,
     broom,
@@ -32,7 +32,7 @@ Imports:
     tidyselect
 Suggests:
     airway,
-    FacileAnalysis,
+    FacileAnalysis (>= 0.98.0),
     knitr,
     magrittr,
     S4Vectors,
