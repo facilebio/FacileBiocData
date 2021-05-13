@@ -88,7 +88,8 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
 
 #' @noRd
 .to_DESeqDataSet <- function(x, design = ~ group, ...) {
-  DESeq2::DESeqDataSet(.to_SummarizedExperiment(x), design = design)
+  out <- DESeq2::DESeqDataSet(.to_SummarizedExperiment(x), design = design)
+  DESeq2::estimateSizeFactors(out)
 }
 
 #' @noRd
