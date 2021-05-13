@@ -26,7 +26,7 @@ biocbox.FacileBiocDataStore <- function(x, class = NULL,
     if (!test_subset(features, features.all[["feature_id"]])) {
       stop("features requested that do not exist in the FacileBiocDataStore")
     }
-    # FIXME: w ith MultiAssayExperiment, subsetting features like this won't work
+    # FIXME: with MultiAssayExperiment, subsetting features like this won't work
     x <- x[features,]
   }
 

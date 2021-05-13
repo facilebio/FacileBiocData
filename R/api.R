@@ -47,11 +47,13 @@ setClass("FacileBiocDataStore",
 #' Retrieve the internal facile list data structure from a data container
 #'
 #' @noRd
+#' @export
 ifacile <- function(x, ...) {
   UseMethod("ifacile", x)
 }
 
-#'@noRd
+#' @noRd
+#' @export
 ifacile.FacileBiocDataStore <- function(x, ...) {
   x@facile
 }

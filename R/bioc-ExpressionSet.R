@@ -13,11 +13,7 @@ setClass("FacileExpressionSet",
 facilitate.ExpressionSet <- function(x, assay_type = "lognorm",
                                      feature_type = "infer",
                                      organism = "unknown", ...) {
-  if (!requireNamespace("Biobase", quietly = TRUE)) {
-    stop("Biobase package required, please install it.",
-         call. = FALSE)
-  }
-
+  reqpkg("Biobase")
   out <- new("FacileExpressionSet",
              experimentData = x@experimentData,
              assayData = x@assayData,
@@ -48,17 +44,11 @@ facilitate.ExpressionSet <- function(x, assay_type = "lognorm",
   out
 }
 
-#' @noRd
-ifacile.FacileExpressionSet <- function(x, ...) x@facile
-
 # bioc data retrieval methods --------------------------------------------------
 
 #' @noRd
 fdata.ExpressionSet <- function(x, assay_name = default_assay(x), ...) {
-  if (!requireNamespace("Biobase", quietly = TRUE)) {
-    stop("Biobase package required, please install it.",
-         call. = FALSE)
-  }
+  reqpkg("Biobase")
   Biobase::fData(x)
 }
 

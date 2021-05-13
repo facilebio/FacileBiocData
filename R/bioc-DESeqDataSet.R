@@ -88,6 +88,9 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
     x <- DESeq2::estimateSizeFactors(x)
   }
 
+  normcounts <- DESeq2::counts(x, normalized = TRUE)
+  x <- SummarizedExperiment::`assay<-`(x, "normcounts", value = normcounts)
+
   anames <- SummarizedExperiment::assayNames(x)
   if ("vst" %in% anames) {
     if (is.null(run_vst)) run_vst <- FALSE
@@ -123,13 +126,13 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
     counts = list(
       assay_type = assay_type,
       feature_type = ainfo[["feature_type"]]),
+    normcounts = list(
+      assay_type = "tpm",
+      feature_type = ainfo[["feature_type"]]),
     vst = list(
       assay_type = "lognorm",
       feature_type = ainfo[["feature_type"]]),
     rlog = list(
-      assay_type = "lognorm",
-      feature_type = ainfo[["feature_type"]]),
-    normcounts = list(
       assay_type = "lognorm",
       feature_type = ainfo[["feature_type"]]))
   out@facile[["default_assay"]] <- "counts"
@@ -151,20 +154,14 @@ facilitate.DESeqDataSet <- function(x, assay_type = "rnaseq",
 fetch_assay_data.FacileDESeqDataSet <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
     normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE, ...,
-    prior.count = 0.1, aggregate = FALSE, aggregate.by= "ewm",
-    verbose = FALSE) {
+    log = normalized || !is.null(batch), replaced = FALSE, prior.count = 0.1,
+    aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
   assert_string(assay_name)
-  if (test_string(normalized) && normalized == "cpm") {
-    # This is for DESeqDataSet that wans to use edgeR normalized counts
+  if (normalized && assay_name == "counts") {
+    assay_name <-  "normcounts"
+  }
+  if (assay_name == "normcounts") {
     normalized <- TRUE
-    assay_name <- "counts"
-  } else if (assay_name == "counts") {
-    if (normalized) {
-      assert_number(prior.count, lower = 0.001)
-      nc <- log2(DESeq2::counts(x, normalized = TRUE) + prior.count)
-      x <- SummarizedExperiment::`assay<-`(x, "normcounts", value = nc)
-      assay_name <- "normcounts"
-    }
   }
   if (assay_name %in% c("vst", "rlog")) {
     if (!assay_name %in% assay_names(x)) {
@@ -173,12 +170,13 @@ fetch_assay_data.FacileDESeqDataSet <- function(
            "facilitate()\n. The vst can also be run by calling ",
            "facilitate(x, run_vst = TRUE). See help for more information.")
     }
-    normalized <- TRUE
+    normalized <- !is.null(batch)
+    log <- FALSE
   }
 
   fetch_assay_data.FacileBiocDataStore(
     x, features, samples, assay_name = assay_name, normalized = normalized,
-    batch = batch, main = main, as.matrix = as.matrix, ...,
+    batch = batch, main = main, as.matrix = as.matrix, log = log, ...,
     aggregate = aggregate, aggregate.by = aggregate.by, verbose = verbose)
 }
 
