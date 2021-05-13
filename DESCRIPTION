@@ -7,12 +7,12 @@ Authors@R: c(
     person("Denali Therapeutics", role = c("cph", "fnd"))
     )
 Description: Enables the use of standard Bioconductor assay containers, like
-    SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.
+    DGEList, EList, ExpressionSet, DESeqDataSet, SummarizedExperiment, etc.
     within the facile.bio ecosystem.
 URL: https://github.com/facilebio/FacileBiocData
 BugReports: https://github.com/facilebio/FacileBiocData/issues
 Depends:
-    FacileData (>= 0.98.0)
+    FacileData (>= 0.98.1)
 Imports:
     Biobase,
     broom,
