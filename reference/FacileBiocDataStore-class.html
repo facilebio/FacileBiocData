@@ -199,22 +199,21 @@ virtual class.</p>
 
     
 
-
-<p>The FacileDESeqDataSet will look for variance stabilized versions of the
+<p>When a DESeqDataSet object is facilitate()'d, a normalized count matrix
+will be calculated using <code><a href='https://rdrr.io/pkg/DESeq2/man/counts.html'>DESeq2::counts(x, normalized = TRUE)</a></code> and stored as
+a matrix named <code>"normcounts"</code> in its <code>assays()</code> list. These are the values
+that are returned by (fetch|with)_assay_data when <code>normalized = TRUE</code>, which
+differs from the edgeR:cpm normalized count data which is usually returned
+from most every other expression container.</p>
+<p>By default, these normalized counts will be log2 transformed when returned to
+conform to the expectation in the facilebio ecosystem. To get the deault
+DESeq2 behaviour, the user would use
+<code>fetch_assay_data(.., normalized = TRUE, log = FALSE)</code>.</p>
+<p>This function will also look for variance stabilized versions of the
 data in the <code>"vst"</code> and <code>"rlog"</code> assay matrices. If no <code>"vst"</code> assay is
 present, it will be run and stored there, unless the <code>facilitate,run_vst</code>
-parameter is set to <code>FALSE</code>.</p>
-<p>Because DESeq uses a different normalization method than edgeR's TMM, when
-the user calls <code>fetch_assay_data(.., normalized = TRUE)</code>, the default will
-be to return the normalized count data retrieved from
-<code><a href='https://rdrr.io/pkg/DESeq2/man/counts.html'>DESeq2::counts()</a></code> with <code>normalized = TRUE</code>.</p>
-<p>To return <code><a href='https://rdrr.io/pkg/edgeR/man/cpm.html'>edgeR::cpm()</a></code> values, you can set <code>normalized = "cpm"</code>, but this
-must be working over the <code>"counts"</code> assay.</p><ol>
-<li><p>Add parameters to run vst/rlog?</p></li>
-<li><p>Enable vst, rlog, and normcounts  to be retrieved via
-fetch_assay_data(assay_name = "vst"|"rlog"|"normcounts")</p></li>
-</ol>
-
+parameter is set to <code>FALSE</code>. This data can be returned using
+<code>assay_name = "vst"</code></p>
     <h2 class="hasAnchor" id="dgelist"><a class="anchor" href="#dgelist"></a>DGEList</h2>
 
     
@@ -254,8 +253,7 @@ parameter if that's not the case.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> dataset sample4   normcounts tpm        unknown      gene20     gene20      
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> dataset sample5   normcounts tpm        unknown      gene1      gene1       
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> dataset sample5   normcounts tpm        unknown      gene20     gene20      
-#&gt; </span><span style='color: #949494;'># … with 30 more rows, and 1 more variable: value &lt;dbl&gt;</span><span></div><div class='input'><span class='fu'>fetch_assay_data</span><span class='op'>(</span><span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene1"</span>, <span class='st'>"gene20"</span><span class='op'>)</span>, normalized <span class='op'>=</span> <span class='st'>"cpm"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in normalized &amp;&amp; assay_name == "counts": invalid 'x' type in 'x &amp;&amp; y'</span></div><div class='input'>
+#&gt; </span><span style='color: #949494;'># … with 30 more rows, and 1 more variable: value &lt;dbl&gt;</span><span></div><div class='input'>
 <span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gene1"</span>, <span class='st'>"gene20"</span><span class='op'>)</span>, normalized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 20 x 4</span><span>
@@ -284,18 +282,19 @@ parameter if that's not the case.</p>
 <span class='co'># Retrieiving different flavors of normalized expression data</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'>samples</span><span class='op'>(</span><span class='va'>fd</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='st'>"gene1"</span>, normalized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='st'>"gene1"</span>, normalized <span class='op'>=</span> <span class='st'>"cpm"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>with_assay_data</span><span class='op'>(</span><span class='st'>"gene1"</span>, assay_name <span class='op'>=</span> <span class='st'>"vst"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>select</span><span class='op'>(</span><span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in normalized &amp;&amp; assay_name == "counts": invalid 'x' type in 'x &amp;&amp; y'</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normcounts"</span>, <span class='st'>"cpm"</span>, <span class='st'>"vst"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in colnames(dat) &lt;- c("normcounts", "cpm", "vst"): object 'dat' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/pairs.html'>pairs</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in pairs(dat): object 'dat' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normcounts"</span>, <span class='st'>"vst"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/pairs.html'>pairs</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+</div><div class='img'><img src='FacileBiocDataStore-class-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>dpca</span> <span class='op'>&lt;-</span> <span class='fu'>FacileAnalysis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span><span class='op'>(</span><span class='va'>fd</span>, assay_name <span class='op'>=</span> <span class='st'>"vst"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='input'><span class='co'># edgeR ---------------------------------------------------------------------</span>
+<span class='op'>}</span>
+<span class='co'># edgeR ---------------------------------------------------------------------</span>
 <span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='example_bioc_data.html'>example_bioc_data</a></span><span class='op'>(</span>class <span class='op'>=</span> <span class='st'>"DGEList"</span><span class='op'>)</span>
 <span class='va'>yf</span> <span class='op'>&lt;-</span> <span class='fu'>facilitate</span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>
 <span class='fu'>FacileAnalysis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/FacileAnalysis/man/fpca.html'>fpca</a></span><span class='op'>(</span><span class='va'>yf</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `event_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `tte_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; ===========================================================
+</div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `event_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 21 (0.70) values in `tte_PFS` covariate failed conversion to numeric</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='output co'>#&gt; ===========================================================
 #&gt; FacilePcaAnalysisResult
 #&gt; -----------------------------------------------------------
 #&gt; Assay used: counts
