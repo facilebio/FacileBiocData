@@ -1,6 +1,6 @@
 Package: FacileBiocData
 Type: Package
-Title: FacileData API wrappers over Bioconductor assay containers
+Title: FacileData API wrappers over Bioconductor assay containers.
 Version: 0.98.2
 Authors@R: c(
     person("Steve", "Lianoglou", , "lianoglou@dnli.com", c("aut", "cre")),
@@ -35,6 +35,7 @@ Suggests:
     FacileAnalysis (>= 0.98.0),
     knitr,
     magrittr,
+    rmarkdown,
     S4Vectors,
     testthat
 Remotes:

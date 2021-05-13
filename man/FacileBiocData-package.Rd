@@ -4,7 +4,7 @@
 \name{FacileBiocData-package}
 \alias{FacileBiocData}
 \alias{FacileBiocData-package}
-\title{FacileBiocData: FacileData API wrappers over Bioconductor assay containers}
+\title{FacileBiocData: FacileData API wrappers over Bioconductor assay containers.}
 \description{
 Enables the use of standard Bioconductor assay containers, like
     SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.

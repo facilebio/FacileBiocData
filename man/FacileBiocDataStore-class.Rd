@@ -70,24 +70,23 @@ virtual class.
 }
 \section{DESeqDataSet}{
 
+When a DESeqDataSet object is facilitate()'d, a normalized count matrix
+will be calculated using \code{DESeq2::counts(x, normalized = TRUE)} and stored as
+a matrix named \code{"normcounts"} in its \code{assays()} list. These are the values
+that are returned by (fetch|with)_assay_data when \code{normalized = TRUE}, which
+differs from the edgeR:cpm normalized count data which is usually returned
+from most every other expression container.
 
-The FacileDESeqDataSet will look for variance stabilized versions of the
+By default, these normalized counts will be log2 transformed when returned to
+conform to the expectation in the facilebio ecosystem. To get the deault
+DESeq2 behaviour, the user would use
+\code{fetch_assay_data(.., normalized = TRUE, log = FALSE)}.
+
+This function will also look for variance stabilized versions of the
 data in the \code{"vst"} and \code{"rlog"} assay matrices. If no \code{"vst"} assay is
 present, it will be run and stored there, unless the \verb{facilitate,run_vst}
-parameter is set to \code{FALSE}.
-
-Because DESeq uses a different normalization method than edgeR's TMM, when
-the user calls \code{fetch_assay_data(.., normalized = TRUE)}, the default will
-be to return the normalized count data retrieved from
-\code{\link[DESeq2:counts]{DESeq2::counts()}} with \code{normalized = TRUE}.
-
-To return \code{\link[edgeR:cpm]{edgeR::cpm()}} values, you can set \code{normalized = "cpm"}, but this
-must be working over the \code{"counts"} assay.
-\enumerate{
-\item Add parameters to run vst/rlog?
-\item Enable vst, rlog, and normcounts  to be retrieved via
-fetch_assay_data(assay_name = {"vst"|"rlog"|"normcounts"})
-}
+parameter is set to \code{FALSE}. This data can be returned using
+\code{assay_name = "vst"}
 }
 
 \section{DGEList}{
@@ -102,7 +101,6 @@ dds <- DESeq2::makeExampleDESeqDataSet(n=2000, m=20)
 fd <- facilitate(dds)
 fetch_assay_data(samples(fd), c("gene1", "gene20"))
 fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = TRUE)
-fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = "cpm")
 
 samples(fd) \%>\%
   with_assay_data(c("gene1", "gene20"), normalized = TRUE)
@@ -110,13 +108,14 @@ samples(fd) \%>\%
 # Retrieiving different flavors of normalized expression data
 dat <- samples(fd) \%>\%
   with_assay_data("gene1", normalized = TRUE) \%>\%
-  with_assay_data("gene1", normalized = "cpm") \%>\%
   with_assay_data("gene1", assay_name = "vst") \%>\%
   select(-(1:2))
-colnames(dat) <- c("normcounts", "cpm", "vst")
+colnames(dat) <- c("normcounts", "vst")
 pairs(dat)
 
+\dontrun{
 dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
+}
 # edgeR ---------------------------------------------------------------------
 y <- example_bioc_data(class = "DGEList")
 yf <- facilitate(y)
