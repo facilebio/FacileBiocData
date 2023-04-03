@@ -74,25 +74,25 @@ test_that("flm_def defines models on facile_frame from a FacileBiocDataStore", {
 })
 
 test_that("fdge/voom works", {
-  vm.facile <- FDS %>%
-    filter_samples(indication == "BLCA") %>%
-    flm_def("sample_type", "tumor", "normal", batch = "sex") %>%
+  vm.facile <- FDS |>
+    filter_samples(indication == "BLCA") |>
+    flm_def("sample_type", "tumor", "normal", batch = "sex") |>
     fdge(method = "voom")
 
-  stats.facile <- vm.facile %>%
-    tidy() %>%
-    select(feature_id, name, logFC, t, pval, padj, CI.L, CI.R, B) %>%
+  stats.facile <- vm.facile |>
+    tidy() |>
+    select(feature_id, name, logFC, t, pval, padj, CI.L, CI.R, B) |>
     arrange(feature_id)
 
   for (bclass in .rnaseq.class) {
     f <- FBIOC[[bclass]]
-    vm.bioc <- f %>%
-      filter_samples(indication == "BLCA") %>%
-      flm_def("sample_type", "tumor", "normal", batch = "sex") %>%
+    vm.bioc <- f |>
+      filter_samples(indication == "BLCA") |>
+      flm_def("sample_type", "tumor", "normal", batch = "sex") |>
       fdge(method = "voom")
-    stats.bioc <- vm.bioc %>%
-      tidy() %>%
-      select(colnames(stats.facile)) %>%
+    stats.bioc <- vm.bioc |>
+      tidy() |>
+      select(colnames(stats.facile)) |>
       arrange(feature_id)
     expect_equal(stats.bioc, stats.facile, info = bclass)
   }

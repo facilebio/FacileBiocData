@@ -40,7 +40,7 @@ assay_sample_info.FacileBiocDataStore <- function(
 #' @noRd
 #' @export
 #' @examples
-#' yf <- example_bioc_data("DGEList") %>% facilitate()
+#' yf <- example_bioc_data("DGEList") |> facilitate()
 fetch_assay_data.FacileBiocDataStore <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
     normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE, ...,

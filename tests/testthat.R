@@ -1,7 +1,6 @@
 library("testthat")
 library("checkmate")
 library("dplyr")
-library("magrittr")
 library("FacileBiocData")
 
 FDS <- FacileData::exampleFacileDataSet()

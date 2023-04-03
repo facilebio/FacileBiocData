@@ -1,9 +1,9 @@
 #' @noRd
 #' @export
 samples.FacileBiocDataStore <- function(x, ...) {
-  pdata(x) %>%
-    as_tibble() %>%
-    dplyr::select(.data$dataset, .data$sample_id) %>%
+  pdata(x) |>
+    as_tibble() |>
+    dplyr::select(.data$dataset, .data$sample_id) |>
     as_facile_frame(x, .valid_sample_check = FALSE)
 }
 
@@ -15,8 +15,8 @@ filter_samples.FacileBiocDataStore <- function(x, ..., samples. = samples(x),
   force(samples.)
   assert_sample_subset(samples.)
 
-  out <- pdata(x) %>%
-    semi_join(samples., by = c("dataset", "sample_id")) %>%
+  out <- pdata(x) |>
+    semi_join(samples., by = c("dataset", "sample_id")) |>
     filter(...)
   if (!with_covariates) {
     out <- select(out, .data$dataset, .data$sample_id)
