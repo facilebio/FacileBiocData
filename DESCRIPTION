@@ -4,8 +4,8 @@ Title: FacileData API wrappers over Bioconductor assay containers.
 Version: 0.98.3
 Authors@R: c(
     person("Steve", "Lianoglou", , "slianoglou@gmail.com", c("aut", "cre")),
-    person("Denali Therapeutics", role = c("cph", "fnd"))
-    )
+    person("Denali Therapeutics", role = c("cph", "fnd"), comment = "2018 - 2022"),
+    person("Aratus Informatics", role = c("cph", "fnd"), comment = "2023+"))
 Description: Enables the use of standard Bioconductor assay containers, like
     DGEList, EList, ExpressionSet, DESeqDataSet, SummarizedExperiment, etc.
     within the facile.bio ecosystem.

@@ -17,11 +17,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Steve Lianoglou \email{lianoglou@dnli.com}
+\strong{Maintainer}: Steve Lianoglou \email{slianoglou@gmail.com}
 
 Other contributors:
 \itemize{
-  \item Denali Therapeutics [copyright holder, funder]
+  \item Denali Therapeutics (2018 - 2022) [copyright holder, funder]
+  \item Aratus Informatics (2023+) [copyright holder, funder]
 }
 
 }
