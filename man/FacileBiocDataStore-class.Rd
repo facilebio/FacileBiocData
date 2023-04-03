@@ -102,19 +102,20 @@ fd <- facilitate(dds)
 fetch_assay_data(samples(fd), c("gene1", "gene20"))
 fetch_assay_data(samples(fd), c("gene1", "gene20"), normalized = TRUE)
 
-samples(fd) \%>\%
+samples(fd) |>
   with_assay_data(c("gene1", "gene20"), normalized = TRUE)
 
 # Retrieiving different flavors of normalized expression data
-dat <- samples(fd) \%>\%
-  with_assay_data("gene1", normalized = TRUE) \%>\%
-  with_assay_data("gene1", assay_name = "vst") \%>\%
+dat <- samples(fd) |>
+  with_assay_data("gene1", normalized = TRUE) |>
+  with_assay_data("gene1", assay_name = "vst") |>
   select(-(1:2))
 colnames(dat) <- c("normcounts", "vst")
 pairs(dat)
 
 \dontrun{
 dpca <- FacileAnalysis::fpca(fd, assay_name = "vst")
+FacileAnalysis::shine(dpca)
 }
 # edgeR ---------------------------------------------------------------------
 y <- example_bioc_data(class = "DGEList")
