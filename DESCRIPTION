@@ -3,7 +3,7 @@ Type: Package
 Title: FacileData API wrappers over Bioconductor assay containers.
 Version: 0.98.3
 Authors@R: c(
-    person("Steve", "Lianoglou", , "lianoglou@dnli.com", c("aut", "cre")),
+    person("Steve", "Lianoglou", , "slianoglou@gmail.com", c("aut", "cre")),
     person("Denali Therapeutics", role = c("cph", "fnd"))
     )
 Description: Enables the use of standard Bioconductor assay containers, like
