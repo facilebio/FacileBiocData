@@ -6,9 +6,7 @@
 \alias{FacileBiocData-package}
 \title{FacileBiocData: FacileData API wrappers over Bioconductor assay containers.}
 \description{
-Enables the use of standard Bioconductor assay containers, like
-    SummarizedExperiment, MultiAssayExperiment, DGEList, ExpressionSet, etc.
-    within the facile.bio ecosystem.
+Enables the use of standard Bioconductor assay containers, like DGEList, EList, ExpressionSet, DESeqDataSet, SummarizedExperiment, etc. within the facile.bio ecosystem.
 }
 \seealso{
 Useful links:

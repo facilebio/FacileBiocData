@@ -9,8 +9,8 @@ test_that("facilitate.ExpressionSet works", {
   expect_s4_class(ddf, "DESeqDataSet")
   checkmate::expect_list(ifacile(ddf))
 
-  covs <- samples(ddf) %>%
-    with_sample_covariates("sex") %>%
+  covs <- samples(ddf) |>
+    with_sample_covariates("sex") |>
     with_sample_covariates("sample_type")
   expect_s3_class(covs, "facile_frame")
   expect_equal(nrow(covs), unname(ncol(ddf)))

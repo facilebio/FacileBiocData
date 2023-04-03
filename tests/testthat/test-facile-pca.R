@@ -18,13 +18,13 @@ test_that("fpca works", {
   set.seed(123)
   # prior.count set to match what is used in voom, since we are testing
   # an EList, which was generated within this package by voom
-  pca.facile <- FDS %>%
-    filter_samples(indication == "BLCA") %>%
+  pca.facile <- FDS |>
+    filter_samples(indication == "BLCA") |>
     FacileAnalysis::fpca(ntop = 1000, prior.count = 0.5)
 
-  sig.facile <- FacileAnalysis::signature(pca.facile) %>% tidy()
-  top.facile <- sig.facile %>%
-    filter(weight >= quantile(sig.facile$weight, 0.75)) %>%
+  sig.facile <- FacileAnalysis::signature(pca.facile) |> tidy()
+  top.facile <- sig.facile |>
+    filter(weight >= quantile(sig.facile$weight, 0.75)) |>
     distinct(feature_id)
   for (bclass in names(FBIOC)) {
     f <- FBIOC[[bclass]]
@@ -32,8 +32,8 @@ test_that("fpca works", {
     # There is an issue casting the survival columns we've got in the
     # dataset, let's ignore that for now
     pca.bioc <- expect_warning({
-      f %>%
-        filter_samples(indication == "BLCA") %>%
+      f |>
+        filter_samples(indication == "BLCA") |>
         FacileAnalysis::fpca(features = features(pca.facile), prior.count = 0.5)
     }, "PFS.*conversion")
 
@@ -44,7 +44,7 @@ test_that("fpca works", {
 
     # check top loading genes are about the same, ie. the top loaded genes
     # from the bioc container covers > 95% of the top genes from the FDS
-    sig.bioc <- FacileAnalysis::signature(pca.bioc) %>% tidy()
+    sig.bioc <- FacileAnalysis::signature(pca.bioc) |> tidy()
     f.recovered <- intersect(sig.bioc$feature_id, top.facile$feature_id)
     f.fraction <- mean(top.facile$feature_id %in% f.recovered)
     expect_true(f.fraction >= 0.98,

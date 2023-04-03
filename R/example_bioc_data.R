@@ -1,6 +1,6 @@
 #' Map the Bioconductor assay container class to the package it comes from.
 #' @noRd
-.bioc_types <- tribble(
+.bioc_types <- tibble::tribble(
   ~class,                 ~package,
   "DGEList",              "edgeR",
   "EList",                "limma",

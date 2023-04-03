@@ -72,33 +72,33 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
   # This test is restricted to rnaseq containers for now
   features.all <- features(FDS)
   features.some <- dplyr::sample_n(features.all, 5)
-  samples.all <- samples(FDS) %>% collect()
+  samples.all <- samples(FDS) |> collect()
   samples.some <- dplyr::sample_n(samples.all, 10)
 
   # The names of the assay will differ accross bioc data container types,
   # so we remove that column from these results
   fds.res <- list(
-    tidy.all = FDS %>%
-      fetch_assay_data(features.some, samples.all) %>%
-      select(-assay) %>%
+    tidy.all = FDS |>
+      fetch_assay_data(features.some, samples.all) |>
+      select(-assay) |>
       arrange(sample_id, feature_id),
-    tidy.some = FDS %>%
-      fetch_assay_data(features.some, samples.some) %>%
-      select(-assay) %>%
+    tidy.some = FDS |>
+      fetch_assay_data(features.some, samples.some) |>
+      select(-assay) |>
       arrange(sample_id, feature_id),
-    tidy.some.fids = FDS %>%
-      fetch_assay_data(features.some$feature_id, samples.some) %>%
-      select(-assay) %>%
+    tidy.some.fids = FDS |>
+      fetch_assay_data(features.some$feature_id, samples.some) |>
+      select(-assay) |>
       arrange(sample_id, feature_id),
     # Exercising the `with_` call here simultaneously tests the with_
     # decoration functionality as well as the normalization procedure, since
     # the default for `with_assay_data` is `normalized = TRUE`
-    tidy.with = samples.some %>%
-      with_assay_data(features.some) %>%
+    tidy.with = samples.some |>
+      with_assay_data(features.some) |>
       arrange(sample_id),
-    matrix.all = FDS %>%
+    matrix.all = FDS |>
       fetch_assay_data(features.some, samples.all, as.matrix = TRUE),
-    matrix.some.norm = FDS %>%
+    matrix.some.norm = FDS |>
       fetch_assay_data(features.some, samples.some, as.matrix = TRUE,
                        normalized = TRUE))
 
@@ -115,24 +115,24 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
     bioc.res <- list(
       # exclude the assay name from the tidy'd results because they will differ
       # across containers
-      tidy.all = f %>%
-        fetch_assay_data(features.some, bsamples.all) %>%
-        select(-assay) %>%
+      tidy.all = f |>
+        fetch_assay_data(features.some, bsamples.all) |>
+        select(-assay) |>
         arrange(sample_id, feature_id),
-      tidy.some = f %>%
-        fetch_assay_data(features.some, bsamples.some) %>%
-        select(-assay) %>%
+      tidy.some = f |>
+        fetch_assay_data(features.some, bsamples.some) |>
+        select(-assay) |>
         arrange(sample_id, feature_id),
-      tidy.some.fids = f %>%
-        fetch_assay_data(features.some$feature_id, bsamples.some) %>%
-        select(-assay) %>%
+      tidy.some.fids = f |>
+        fetch_assay_data(features.some$feature_id, bsamples.some) |>
+        select(-assay) |>
         arrange(sample_id, feature_id),
-      tidy.with = bsamples.some %>%
-        with_assay_data(features.some, normalized = normalized) %>%
+      tidy.with = bsamples.some |>
+        with_assay_data(features.some, normalized = normalized) |>
         arrange(sample_id),
-      matrix.all = f %>%
+      matrix.all = f |>
         fetch_assay_data(features.some, bsamples.all, as.matrix = TRUE),
-      matrix.some.norm = f %>%
+      matrix.some.norm = f |>
         fetch_assay_data(features.some, bsamples.some, normalized = normalized,
                          as.matrix = TRUE))
 
@@ -198,7 +198,7 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
 #   normalized <- TRUE
 #
 #   features.all <- features(FDS)
-#   samples.all <- samples(FDS) %>% collect()
+#   samples.all <- samples(FDS) |> collect()
 #
 #   for (i in 1:10) {
 #     features.some <- dplyr::sample_n(features.all, 5)
@@ -207,27 +207,27 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
 #     # The names of the assay will differ accross bioc data container types,
 #     # so we remove that column from these results
 #     fds.res <- list(
-#       tidy.all = FDS %>%
-#         fetch_assay_data(features.some, samples.all) %>%
-#         select(-assay) %>%
+#       tidy.all = FDS |>
+#         fetch_assay_data(features.some, samples.all) |>
+#         select(-assay) |>
 #         arrange(sample_id, feature_id),
-#       tidy.some = FDS %>%
-#         fetch_assay_data(features.some, samples.some) %>%
-#         select(-assay) %>%
+#       tidy.some = FDS |>
+#         fetch_assay_data(features.some, samples.some) |>
+#         select(-assay) |>
 #         arrange(sample_id, feature_id),
-#       tidy.some.fids = FDS %>%
-#         fetch_assay_data(features.some$feature_id, samples.some) %>%
-#         select(-assay) %>%
+#       tidy.some.fids = FDS |>
+#         fetch_assay_data(features.some$feature_id, samples.some) |>
+#         select(-assay) |>
 #         arrange(sample_id, feature_id),
 #       # Exercising the `with_` call here simultaneously tests the with_
 #       # decoration functionality as well as the normalization procedure, since
 #       # the default for `with_assay_data` is `normalized = TRUE`
-#       tidy.with = samples.some %>%
-#         with_assay_data(features.some) %>%
+#       tidy.with = samples.some |>
+#         with_assay_data(features.some) |>
 #         arrange(sample_id),
-#       matrix.all = FDS %>%
+#       matrix.all = FDS |>
 #         fetch_assay_data(features.some, samples.all, as.matrix = TRUE),
-#       matrix.some.norm = FDS %>%
+#       matrix.some.norm = FDS |>
 #         fetch_assay_data(features.some, samples.some, as.matrix = TRUE,
 #                          normalized = TRUE))
 #
@@ -239,24 +239,24 @@ test_that("(fetch|with)_assay_data retrieval works across containers", {
 #     bioc.res <- list(
 #       # exclude the assay name the tidied reuslts because they will differ
 #       # across containers
-#       tidy.all = f %>%
-#         fetch_assay_data(features.some, bsamples.all) %>%
-#         select(-assay) %>%
+#       tidy.all = f |>
+#         fetch_assay_data(features.some, bsamples.all) |>
+#         select(-assay) |>
 #         arrange(sample_id, feature_id),
-#       tidy.some = f %>%
-#         fetch_assay_data(features.some, bsamples.some) %>%
-#         select(-assay) %>%
+#       tidy.some = f |>
+#         fetch_assay_data(features.some, bsamples.some) |>
+#         select(-assay) |>
 #         arrange(sample_id, feature_id),
-#       tidy.some.fids = f %>%
-#         fetch_assay_data(features.some$feature_id, bsamples.some) %>%
-#         select(-assay) %>%
+#       tidy.some.fids = f |>
+#         fetch_assay_data(features.some$feature_id, bsamples.some) |>
+#         select(-assay) |>
 #         arrange(sample_id, feature_id),
-#       tidy.with = bsamples.some %>%
-#         with_assay_data(features.some, normalized = normalized) %>%
+#       tidy.with = bsamples.some |>
+#         with_assay_data(features.some, normalized = normalized) |>
 #         arrange(sample_id),
-#       matrix.all = f %>%
+#       matrix.all = f |>
 #         fetch_assay_data(features.some, bsamples.all, as.matrix = TRUE),
-#       matrix.some.norm = f %>%
+#       matrix.some.norm = f |>
 #         fetch_assay_data(features.some, bsamples.some, normalized = normalized,
 #                          as.matrix = TRUE))
 #

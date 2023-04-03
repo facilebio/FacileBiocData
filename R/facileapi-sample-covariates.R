@@ -35,7 +35,7 @@ fetch_sample_covariates.FacileBiocDataStore <- function(
       warning("Unknown sample covariates: ", paste(bad.covs, collapse = ","))
       covariates <- intersect(covariates, all.covs)
     }
-    sinfo <- select(sinfo, .data$dataset, .data$sample_id, {{covariates}})
+    sinfo <- select(sinfo, "dataset", "sample_id", {{covariates}})
   }
 
   if (nrow(samples) == 0 || length(all.covs) == 0L) {

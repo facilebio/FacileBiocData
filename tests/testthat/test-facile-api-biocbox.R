@@ -10,8 +10,8 @@ if (!exists("Y")) Y <- example_bioc_data("DGEList", efds = FDS)
 BIOC <- sapply(.classes, example_bioc_data, Y = Y, simplify = FALSE)
 
 test_that("biocbox.FacileBiocDataStore can give itself back", {
-  some.samples <- collect(samples(FDS)) %>% sample_frac(0.5)
-  some.features <- collect(features(FDS)) %>% sample_frac(0.5)
+  some.samples <- collect(samples(FDS)) |> sample_frac(0.5)
+  some.features <- collect(features(FDS)) |> sample_frac(0.5)
 
   for (bclass in names(BIOC)) {
     obj <- BIOC[[bclass]]

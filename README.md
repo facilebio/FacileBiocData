@@ -41,17 +41,17 @@ framework:
 
 ``` r
 library(FacileAnalysis)
-dge.facile <- airway.facile %>% 
-  flm_def("dex", numer = "trt", denom = "untrt", batch = "cell") %>% 
+dge.facile <- airway.facile |> 
+  flm_def("dex", numer = "trt", denom = "untrt", batch = "cell") |> 
   fdge(method = "voom")
 ```
 
 We can extract the statistics from the `fdge` result:
 
 ``` r
-tidy(dge.facile) %>% 
-  select(feature_id, logFC, pval, padj) %>% 
-  arrange(pval) %>% 
+tidy(dge.facile) |> 
+  select(feature_id, logFC, pval, padj) |> 
+  arrange(pval) |> 
   head()
 #> # A tibble: 6 x 4
 #>   feature_id      logFC     pval        padj

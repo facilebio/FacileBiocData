@@ -8,7 +8,7 @@
 #' @importFrom rlang .data .env
 "_PACKAGE"
 
-# Import and rexport -----------------------------------------------------------
+# Import and re-export ---------------------------------------------------------
 
 #' @importFrom broom tidy
 #' @export

@@ -13,8 +13,8 @@ test_that("facilitate.DGEList works", {
   expect_s4_class(f, "DGEList")
   checkmate::expect_list(ifacile(f))
 
-  covs <- samples(f) %>%
-    with_sample_covariates("sex") %>%
+  covs <- samples(f) |>
+    with_sample_covariates("sex") |>
     with_sample_covariates("sample_type")
   expect_s3_class(covs, "facile_frame")
   expect_equal(nrow(covs), unname(ncol(f)))

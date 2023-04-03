@@ -4,11 +4,12 @@ assay_sample_info.FacileBiocDataStore <- function(
     x, assay_name, samples = NULL, ...,
     .developer = getOption("fbioc.developer", FALSE)) {
   assert_choice(assay_name, assay_names(x))
+
   if (is.null(samples)) {
     samples <- samples(x)
   } else {
     assert_sample_subset(samples, x)
-    samples <- distinct(samples, .data$dataset, .data$sample_id,
+    samples <- distinct(samples, .data[["dataset"]], .data[["sample_id"]],
                         .keep_all = TRUE)
   }
 
@@ -40,7 +41,7 @@ assay_sample_info.FacileBiocDataStore <- function(
 #' @noRd
 #' @export
 #' @examples
-#' yf <- example_bioc_data("DGEList") %>% facilitate()
+#' yf <- example_bioc_data("DGEList") |> facilitate()
 fetch_assay_data.FacileBiocDataStore <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
     normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE, ...,
@@ -87,6 +88,9 @@ fetch_assay_data.FacileBiocDataStore <- function(
   features[["assay_type"]] <- ainfo[["assay_type"]]
 
   if (!is.null(batch)) {
+    if (!isTRUE(normalized)) {
+      warning("`batch` parameter specified, setting `normalized` to `TRUE`")
+    }
     normalized <- TRUE
   }
 
