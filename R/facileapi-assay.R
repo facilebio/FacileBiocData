@@ -23,7 +23,9 @@ assay_sample_info.FacileBiocDataStore <- function(
     assay.samples <- samples(x)
   }
 
-  semi_join(assay.samples, samples, by = c("dataset", "sample_id"))
+  assay.samples |>
+    semi_join(samples, by = c("dataset", "sample_id")) |>
+    mutate(assay = .env$assay_name, .after = "dataset")
 }
 
 #' Assay data retrieval from a FacileBiocDataStore
