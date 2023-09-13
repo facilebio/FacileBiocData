@@ -12,7 +12,7 @@ Description: Enables the use of standard Bioconductor assay containers, like
 URL: https://github.com/facilebio/FacileBiocData
 BugReports: https://github.com/facilebio/FacileBiocData/issues
 Depends:
-    R (>= 4.2.0)
+    R (>= 4.2.0),
     FacileData (>= 0.98.1)
 Imports:
     Biobase,
