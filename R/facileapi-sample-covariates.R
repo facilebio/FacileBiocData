@@ -13,7 +13,7 @@
 #' @noRd
 #' @export
 fetch_sample_covariates.FacileBiocDataStore <- function(
-  x, samples = NULL, covariates = NULL,
+  x, covariates = NULL, samples = NULL,
   custom_key = Sys.getenv("USER"), with_source = FALSE, ...) {
 
   sinfo <- pdata(x)
@@ -71,7 +71,7 @@ covariate_definitions.FacileBiocDataStore <- function(x, as.list = TRUE, ...) {
 #' @noRd
 #' @export
 fetch_custom_sample_covariates.FacileBiocDataStore <- function(
-  x, samples = NULL, covariates = NULL, custom_key = Sys.getenv("USER"),
+  x, covariates = NULL, samples = NULL, custom_key = Sys.getenv("USER"),
   file.prefix = "facile", ...) {
   .empty_sample_covariates(x)
 }
