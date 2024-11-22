@@ -27,7 +27,8 @@
   assay_type = "rnaseq",
   feature_type = "infer",
   organism = "unknown",
-  ...
+  ...,
+  alternate_assay = NULL
 )
 }
 \arguments{
@@ -52,6 +53,9 @@ that, otherwise if this isn't set to \code{FALSE} it will be run.}
 how it is run internally}
 
 \item{verbose}{make some noise}
+
+\item{alternate_assay}{define an alternate "slot/element" to use for the
+assay data aside from the default \code{"counts"} from a DGEList.}
 }
 \description{
 Bioconductor assay containers, like a DGEList, DESeqDataSet,
@@ -121,4 +125,7 @@ FacileAnalysis::shine(dpca)
 y <- example_bioc_data(class = "DGEList")
 yf <- facilitate(y)
 FacileAnalysis::fpca(yf)
+
+# use the `"atenth"` matrix for the assay data
+yfa <- facilitate(y, alternate_assay = "atenth")
 }

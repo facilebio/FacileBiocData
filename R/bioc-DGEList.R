@@ -10,18 +10,30 @@ setClass("FacileDGEList", contains = c("FacileBiocDataStore", "DGEList"))
 #' parameter if that's not the case.
 #'
 #' @export
+#' @param alternate_assay define an alternate "slot/element" to use for the
+#'   assay data aside from the default `"counts"` from a DGEList.
 #' @examples
 #' # edgeR ---------------------------------------------------------------------
 #' y <- example_bioc_data(class = "DGEList")
 #' yf <- facilitate(y)
 #' FacileAnalysis::fpca(yf)
+#'
+#' # use the `"atenth"` matrix for the assay data
+#' yfa <- facilitate(y, alternate_assay = "atenth")
 facilitate.DGEList <- function(x, assay_type = "rnaseq", feature_type = "infer",
-                               organism = "unknown", ...) {
+                               organism = "unknown", ...,
+                               alternate_assay = NULL) {
   reqpkg("edgeR")
   sinfo <- .init_pdata(x, ...)
   colnames(x) <- rownames(sinfo)
 
-  counts <- x[["counts"]]
+  if (test_string(alternate_assay) && alternate_assay %in% names(x)) {
+    mname <- alternate_assay
+  } else {
+    mname <- "counts"
+  }
+  # counts <- x[["counts"]]
+  counts <- x[[mname]]
   colnames(counts) <- rownames(sinfo)
 
   # Currently we only support one assay

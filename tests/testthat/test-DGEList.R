@@ -23,3 +23,21 @@ test_that("facilitate.DGEList works", {
 
   expect_s4_class(fds(covs), "FacileDGEList")
 })
+
+test_that("alternate assay use for facilitated DGEList", {
+  yx <- example_bioc_data("DGEList")
+  yfc <- facilitate(yx)
+  yfa <- facilitate(yx, alternate_assay = "atenth")
+
+  cdata <- yfc |>
+    fetch_assay_data(
+      rownames(yx)[1:2],
+      normalized = FALSE) |>
+    with_sample_covariates(c("sex", "sample_type"))
+  adata <- yfa |>
+    fetch_assay_data(
+      rownames(yx)[1:2],
+      normalized = FALSE) |>
+    with_sample_covariates(c("sex", "sample_type"))
+  expect_equal(adata$value, cdata$value / 10)
+})

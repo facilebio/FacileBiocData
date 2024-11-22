@@ -56,7 +56,16 @@ example_bioc_data <- function(class = "DGEList", efds = NULL, y = NULL, ...) {
     stop("Conversion function not found: ", fn.name, call. = FALSE)
   }
 
-  fn(y, ...)
+  out <- fn(y, ...)
+
+  # Add a second assay
+  if (is(out, "DGEList")) {
+    out$atenth <- y$counts / 10
+  } else if (is(out, "SummarizedExperiment")) {
+    SummarizedExperiment::`assay<-`(out, "atenth", value = y$counts / 10)
+  }
+
+  out
 }
 
 #' @noRd
