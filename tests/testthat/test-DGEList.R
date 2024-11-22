@@ -26,17 +26,19 @@ test_that("facilitate.DGEList works", {
 
 test_that("alternate assay use for facilitated DGEList", {
   yx <- example_bioc_data("DGEList")
-  yfc <- facilitate(yx)
-  yfa <- facilitate(yx, alternate_assay = "atenth")
+  yf <- facilitate(yx)
 
-  cdata <- yfc |>
+  cdata <- yf |>
     fetch_assay_data(
       rownames(yx)[1:2],
+      assay_name = "counts",
       normalized = FALSE) |>
     with_sample_covariates(c("sex", "sample_type"))
-  adata <- yfa |>
+
+  adata <- yf |>
     fetch_assay_data(
       rownames(yx)[1:2],
+      assay_name = "atenth",
       normalized = FALSE) |>
     with_sample_covariates(c("sex", "sample_type"))
   expect_equal(adata$value, cdata$value / 10)

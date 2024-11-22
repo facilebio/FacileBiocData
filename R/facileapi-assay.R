@@ -128,7 +128,12 @@ fetch_assay_data.FacileBiocDataStore <- function(
                      feature_id = "aggregated",
                      feature_name = "aggregated")
     }
-    vals <- left_join(samples, vals, by = c("dataset", "sample_id"))
+    vals <- samples |>
+      left_join(
+        vals,
+        by = c("dataset", "sample_id"),
+        suffix = c("", ".dropme..")) |>
+      select(-ends_with(".dropme.."))
   } else {
     vals <- adat
   }
