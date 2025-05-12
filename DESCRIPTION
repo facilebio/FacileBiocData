@@ -1,7 +1,7 @@
 Package: FacileBiocData
 Type: Package
 Title: FacileData API wrappers over Bioconductor assay containers.
-Version: 0.98.7
+Version: 0.98.8
 Authors@R: c(
     person("Steve", "Lianoglou", , "slianoglou@gmail.com", c("aut", "cre")),
     person("Denali Therapeutics", role = c("cph", "fnd"), comment = "2018 - 2022"),

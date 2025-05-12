@@ -47,9 +47,11 @@ assay_sample_info.FacileBiocDataStore <- function(
 fetch_assay_data.FacileBiocDataStore <- function(
     x, features = NULL, samples = NULL, assay_name = default_assay(x),
     normalized = FALSE, batch = NULL, main = NULL, as.matrix = FALSE, ...,
-    aggregate = FALSE, aggregate.by= "ewm", verbose = FALSE) {
+    aggregate = FALSE, aggregate.by = "ewm", verbose = FALSE) {
   assert_flag(as.matrix)
   assert_flag(normalized)
+  aggregate.by <- match.arg(tolower(aggregate.by), c("ewm", "zscore"))
+
   ainfo <- assay_info(x, assay_name)
   if (is.null(samples)) {
     samples <- collect(samples(x), n = Inf)
@@ -115,6 +117,22 @@ fetch_assay_data.FacileBiocDataStore <- function(
 
   pdat <- pdata(x)
   samples[["samid"]] <- NULL
+
+  aggregated <- NULL
+
+  if (isTRUE(aggregate)) {
+    if (aggregate.by == "ewm") {
+      aggregated <- sparrow::eigenWeightedMean(adat, ...)
+    } else if (aggregate.by == "zscore") {
+      aggregated <- sparrow::zScore(adat, ...)
+    } else {
+      stop("Unknown aggregation method: ", aggregate.by)
+    }
+    adat <- matrix(
+      aggregated$score,
+      nrow = 1L,
+      dimnames = list("score", names(aggregated$score)))
+  }
 
   if (!as.matrix) {
     atype <- ainfo[["assay_type"]]
